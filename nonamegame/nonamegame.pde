@@ -17,13 +17,17 @@ int height = 640;
 int lastMouseX;
 int lastMouseY;
 
+
 void setup() 
 {
 
   size(960, 640, P3D);
   background(63, 63, 63);
   lastMouseX = 0;
-  lastMouseY = 0;
+  lastMouseY = 0;  
+  
+  runTests();
+
 }
 
 void draw() 
@@ -108,6 +112,7 @@ void draw()
   text(littlea, 100, 200);
   text(char(biga + diff), 100, 300);
   
+  /*
   if (mouseX != lastMouseX) {
     println(mouseX);
     lastMouseX = mouseX;
@@ -116,6 +121,7 @@ void draw()
     println(mouseY);
     lastMouseX = mouseY;
   }
+  */
   
 
 }
