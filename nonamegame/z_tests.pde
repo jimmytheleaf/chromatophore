@@ -11,7 +11,23 @@ void runTests() {
    runEntityTests();
    runSystemTests();
    runColorTests();
+   runSceneTests();
 }
+
+void runSceneTests() {
+  
+  SceneManager sm = new SceneManager();
+  
+  World w = new World();
+  Scene s = new Scene("PLAY", w);
+  
+  sm.addScene(s);
+  
+  Scene s2 = sm.getScene("PLAY");
+  assertTrue(s == s2, "Scene retrieved should be scene stored");
+  
+}
+
 
 void runColorTests() {
 
