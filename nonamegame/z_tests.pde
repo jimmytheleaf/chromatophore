@@ -21,6 +21,13 @@ void runColorTests() {
    assertTrue(g(c) == 100, "Green value should be 100, is " + g(c));
    assertTrue(b(c) == 150, "Blue value should be 150, is " + b(c));
    
+   IColor tt = new TwoTone(true);
+   
+   assertTrue(tt.toFullColor() == color(255), "Should be black");
+   tt.setFromFullColor(color(15));   
+   assertTrue(tt.toFullColor() == color(0), "Should be white");
+   
+   
 }
 
 void runEntityTests() {
@@ -44,7 +51,6 @@ void runSystemTests() {
   sys.addSystem(foo);
   
   System bar = sys.getSystem("Foo");
-  
   assertTrue(foo == bar, "System added and system retrieved should be the same, instead are " + foo + ", " + bar);
 
 }

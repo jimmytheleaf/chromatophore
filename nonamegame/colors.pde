@@ -1,3 +1,5 @@
+float[] zbc = {147, 176, 205};
+
 float r(int rgb) {
   return rgb >> 16 & 0xFF;
 }
@@ -13,6 +15,33 @@ interface IColor {
    int toFullColor();
    void setFromFullColor(int full);
 }
+
+class TwoTone implements IColor {
+  
+  boolean on;
+  
+  TwoTone(boolean on) {
+     this.on = on; 
+  }
+   int toFullColor() {
+     if (on) {
+       return color(255);
+     } else {
+       return color(0);
+     }
+   }
+   
+   void setFromFullColor(int full) {
+     int value = int((r(full) + g(full) + b(full)) / 3);
+     if (value > 128) {
+       this.on = true;
+     } else {
+       this.on = false;
+     } 
+   }
+
+}
+
 
 class Greyscale implements IColor {
  
