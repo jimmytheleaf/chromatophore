@@ -11,19 +11,15 @@ int divisor = 1;
 int width = 960;
 int height = 640;
 
-int lastMouseX;
-int lastMouseY;
-
+World world;
 
 void setup() 
 {
 
   size(960, 640);
-  background(63, 63, 63);
-  lastMouseX = 0;
-  lastMouseY = 0;  
-  
   runTests();
+
+  world = new World();
 
 }
 
@@ -81,11 +77,11 @@ void draw()
 }
 
 void keyPressed() {
-  println(key);
-  println();
   
   key = normalizeInput(key);
-  
+  println(key);
+
+  // TODO: http://processing.org/reference/keyCode.html
   if (key == INPUT_UP) {
     y--;
   } else if (key == INPUT_DOWN) {
