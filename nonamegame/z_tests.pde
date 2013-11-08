@@ -10,9 +10,18 @@ void runTests() {
   
    runEntityTests();
    runSystemTests();
-   runWorldTests();
+   runColorTests();
 }
 
+void runColorTests() {
+
+   int c = color(50, 100, 150);
+   
+   assertTrue(r(c) == 50, "Red value should be 50, is " + r(c));
+   assertTrue(g(c) == 100, "Green value should be 100, is " + g(c));
+   assertTrue(b(c) == 150, "Blue value should be 150, is " + b(c));
+   
+}
 
 void runEntityTests() {
 
