@@ -48,19 +48,22 @@ class TwoTone implements IColor {
 class Greyscale implements IColor {
  
    int value;
+   float alpha;
    
    Greyscale(int value) {
       this.value = constrain(value, 0, 255);
+      this.alpha = 255;
    }
   
    int toFullColor() {
-     return color(this.value, this.value, this.value);
+     return color(this.value, this.value, this.value, this.alpha);
    }
    
    void setFromFullColor(int full) {
      
       // Average RGB values
       this.value = int((r(full) + g(full) + b(full)) / 3);
+      this.alpha = alpha(full);
  
    }
   
@@ -78,7 +81,7 @@ class FullColor implements IColor {
       this.r = constrain(r, 0, 255);
       this.g = constrain(g, 0, 255);
       this.b = constrain(b, 0, 255);
-      
+
    }
   
    int toFullColor() {

@@ -19,6 +19,14 @@ class World {
    	  this.clock = new Clock();
     }
 
+    void setSystem(System s) {
+    	this.system_manager.addSystem(s);
+    }
+
+    System getSystem(String name) {
+      return this.system_manager.getSystem(name);
+    }
+
     float updateClock() {
 
     	clock.update();

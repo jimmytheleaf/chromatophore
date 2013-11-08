@@ -4,7 +4,7 @@ class Tween {
 
 	float initial_value;
 	float final_value;
-	float duration;
+	float dur;
 	Easing easing_function;
 	float change;
 	float elapsed;
@@ -12,9 +12,10 @@ class Tween {
 	float value;
 
 	Tween(float _initial_value, float _final_value, float _duration, Easing _easing_function) {
+
 		this.initial_value = _initial_value;
 		this.final_value = _final_value;
-		this.duration = _duration;
+		this.dur = _duration;
 		this.easing_function = _easing_function;
 
 		this.change = this.final_value - this.initial_value;
@@ -33,7 +34,7 @@ class Tween {
 		
 		} else {
 
-			this.value = easing_function.ease(this.elapsed, this.initial_value, this.change, this.duration);
+			this.value = easing_function.ease(this.elapsed, this.initial_value, this.change, this.dur);
 
 		}
 
@@ -41,13 +42,16 @@ class Tween {
 
 	boolean finished() {
 
-		return this.elapsed > this.duration;
+		return this.elapsed > this.dur;
 	
 	}
 }
 
-interface TweenCallback {
-	void setValue(float val);
+interface TweenVariable {
+
+ 	public	float initial();
+	public  void setValue(float value);
+
 }
 
 

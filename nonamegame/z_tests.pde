@@ -32,9 +32,35 @@ void runTweenTest() {
   assertTrue(tween.value == 1.0, "Done should be 1");
   assertTrue(tween.elapsed == 1.2, "Should have elapsed 1.2");
   assertTrue(tween.finished() == true, "Finished");
+
+ 
+  TweenSystem tween_system = new TweenSystem();
+
+
+
+  final Tweenable t = new Tweenable();
+     
+  tween_system.addTween(1.0, new TweenVariable() {
+                              public float initial() { return t.foo; }
+                              public void setValue(float value) { t.foo = value; }  
+                       }, 1.0, EasingFunctions.linear
+   );
+
+  tween_system.update(0.5);
+
+  assertTrue(t.foo == 0.5, "Should be tweened half-way");
+  
+  tween_system.update(0.7);
+
+  assertTrue(t.foo == 1.0, "Should be tweened all the way");
+  assertTrue(tween_system.tweens.size() == 0, "Should have pruned tween");
   
 }
 
+class Tweenable {
+  Float foo = 0.0;
+  Tweenable() {}
+};
 
 void runSceneTests() {
   
