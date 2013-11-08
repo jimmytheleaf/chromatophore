@@ -12,7 +12,29 @@ void runTests() {
    runSystemTests();
    runColorTests();
    runSceneTests();
+   runTweenTest();
 }
+
+void runTweenTest() {
+
+  Tween tween = new Tween(0, 1, 1, EasingFunctions.linear);
+
+  assertTrue(tween.change == 1.0, "Change should be 1.0");
+
+  tween.update(0.5);
+
+  assertTrue(tween.value == 0.5, "Halfway through should be 0.5");
+  assertTrue(tween.elapsed == 0.5, "Should have elapsed 0.5");
+  assertTrue(tween.finished() == false, "Not finished");
+
+  tween.update(0.7);
+
+  assertTrue(tween.value == 1.0, "Done should be 1");
+  assertTrue(tween.elapsed == 1.2, "Should have elapsed 1.2");
+  assertTrue(tween.finished() == true, "Finished");
+  
+}
+
 
 void runSceneTests() {
   

@@ -3,9 +3,11 @@ float[] zbc = {147, 176, 205};
 float r(int rgb) {
   return rgb >> 16 & 0xFF;
 }
+
 float g(int rgb) {
   return rgb >> 8 & 0xFF;
 }
+
 float b(int rgb) {
   return rgb & 0xFF;
 }
@@ -76,6 +78,7 @@ class FullColor implements IColor {
       this.r = constrain(r, 0, 255);
       this.g = constrain(g, 0, 255);
       this.b = constrain(b, 0, 255);
+      
    }
   
    int toFullColor() {

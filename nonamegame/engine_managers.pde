@@ -32,3 +32,25 @@ class SystemManager {
   }
 
 }
+
+class SceneManager {
+
+  HashMap<String, Scene> scenes;
+  
+  Scene current_scene;
+  
+  SceneManager() {
+    this.scenes = new HashMap<String, Scene>();  
+  }
+  
+  Scene addScene(Scene s) {
+    this.scenes.put(s.getName(), s);
+    return s;  
+  }
+  
+  Scene getScene(String name) {
+    return this.scenes.get(name);
+  }
+
+
+}

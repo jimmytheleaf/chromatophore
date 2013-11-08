@@ -19,13 +19,15 @@ void setup()
   size(960, 640);
   runTests();
 
-  world = new World();
+  world = new World(960, 640);
 
 }
 
 void draw() 
 {
-  
+  world.updateClock();
+
+
   background(63, 63, 63);
   constrain(divisor, 1, 10);  
   divisor = constrain(divisor, 1, 10);  
