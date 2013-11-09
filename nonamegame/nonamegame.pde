@@ -32,7 +32,6 @@ class Rectangle {
   void draw() {
     fill(c.toFullColor());
     rect(this.x, this.y, this.width, this.height);
-    println(c.alpha);
   }
 
 }

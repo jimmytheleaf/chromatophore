@@ -31,12 +31,12 @@ class World {
 
     	clock.update();
 
-  		/*
+  		
 		if (clock.ticks % 50 == 0) {
 		    println(clock.dt);
 		    println(clock.fps());
 		} 
-		*/
+		
 
     	return clock.dt;
     }
