@@ -37,7 +37,7 @@ class Motion extends Component {
 	boolean active;
 
 	Motion() { 
-  super("Motion");
+  		super("Motion");
 		this.active = true;
 	}
 
@@ -80,6 +80,30 @@ class Motion extends Component {
 		return this;
 	}
 
+}
 
+
+interface BehaviorCallback {
+	void update(float dt);
+}
+
+class Behavior extends Component {
+
+	ArrayList<BehaviorCallback> behaviors;
+
+	Behavior() {
+		super("Behavior");
+		this.behaviors = new ArrayList<BehaviorCallback>();
+	}
+
+	Behavior addBehavior(BehaviorCallback c) {
+		this.behaviors.add(c);
+		return this;
+	}
+
+	Behavior resetBehaviors() {
+		this.behaviors = new ArrayList<BehaviorCallback>();
+  return this;
+	}
 
 }

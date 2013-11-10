@@ -4,6 +4,9 @@ class World {
 
     EntityManager entity_manager;
     SystemManager system_manager;
+    TagManager tag_manager;
+    GroupManager group_manager;
+
     ViewPort view_port;
     Clock clock;
 
@@ -15,6 +18,9 @@ class World {
       
       this.entity_manager = new EntityManager();
       this.system_manager = new SystemManager();      
+      this.tag_manager = new TagManager();
+      this.group_manager = new GroupManager();
+      
    	  this.view_port = new ViewPort(width, height);
    	  this.clock = new Clock();
     }

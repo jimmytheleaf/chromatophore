@@ -54,3 +54,34 @@ class SceneManager {
 
 
 }
+
+class TagManager {
+
+  HashMap<String, Entity> tag_to_entity;
+
+  TagManager() {
+    this.tag_to_entity = new HashMap<String, Entity>();
+  }
+
+  void registerEntity(String tag, Entity e) {
+    this.tag_to_entity.put(tag, e);
+  }
+
+  Entity getEntity(String tag) {
+    return this.tag_to_entity.get(tag);
+  }
+
+}
+
+class GroupManager {
+
+    MultiMap<String, Entity> group_to_entities;
+
+    GroupManager() {
+      group_to_entities = new MultiMap<String, Entity>();
+    }
+
+    // TODO
+
+}
+
