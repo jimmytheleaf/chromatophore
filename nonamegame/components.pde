@@ -1,7 +1,7 @@
 
 class Transform extends Component {
 
-	Vec2 pos = new Vec2(0, 0);
+	final Vec2 pos;
 	int z;
 
 	Transform(int x, int y) {
