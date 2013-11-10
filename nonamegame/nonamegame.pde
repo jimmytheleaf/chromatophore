@@ -3,34 +3,36 @@ int height = 640;
 
 World world;
 
-Entity player;
-
 void setup() 
 {
 
   size(960, 640);
   runTests();
+  colorMode(RGB, 255, 255, 255, 255);
 
   world = new World(960, 640);
 
-  TweenSystem tween_system = new TweenSystem(world);
+  final TweenSystem tween_system = new TweenSystem(world);
   MovementSystem movement_system = new MovementSystem(world);
   BehaviorSystem behavior_system = new BehaviorSystem(world);
   InputSystem input_system = new InputSystem(world);
+  RenderingSystem rendering_system = new RenderingSystem(world);
 
   world.setSystem(tween_system);
   world.setSystem(movement_system);
   world.setSystem(behavior_system);
   world.setSystem(input_system);
-
+  world.setSystem(rendering_system);
 
   input_system.registerInput('W', ACTION_UP);
   input_system.registerInput('S', ACTION_DOWN);
   input_system.registerInput('A', ACTION_LEFT);
   input_system.registerInput('D', ACTION_RIGHT);
 
-  player = world.entity_manager.newEntity();
-  player.addComponent(new Transform(500, 500));
+  final Entity player = world.entity_manager.newEntity();
+
+  Transform t = new Transform(500, 500);
+  player.addComponent(t);
 
   Motion m = new Motion();
   m.max_speed = 500;
@@ -39,44 +41,13 @@ void setup()
 
   player.addComponent(m);
 
-  Behavior b = new Behavior();
-
-  final Entity player_closure = player;
-  b.addBehavior(new BehaviorCallback() {
-      public void update(float dt) {
-        Transform t = (Transform) player_closure.getComponent(TRANSFORM);
-        Motion m = (Motion) player_closure.getComponent(MOTION);
-
-        if (t.pos.x <= 0) {
-          t.pos.x = 0;
-          m.velocity.x = -m.velocity.x;
-        }
-
-        if (t.pos.x >= width) {
-          t.pos.x = width;
-          m.velocity.x = -m.velocity.x;
-        }
-
-        if (t.pos.y <= 0) {
-          t.pos.y = 0;
-          m.velocity.y = -m.velocity.y;
-        }
-
-        if (t.pos.y >= height) {
-          t.pos.y = height;
-          m.velocity.y = -m.velocity.y;
-        }
-      }
-  });
-
-  player.addComponent(b);
 
   InputResponse r = new InputResponse(); 
 
   r.addInputResponseFunction(new InputResponseFunction() {
       public void update(InputSystem input_system) {
 
-        Motion m = (Motion) player_closure.getComponent(MOTION);
+        Motion m = (Motion) player.getComponent(MOTION);
 
           if (input_system.actionHeld(ACTION_UP)) {
             if (m.velocity.y >= 0) {
@@ -117,13 +88,82 @@ void setup()
 
   player.addComponent(r);
 
+ final Shape player_shape = new Circle(t.pos, 50).setColor(new RGB(zbc[0], zbc[1], zbc[2], 255));
+ player.addComponent(new RenderingComponent().addDrawable(player_shape));
 
+ Behavior b = new Behavior();
+
+
+  b.addBehavior(new BehaviorCallback() {
+      public void update(float dt) {
+        Transform t = (Transform) player.getComponent(TRANSFORM);
+        Motion m = (Motion) player.getComponent(MOTION);
+
+        if (t.pos.x <= 0) {
+          t.pos.x = 0;
+          m.velocity.x = -m.velocity.x;
+        }
+
+        if (t.pos.x >= width) {
+          t.pos.x = width;
+          m.velocity.x = -m.velocity.x;
+        }
+
+        if (t.pos.y <= 0) {
+          t.pos.y = 0;
+          m.velocity.y = -m.velocity.y;
+        }
+
+        if (t.pos.y >= height) {
+          t.pos.y = height;
+          m.velocity.y = -m.velocity.y;
+        }
+      }
+  });
+
+ // Shift to analagous colors
+ b.addBehavior(new BehaviorCallback() {
+
+      final HSB player_hsb = new HSB(player_shape.getColor().toRaw());
+           
+      ArrayList<IColor> analagous = new AnalagousHarmony().generate(player_hsb);
+      int current = 0;
+      HSB next_color = new HSB(player_hsb.toRaw());
+
+      public void update(float dt) {
+
+        player_shape.setColor(player_hsb);
+  
+        if (player_shape.getColor().toRaw() == next_color.toRaw()) {
+
+          current++;
+          if (current >= analagous.size()) {
+            current = 0;
+          }
+
+
+          next_color = new HSB(analagous.get(current).toRaw());
+
+          tween_system.addTween(0.1, new TweenVariable() {
+                              public float initial() {           
+                                printDebug("Got here initial");
+                                return player_hsb.hue; }
+                              public void setValue(float value) { 
+                                                                printDebug("Got here set");
+
+                                player_hsb.hue = int(value); 
+                              }  
+                          }, next_color.hue, EasingFunctions.linear);
+        }
+
+      }
+  });
+
+
+  player.addComponent(b);
 
   /*
-  tween_system.addTween(3, new TweenVariable() {
-                              public float initial() { return this_rectangle.c.alpha; }
-                              public void setValue(float value) { this_rectangle.c.alpha = value; }  
-                          }, 1.0, EasingFunctions.linear);
+
   */
   background(63, 63, 63);
   noStroke();
@@ -153,12 +193,18 @@ void draw()
 
   // background(63, 63, 63);
   
+  
+  RenderingSystem rendering_system = (RenderingSystem) world.getSystem(RENDERING_SYSTEM);
+  rendering_system.drawDrawables();
+  
+
+  /*
   fill(zbc[0] + random(-20, 20), zbc[1]  + random(-20, 20), zbc[2]  + random(-20, 20));
 
   Transform t = (Transform) world.entity_manager.getComponent(player, TRANSFORM);
   Vec2 player_position = t.pos;
   ellipse(player_position.x, player_position.y, 100, 100);  
-
+  */
 }
 
 void keyReleased() {

@@ -1,3 +1,37 @@
+
+String TWEEN_SYSTEM = "TweenSystem";
+String MOVEMENT_SYSTEM = "MovementSystem";
+String BEHAVIOR_SYSTEM = "BehaviorSystem";
+String INPUT_SYSTEM = "InputSystem";
+String RENDERING_SYSTEM = "RenderingSystem";
+
+class RenderingSystem extends System {
+
+  RenderingSystem(World w) {
+    super(RENDERING_SYSTEM, w);
+  }
+
+  void drawDrawables() {
+    
+  	if (this.world.entity_manager.component_store.containsKey(RENDERING)) {
+
+  	  // TODO - Z order
+      for (Entity e : this.world.entity_manager.component_store.get(RENDERING).keySet()) {
+     
+        RenderingComponent r = (RenderingComponent) e.getComponent(RENDERING);
+      
+        for (Drawable d : r.drawables) {
+          d.draw();
+          // printDebug("Drawing drawable : " + d);
+        }
+       
+      }
+    }
+  } 
+
+}
+
+
 class BehaviorSystem extends System {
 
   BehaviorSystem(World w) {
@@ -40,7 +74,7 @@ class InputSystem extends System {
   void keyPressed(int key) {
 
   	printDebug("Key pressed called on " + (char) key);
-  	
+
     if (input_to_action.containsKey(key)) {
       String action = input_to_action.get(key);
       pressed_actions.put(action, true);
@@ -215,4 +249,3 @@ class MovementSystem extends System {
     }
   }
 }
-

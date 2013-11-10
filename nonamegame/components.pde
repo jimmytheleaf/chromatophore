@@ -1,3 +1,9 @@
+String RENDERING = "RenderingComponent";
+String TRANSFORM = "Transform";
+String MOTION = "Motion";
+String BEHAVIOR = "Behavior";
+String INPUT_RESPONSE = "INPUT_RESPONSE";
+
 
 class Transform extends Component {
 
@@ -134,4 +140,27 @@ class InputResponse extends Component {
 
 }
 
+interface Drawable {
+	public void draw();
+}
 
+class RenderingComponent extends Component {
+	
+	ArrayList<Drawable> drawables;
+
+	RenderingComponent() {
+		super(RENDERING);
+		this.drawables = new ArrayList<Drawable>();
+	}
+
+	RenderingComponent addDrawable(Drawable d) {
+		this.drawables.add(d);
+		return this;
+	}
+
+	RenderingComponent reset() {
+		this.drawables = new ArrayList<Drawable>();
+		return this;
+	}
+
+}

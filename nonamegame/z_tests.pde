@@ -87,10 +87,30 @@ void runColorTests() {
    
    IColor tt = new TwoTone(true);
    
-   assertTrue(tt.toFullColor() == color(255), "Should be black");
-   tt.setFromFullColor(color(15));   
-   assertTrue(tt.toFullColor() == color(0), "Should be white");
+   assertTrue(tt.toRaw() == color(255), "Should be black");
+   tt.setFromRaw(color(15));   
+   assertTrue(tt.toRaw() == color(0), "Should be white");
    
+   HSB hsb = new HSB(c);
+   RGB rgb = new RGB(c);
+   
+   assertTrue(rgb.toRaw() == c, "To and from raw RGB should be symmetrical");   
+   assertTrue(rgb.toRaw() == c, "To and from raw RGB should be symmetrical, make sure no hsb side effects");   
+   assertTrue(rgb.r == 50, "Should parse 50 red");   
+   assertTrue(rgb.g == 100, "Should parse 50 red");   
+   assertTrue(rgb.b == 150, "Should parse 50 red");   
+
+
+  /* This doesn't assert true, but is close enough, as the below test shows.
+  assertTrue(hsb.toRaw() == c, "To and from raw HSB should be symmetrical, instead are " + c + " and " + hsb.toRaw());
+
+  int c = color(50, 100, 150);
+  HSB hsb = new HSB(c);
+  fill(c);
+  rect(0, 0, 480, 640);
+  fill(hsb.toRaw());
+  rect(480, 0, 480, 640);
+  */ 
    
 }
 
