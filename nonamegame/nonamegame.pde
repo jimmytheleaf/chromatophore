@@ -27,6 +27,25 @@ void setup()
 
   world = new World(960, 640);
 
+
+
+
+  TweenSystem tween_system = new TweenSystem(world);
+  MovementSystem movement_system = new MovementSystem(world);
+  BehaviorSystem behavior_system = new BehaviorSystem(world);
+  InputSystem input_system = new InputSystem(world);
+
+  world.setSystem(tween_system);
+  world.setSystem(movement_system);
+  world.setSystem(behavior_system);
+  world.setSystem(input_system);
+
+
+  input_system.registerInput('W', ACTION_UP);
+  input_system.registerInput('S', ACTION_DOWN);
+  input_system.registerInput('A', ACTION_LEFT);
+  input_system.registerInput('D', ACTION_RIGHT);
+
   player = world.entity_manager.newEntity();
   player.addComponent(new Transform(500, 500));
 
@@ -69,14 +88,56 @@ void setup()
 
   player.addComponent(b);
 
+  InputResponse r = new InputResponse(); 
 
-  TweenSystem tween_system = new TweenSystem(world);
-  MovementSystem movement_system = new MovementSystem(world);
-  BehaviorSystem behavior_system = new BehaviorSystem(world);
+  r.addInputResponseFunction(new InputResponseFunction() {
+      public void update(InputSystem input_system) {
 
-  world.setSystem(tween_system);
-  world.setSystem(movement_system);
-  world.setSystem(behavior_system);
+        Motion m = (Motion) player_closure.getComponent(MOTION);
+
+          if (input_system.actionHeld(ACTION_UP)) {
+            if (m.velocity.y >= 0) {
+               m.velocity.y = -100;
+               m.acceleration.y = 0;
+            }
+            m.acceleration.y -= 50;
+
+            // printDebug("Action Held: UP");
+          } else if (input_system.actionHeld(ACTION_DOWN)) {
+            
+            if (m.velocity.y <= 0) {
+              m.velocity.y = 100;
+              m.acceleration.y = 0;
+            }
+            m.acceleration.y += 50;
+
+            // printDebug("Action Held: DOWN");
+
+          }
+
+          if (input_system.actionHeld(ACTION_LEFT)) {
+            if (m.velocity.x >= 0) {
+              m.velocity.x = -100;
+              m.acceleration.x = 0;
+            }
+            m.acceleration.x -= 50;
+            // printDebug("Action Held: LEFT");
+
+          } else if (input_system.actionHeld(ACTION_RIGHT)) {
+            if (m.velocity.x <= 0) {
+              m.velocity.x = 100;
+              m.acceleration.x = 0;
+            }
+            m.acceleration.x += 10;
+            // printDebug("Action Held: RIGHT");
+
+          }
+
+      }
+  });
+
+  player.addComponent(r);
+
 
 
   tween_system.addTween(3, new TweenVariable() {
@@ -96,9 +157,12 @@ void draw()
   MovementSystem movement_system = (MovementSystem) world.getSystem(MOVEMENT_SYSTEM);
   movement_system.updateMovables(world.clock.dt);
 
-
   BehaviorSystem behavior_system = (BehaviorSystem) world.getSystem(BEHAVIOR_SYSTEM);
   behavior_system.updateBehaviors(world.clock.dt);
+
+
+  InputSystem input_system = (InputSystem) world.getSystem(INPUT_SYSTEM);
+  input_system.updateInputs(world.clock.dt);
 
   background(63, 63, 63);
 
@@ -147,11 +211,11 @@ void draw()
 
   /*
   if (mouseX != lastMouseX) {
-    println(mouseX);
+    printDebug(mouseX);
     lastMouseX = mouseX;
   }
   if (mouseY != lastMouseX) {
-    println(mouseY);
+    printDebug(mouseY);
     lastMouseX = mouseY;
   }
   */
@@ -159,13 +223,23 @@ void draw()
 
 }
 
+void keyReleased() {
+
+  key = normalizeInput(key);
+
+  InputSystem input_system = (InputSystem) world.getSystem(INPUT_SYSTEM);
+  input_system.keyReleased(key);
+}
+
 void keyPressed() {
   
   key = normalizeInput(key);
-  println(key);
 
+  InputSystem input_system = (InputSystem) world.getSystem(INPUT_SYSTEM);
+  input_system.keyPressed(key);
+
+  /*
   Motion m = (Motion) world.entity_manager.getComponent(player, MOTION);
-
 
   // TODO: http://processing.org/reference/keyCode.html
   if (key == INPUT_UP) {
@@ -193,6 +267,7 @@ void keyPressed() {
     }
     m.acceleration.x += 10;
   }
+  */
   
   if (key == 'I') {
     divisor++;
