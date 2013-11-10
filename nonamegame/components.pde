@@ -10,13 +10,13 @@ class Transform extends Component {
 		this.z = 1;
 	}
 
-	Transform move(int x, int y) {
+	Transform move(float x, float y) {
 		this.pos.x += x;
 		this.pos.y += y;
 		return this;
 	}
 
-	Transform moveTo(int x, int y) {
+	Transform moveTo(float x, float y) {
 		this.pos.x = x;
 		this.pos.y = y;
 		return this;
@@ -30,14 +30,14 @@ class Motion extends Component {
 	Vec2 acceleration  = new Vec2(0, 0);
 	Vec2 drag = new Vec2(0, 0);
 	float min_speed = 0;
-	float max_speed = Float.MAX_VALUE;
+	float max_speed = 1000000;
 	float min_acceleration = 0;
-	float max_acceleration = Float.MAX_VALUE;
+	float max_acceleration = 10000000;
 
 	boolean active;
 
 	Motion() { 
-  		super("Motion");
+  		super(MOTION);
 		this.active = true;
 	}
 
@@ -92,7 +92,7 @@ class Behavior extends Component {
 	ArrayList<BehaviorCallback> behaviors;
 
 	Behavior() {
-		super("Behavior");
+		super(BEHAVIOR);
 		this.behaviors = new ArrayList<BehaviorCallback>();
 	}
 
@@ -103,7 +103,7 @@ class Behavior extends Component {
 
 	Behavior resetBehaviors() {
 		this.behaviors = new ArrayList<BehaviorCallback>();
-  return this;
+  		return this;
 	}
 
 }

@@ -15,28 +15,7 @@ World world;
 
 Entity player;
 
-class Rectangle {
 
-  int x;
-  int y; 
-  int width; 
-  int height;
-  Greyscale c;
-
-  Rectangle(int x, int y, int width, int height, Greyscale _c) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.c = _c;
-  }
-
-  void draw() {
-    fill(c.toFullColor());
-    rect(this.x, this.y, this.width, this.height);
-  }
-
-}
 
 Rectangle this_rectangle = new Rectangle(0, 0, 960, 640, new Greyscale(0));
 
@@ -51,9 +30,54 @@ void setup()
   player = world.entity_manager.newEntity();
   player.addComponent(new Transform(500, 500));
 
-  TweenSystem tween_system = new TweenSystem();
+  Motion m = new Motion();
+  m.max_speed = 500;
+  // m.drag.x = 100;
+  // m.drag.y = 100;
+
+  player.addComponent(m);
+
+  Behavior b = new Behavior();
+
+  final Entity player_closure = player;
+  b.addBehavior(new BehaviorCallback() {
+      public void update(float dt) {
+        Transform t = (Transform) player_closure.getComponent(TRANSFORM);
+        Motion m = (Motion) player_closure.getComponent(MOTION);
+
+        if (t.pos.x <= 0) {
+          t.pos.x = 0;
+          m.velocity.x = -m.velocity.x;
+        }
+
+        if (t.pos.x >= width) {
+          t.pos.x = width;
+          m.velocity.x = -m.velocity.x;
+        }
+
+        if (t.pos.y <= 0) {
+          t.pos.y = 0;
+          m.velocity.y = -m.velocity.y;
+        }
+
+        if (t.pos.y >= height) {
+          t.pos.y = height;
+          m.velocity.y = -m.velocity.y;
+        }
+      }
+  });
+
+  player.addComponent(b);
+
+
+  TweenSystem tween_system = new TweenSystem(world);
+  MovementSystem movement_system = new MovementSystem(world);
+  BehaviorSystem behavior_system = new BehaviorSystem(world);
 
   world.setSystem(tween_system);
+  world.setSystem(movement_system);
+  world.setSystem(behavior_system);
+
 
   tween_system.addTween(3, new TweenVariable() {
                               public float initial() { return this_rectangle.c.alpha; }
@@ -69,6 +93,12 @@ void draw()
   TweenSystem tween_system = (TweenSystem) world.getSystem(TWEEN_SYSTEM);
   tween_system.update(world.clock.dt);
 
+  MovementSystem movement_system = (MovementSystem) world.getSystem(MOVEMENT_SYSTEM);
+  movement_system.updateMovables(world.clock.dt);
+
+
+  BehaviorSystem behavior_system = (BehaviorSystem) world.getSystem(BEHAVIOR_SYSTEM);
+  behavior_system.updateBehaviors(world.clock.dt);
 
   background(63, 63, 63);
 
@@ -134,15 +164,34 @@ void keyPressed() {
   key = normalizeInput(key);
   println(key);
 
+  Motion m = (Motion) world.entity_manager.getComponent(player, MOTION);
+
+
   // TODO: http://processing.org/reference/keyCode.html
   if (key == INPUT_UP) {
     y--;
+    if (m.velocity.y >= 0) {
+      m.velocity.y = -100;
+    }
+    m.acceleration.y -= 50;
   } else if (key == INPUT_DOWN) {
     y++;
+    if (m.velocity.y <= 0) {
+      m.velocity.y = 100;
+    }
+    m.acceleration.y += 50;
   } else if (key == INPUT_LEFT) {
     x--;
+    if (m.velocity.x >= 0) {
+      m.velocity.x = -100;
+    }
+    m.acceleration.x -= 50;
   } else if (key == INPUT_RIGHT) {
     x++;
+    if (m.velocity.x <= 0) {
+      m.velocity.x = 100;
+    }
+    m.acceleration.x += 10;
   }
   
   if (key == 'I') {

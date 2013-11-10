@@ -12,7 +12,7 @@ class Entity {
       this.world.entity_manager.addComponent(this, c);
    }
 
-   Component getComponent(Entity e, String name) {
+   Component getComponent(String name) {
 
       return this.world.entity_manager.getComponent(this, name);
 
@@ -33,9 +33,11 @@ class Component {
 class System {
   
   String name;
+  World world;
   
-  System(String _name) {
+  System(String _name, World _w) {
     this.name = _name;
+    this.world = _w;
   }
   
 }

@@ -34,7 +34,7 @@ void runTweenTest() {
   assertTrue(tween.finished() == true, "Finished");
 
  
-  TweenSystem tween_system = new TweenSystem();
+  TweenSystem tween_system = new TweenSystem(new World());
 
 
 
@@ -110,7 +110,7 @@ void runSystemTests() {
 
   SystemManager sys = new SystemManager();
   
-  System foo = new System("Foo");
+  System foo = new System("Foo", new World());
   
   sys.addSystem(foo);
   

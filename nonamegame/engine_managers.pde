@@ -36,7 +36,7 @@ class EntityManager {
               return store.get(e);
           }
 
-      } 
+      }
       return null;
 
    }
