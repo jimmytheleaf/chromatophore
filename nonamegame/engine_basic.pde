@@ -1,10 +1,22 @@
 class Entity {
  
    int id;
+   World world;
   
-   Entity(int _id) {
+   Entity(int _id, World w) {
       this.id = _id; 
+      this.world = w;
    } 
+
+    void addComponent(Component c) {
+      this.world.entity_manager.addComponent(this, c);
+   }
+
+   Component getComponent(Entity e, String name) {
+
+      return this.world.entity_manager.getComponent(this, name);
+
+   }
   
 }
 

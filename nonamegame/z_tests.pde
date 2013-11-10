@@ -96,7 +96,7 @@ void runColorTests() {
 
 void runEntityTests() {
 
-  EntityManager em = new EntityManager();
+  EntityManager em = new EntityManager(new World());
   
   assertTrue(em.next_id == 1, "First ID should be 1");
   

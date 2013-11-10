@@ -13,6 +13,8 @@ int height = 640;
 
 World world;
 
+Entity player;
+
 class Rectangle {
 
   int x;
@@ -46,6 +48,9 @@ void setup()
 
   world = new World(960, 640);
 
+  player = world.entity_manager.newEntity();
+  player.addComponent(new Transform(500, 500));
+
   TweenSystem tween_system = new TweenSystem();
 
   world.setSystem(tween_system);
@@ -61,7 +66,7 @@ void draw()
 {
   world.updateClock();
 
-  TweenSystem tween_system = (TweenSystem) world.getSystem("TweenSystem");
+  TweenSystem tween_system = (TweenSystem) world.getSystem(TWEEN_SYSTEM);
   tween_system.update(world.clock.dt);
 
 
@@ -98,6 +103,11 @@ void draw()
   }
   
   fill(zbc[0], zbc[1], zbc[2]);
+
+  Transform t = (Transform) world.entity_manager.getComponent(player, TRANSFORM);
+  Vec2 player_position = t.pos;
+  ellipse(player_position.x, player_position.y, 100, 100);
+
 
   // Player
   rect(x * unit_length, y * unit_length, unit_length, unit_length);

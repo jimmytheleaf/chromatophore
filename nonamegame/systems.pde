@@ -4,7 +4,7 @@ class TweenSystem extends System {
 	HashMap<Tween, TweenVariable> tweens;
 
 	TweenSystem() {
-  		super("TweenSystem");
+  		super(TWEEN_SYSTEM);
 		tweens = new HashMap<Tween, TweenVariable>();
 
 	}

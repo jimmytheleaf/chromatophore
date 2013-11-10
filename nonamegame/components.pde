@@ -5,7 +5,7 @@ class Transform extends Component {
 	int z;
 
 	Transform(int x, int y) {
-  super("Transform");
+  		super(TRANSFORM);
   		this.pos = new Vec2(x, y);
 		this.z = 1;
 	}

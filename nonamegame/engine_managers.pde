@@ -1,15 +1,44 @@
 class EntityManager {
  
    int next_id;
-   
-   EntityManager() {
+   HashMap<String, HashMap<Entity, Component>> component_store;
+   World world;
+
+   EntityManager(World _w) {
       this.next_id = 1; 
+      this.component_store = new HashMap<String, HashMap<Entity, Component>>();
+      this.world = _w;
    }
    
    Entity newEntity() {
-      Entity e = new Entity(next_id);  
+      Entity e = new Entity(next_id, world);  
       next_id++;
       return e;
+   }
+
+   void addComponent(Entity e, Component c) {
+
+      HashMap<Entity, Component> store = this.component_store.get(c.name);
+      if (store == null) {
+        store = new HashMap<Entity, Component> ();
+        component_store.put(c.name, store);
+      }
+
+      store.put(e, c);
+
+   }
+
+   Component getComponent(Entity e, String name) {
+
+      if (this.component_store.containsKey(name)) {
+          HashMap<Entity, Component> store = this.component_store.get(name);
+          if (store.containsKey(e)) {
+              return store.get(e);
+          }
+
+      } 
+      return null;
+
    }
   
 }

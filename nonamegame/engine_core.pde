@@ -16,7 +16,7 @@ class World {
 
     World(int width, int height) {
       
-      this.entity_manager = new EntityManager();
+      this.entity_manager = new EntityManager(this);
       this.system_manager = new SystemManager();      
       this.tag_manager = new TagManager();
       this.group_manager = new GroupManager();
