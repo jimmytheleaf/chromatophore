@@ -2,10 +2,10 @@
 
 class Vec2 {
 
-	int x;
-	int y;
+	float x;
+	float y;
 
-	Vec2(int _x, int _y) {
+	Vec2(float _x, float _y) {
 		this.x = _x;
 		this.y = _y;
 	}
@@ -34,9 +34,9 @@ class Vec2 {
 		return this;
 	}
 
-	Vec2 multiply(Vec2 other) {
-		this.x *= other.x;
-		this.y *= other.y;
+	Vec2 multiply(float multiplier) {
+		this.x *= multiplier;
+		this.y *= multiplier;
 		return this;
 	}
 
@@ -62,6 +62,22 @@ class Vec2 {
 
 	float dist(Vec2 other) {
 		return sqrt(this.dist2(other));
+	}
+
+	Vec2 normalize() {
+
+		float l = this.len();
+	 	if ( l > 0) {
+			this.x /=  l;
+			this.y /= l;
+		}
+		return this;
+	}
+
+	Vec2 scaleTo(float dist) {
+		this.normalize();
+		this.multiply(dist);
+  return this;
 	}
 
 }
