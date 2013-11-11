@@ -92,6 +92,7 @@ void setup()
 
  final Shape player_shape = new Circle(t.pos, 50).setColor(new RGB(zbc[0], zbc[1], zbc[2], 255));
  player.addComponent(new RenderingComponent().addDrawable(player_shape));
+ player.addComponent(new Collider(player_shape));
 
  Behavior b = new Behavior();
 
@@ -186,6 +187,25 @@ void setup()
   fill(hsb.toRaw());
   rect(480, 0, 480, 640);
   */
+
+
+
+  final Entity rectang = world.entity_manager.newEntity();
+  Transform rt = new Transform(200, 200);
+  rectang.addComponent(rt);
+  final Shape rectang_shape = new Rectangle(rt.pos, 50, 100).setColor(new RGB(zbc[2], zbc[0], zbc[1], 255));
+  rectang.addComponent(new RenderingComponent().addDrawable(rectang_shape));
+  rectang.addComponent(new Collider(rectang_shape));
+
+  final Entity circl = world.entity_manager.newEntity();
+  Transform ct = new Transform(600, 200);
+  circl.addComponent(ct);
+  final Shape circl_shape = new Circle(ct.pos, 75).setColor(new RGB(zbc[2], zbc[1], zbc[0], 255));
+  circl.addComponent(new RenderingComponent().addDrawable(circl_shape));
+  circl.addComponent(new Collider(circl_shape));
+
+  collision_system.watchCollision(player, rectang);
+  collision_system.watchCollision(player, circl);
 }
 
 void update(float dt) {
@@ -193,20 +213,29 @@ void update(float dt) {
   TweenSystem tween_system = (TweenSystem) world.getSystem(TWEEN_SYSTEM);
   tween_system.update(dt);
 
-  MovementSystem movement_system = (MovementSystem) world.getSystem(MOVEMENT_SYSTEM);
-  movement_system.updateMovables(dt);
+  InputSystem input_system = (InputSystem) world.getSystem(INPUT_SYSTEM);
+  input_system.updateInputs(dt);
 
   BehaviorSystem behavior_system = (BehaviorSystem) world.getSystem(BEHAVIOR_SYSTEM);
   behavior_system.updateBehaviors(dt);
 
-  InputSystem input_system = (InputSystem) world.getSystem(INPUT_SYSTEM);
-  input_system.updateInputs(dt);
+  MovementSystem movement_system = (MovementSystem) world.getSystem(MOVEMENT_SYSTEM);
+  movement_system.updateMovables(dt);
+
+  CollisionSystem collision_system = (CollisionSystem) world.getSystem(COLLISION_SYSTEM);
+
+  ArrayList<CollisionPair> collisions = collision_system.getCollisions();
+
+  printDebug("Detected collisions: " + collisions.size());
+  
+
 }
 
 
 void draw() 
 {
-  colorMode(RGB, 255, 255, 255, 255);
+
+  background(63, 63, 63);
 
   world.updateClock();
 
@@ -244,4 +273,3 @@ void keyPressed() {
   input_system.keyPressed(key);
 
 }
-

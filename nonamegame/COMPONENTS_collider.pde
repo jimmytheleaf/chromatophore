@@ -10,6 +10,10 @@ class CollisionPair {
 		this.a = _a;
 		this.b = _b;
 	}
+
+	boolean involvesTheseEntities(Entity _a, Entity _b) {
+		return (this.a == _a && this.b == _b) || (this.b == _a && this.a == _b);
+	} 
 }
 
 class Collider extends Component {

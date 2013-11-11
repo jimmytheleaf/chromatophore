@@ -64,6 +64,16 @@ class Vec2 {
 		return sqrt(this.dist2(other));
 	}
 
+	float dist2(float x, float y) {
+		float dx = this.x - x;
+		float dy = this.y - y;
+		return (dx * dx + dy * dy);
+	}
+
+	float dist(float x, float y) {
+		return sqrt(this.dist2(x, y));
+	}
+
 	Vec2 normalize() {
 
 		float l = this.len();

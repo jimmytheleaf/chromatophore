@@ -3,6 +3,8 @@ void assertTrue(boolean conditional, String message) throws RuntimeException {
   
   if (!conditional) {
      throw new RuntimeException("Assertion Error: " + message); 
+  } else {
+    printDebug("Test passed: " + message);
   }
 }
   
@@ -46,6 +48,46 @@ void runCollisionTests() {
   cs.watchCollision(a, b);
   cs.reset();
   assertTrue(cs.collisions_to_watch.size() == 0, "Shouldn't have anything to watch");
+
+
+  Point p1 = new Point(10, 10);
+  Point p2 = new Point(10, 21);
+  Point p3 = new Point(10, 21);
+
+  Circle c1 = new Circle(10, 10, 10);
+  Circle c2 = new Circle(19, 10, 10);
+  Circle c3 = new Circle(31, 10, 10);
+
+  Rectangle r1 = new Rectangle (9, 9, 10, 10);
+  Rectangle r2 = new Rectangle (19, 19, 10, 10);
+  Rectangle r3 = new Rectangle (39, 39, 10, 10);
+
+  // Point collisions
+  assertTrue(!cs.checkCollision(p1, p1), "Shape doesn't collide with self");
+  assertTrue(!cs.checkCollision(p1, p2), "Different points shouldn't collide");
+  assertTrue(cs.checkCollision(p2, p3), "Points in the same spot should collide");
+  assertTrue(cs.checkCollision(p1, c1), "Point is inside shape");
+  assertTrue(cs.checkCollision(p1, r1), "Point is inside shape");
+
+  // Circle Collisions
+  assertTrue(cs.checkCollision(c1, p1), "Point is inside shape");
+  assertTrue(!cs.checkCollision(c3, p1), "Point is not inside shape");
+  assertTrue(cs.checkCollision(c1, c2), "Circles overlap");
+  assertTrue(cs.checkCollision(c2, c1), "Circles overlap");
+  assertTrue(!cs.checkCollision(c1, c3), "Circles don't overlap");
+  assertTrue(!cs.checkCollision(c3, c1), "Circles don't overlap");
+  assertTrue(cs.checkCollision(c1, r1), "Rectangle collides with circle");
+  assertTrue(!cs.checkCollision(c1, r3), "Rectangle does not collide with circle");
+
+  // Rectangle Collisions
+  assertTrue(cs.checkCollision(r1, p1), "Point is inside rectangle");
+  assertTrue(!cs.checkCollision(r1, p3), "Point is not shape");
+  assertTrue(cs.checkCollision(r1, c1), "Rectangle collides with circle");
+  assertTrue(!cs.checkCollision(r1, c3), "Rectangle does not collide with circle");
+  assertTrue(cs.checkCollision(r1, r2), "Rectangle collides with rectangle");
+  assertTrue(!cs.checkCollision(r1, r3), "Rectangle does not collide with rectangle");
+
+
 
 }
 

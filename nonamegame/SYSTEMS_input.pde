@@ -21,7 +21,7 @@ class InputSystem extends System {
 
   void keyPressed(int key) {
 
-    printDebug("Key pressed called on " + (char) key);
+    // printDebug("Key pressed called on " + (char) key);
 
     if (input_to_action.containsKey(key)) {
       String action = input_to_action.get(key);
@@ -31,7 +31,7 @@ class InputSystem extends System {
   }
 
   void keyReleased(int key) {
-    printDebug("Key released called on " + (char) key);
+    // printDebug("Key released called on " + (char) key);
     if (input_to_action.containsKey(key)) {
       String action = input_to_action.get(key);
       held_actions.remove(action);

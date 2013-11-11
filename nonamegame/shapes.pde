@@ -1,5 +1,5 @@
 
-abstract class Shape implements Drawable {
+abstract class Shape implements Drawable, Collidable {
 
   final Vec2 pos;
   IColor clr;
@@ -48,11 +48,16 @@ class Point extends Shape {
 }
 
 
-class Rectangle extends Shape {
+class Rectangle extends Shape  {
 
   int width; 
   int height;
 
+  Rectangle(Vec2 pos, int width, int height) {
+    super(pos);
+    this.width = width;
+    this.height = height;
+  }
   Rectangle(float x, float y, int width, int height) {
     super(x, y);
     this.width = width;
