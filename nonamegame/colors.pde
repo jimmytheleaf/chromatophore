@@ -136,12 +136,15 @@ class HSB implements IColor {
   
    // Stay in RGB most of the time
   int toRaw() {
+
     colorMode(HSB, 360, 100, 100, 255);
     int c = color(this.h, this.s, this.b, this.a);
     colorMode(RGB, 255, 255, 255, 255);
-    return c;
-  }
   
+    return c;
+
+  }
+
   void setFromRaw(int raw) {
 
       colorMode(HSB, 360, 100, 100, 255);

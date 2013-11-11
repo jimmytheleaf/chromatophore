@@ -6,7 +6,7 @@ World world;
 void setup() 
 {
 
-  size(960, 640);
+  size(960, 640, P2D);
   runTests();
   colorMode(RGB, 255, 255, 255, 255);
 
@@ -122,7 +122,8 @@ void setup()
   });
 
  // Shift to analagous colors
-   
+ 
+ /* 
  b.addBehavior(new BehaviorCallback() {
 
       final HSB player_hsb = new HSB(player_shape.getColor().toRaw());
@@ -162,15 +163,27 @@ void setup()
 
       }
   });
-   
+  */
 
   player.addComponent(b);
 
-  /*
 
-  */
   background(63, 63, 63);
   noStroke();
+  
+  /*
+  int c = color(50, 100, 150, 255);
+  printDebug("Color initialized in rgb: " + c);
+  
+  fill(c);
+  rect(0, 0, 480, 640);
+  HSB hsb = new HSB(c);
+  printDebug("Color output to: " + hsb.toRaw() + " (hue: " + hsb.h + ", Sat: " + hsb.s + ", Bri: " + hsb.b + ", Alpha: " + hsb.a + ")");
+
+
+  fill(hsb.toRaw());
+  rect(480, 0, 480, 640);
+  */
 }
 
 void update(float dt) {
@@ -191,6 +204,8 @@ void update(float dt) {
 
 void draw() 
 {
+  colorMode(RGB, 255, 255, 255, 255);
+
   world.updateClock();
 
   update(world.clock.dt);
@@ -227,4 +242,4 @@ void keyPressed() {
   input_system.keyPressed(key);
 
 }
-  
+
