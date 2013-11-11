@@ -122,43 +122,47 @@ void setup()
   });
 
  // Shift to analagous colors
+   
  b.addBehavior(new BehaviorCallback() {
 
       final HSB player_hsb = new HSB(player_shape.getColor().toRaw());
            
       ArrayList<IColor> analagous = new AnalagousHarmony().generate(player_hsb);
       int current = 0;
-      HSB next_color = new HSB(player_hsb.toRaw());
+      HSB next_color = player_hsb;
 
+      int i = 0;
       public void update(float dt) {
 
         player_shape.setColor(player_hsb);
-  
-        if (player_shape.getColor().toRaw() == next_color.toRaw()) {
+        
+        printDebug("Got here: " + ((HSB) player_shape.clr).h + " , " + next_color.h);
 
+        if (((HSB) player_shape.clr).h == next_color.h) {
+          printDebug("Got here: " + ((HSB) player_shape.clr).h + " , " + next_color.h);
           current++;
           if (current >= analagous.size()) {
+            i++;
             current = 0;
           }
 
 
           next_color = new HSB(analagous.get(current).toRaw());
 
+        
           tween_system.addTween(0.1, new TweenVariable() {
                               public float initial() {           
-                                printDebug("Got here initial");
-                                return player_hsb.hue; }
+                                return ((HSB) player_shape.clr).h; }
                               public void setValue(float value) { 
-                                                                printDebug("Got here set");
-
-                                player_hsb.hue = int(value); 
+                                ((HSB) player_shape.clr).h = int(value); 
                               }  
-                          }, next_color.hue, EasingFunctions.linear);
+                          }, next_color.h, EasingFunctions.linear);
+       
         }
 
       }
   });
-
+   
 
   player.addComponent(b);
 

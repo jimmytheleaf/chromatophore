@@ -26,6 +26,8 @@ abstract class Shape implements Drawable {
 
   public abstract void draw();
 
+  // public abstract boolean collidesWith(Collidable collidable)
+
 }
 
 class Point extends Shape {

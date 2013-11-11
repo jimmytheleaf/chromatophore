@@ -81,9 +81,9 @@ void runColorTests() {
 
    int c = color(50, 100, 150);
    
-   assertTrue(r(c) == 50, "Red value should be 50, is " + r(c));
-   assertTrue(g(c) == 100, "Green value should be 100, is " + g(c));
-   assertTrue(b(c) == 150, "Blue value should be 150, is " + b(c));
+   assertTrue(bitwiseR(c) == 50, "Red value should be 50, is " + bitwiseR(c));
+   assertTrue(bitwiseG(c) == 100, "Green value should be 100, is " + bitwiseG(c));
+   assertTrue(bitwiseB(c) == 150, "Blue value should be 150, is " + bitwiseB(c));
    
    IColor tt = new TwoTone(true);
    
@@ -96,9 +96,9 @@ void runColorTests() {
    
    assertTrue(rgb.toRaw() == c, "To and from raw RGB should be symmetrical");   
    assertTrue(rgb.toRaw() == c, "To and from raw RGB should be symmetrical, make sure no hsb side effects");   
-   assertTrue(rgb.r == 50, "Should parse 50 red");   
-   assertTrue(rgb.g == 100, "Should parse 50 red");   
-   assertTrue(rgb.b == 150, "Should parse 50 red");   
+   assertTrue(rgb.r + 0 == 50, "Should parse 50 red");   
+   assertTrue(rgb.g + 0 == 100, "Should parse 50 red");   
+   assertTrue(rgb.b + 0 == 150, "Should parse 50 red");   
 
 
   /* This doesn't assert true, but is close enough, as the below test shows.

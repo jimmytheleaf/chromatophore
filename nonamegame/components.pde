@@ -3,7 +3,34 @@ String TRANSFORM = "Transform";
 String MOTION = "Motion";
 String BEHAVIOR = "Behavior";
 String INPUT_RESPONSE = "INPUT_RESPONSE";
+String COLLIDER = "Collider";
 
+
+interface Collidable {
+	public boolean collidesWith(Collidable collidable);
+}
+
+class CollisionEvent {
+
+	Entity a;
+	Entity b;
+
+	CollisionEvent(Entity _a, Entity _b) {
+		this.a = _a;
+		this.b = _b;
+	}
+}
+
+class Collider extends Component {
+
+	Collidable collidable;
+
+	Collider(Collidable _collidable) {
+		super(COLLIDER); // ha
+		this.collidable = _collidable;
+	}
+
+}
 
 class Transform extends Component {
 

@@ -1,17 +1,18 @@
 
 int[] zbc = {147, 176, 205};
 
-float r(int rgb) {
+float bitwiseR(int rgb) {
   return rgb >> 16 & 0xFF;
 }
 
-float g(int rgb) {
+float bitwiseG(int rgb) {
   return rgb >> 8 & 0xFF;
 }
 
-float b(int rgb) {
+float bitwiseB(int rgb) {
   return rgb & 0xFF;
 }
+
 
 interface IColor {  
   
@@ -35,7 +36,7 @@ class TwoTone implements IColor {
    }
    
    void setFromRaw(int full) {
-     int value = int((r(full) + g(full) + b(full)) / 3);
+     int value = int((bitwiseR(full) + bitwiseG(full) + bitwiseB(full)) / 3);
      if (value > 128) {
        this.on = true;
      } else {
@@ -63,7 +64,7 @@ class Greyscale implements IColor {
    void setFromRaw(int full) {
      
       // Average RGB values
-      this.value = int((r(full) + g(full) + b(full)) / 3);
+      this.value = int((bitwiseR(full) + bitwiseG(full) + bitwiseB(full)) / 3);
       this.alpha = alpha(full);
  
    }
@@ -97,9 +98,9 @@ class RGB implements IColor {
    
    void setFromRaw(int full) {
   
-     this.r = int(r(full));
-     this.g = int(g(full));
-     this.b = int(b(full));
+     this.r = int(bitwiseR(full));
+     this.g = int(bitwiseG(full));
+     this.b = int(bitwiseB(full));
      this.a = int(alpha(full));
   
    }
@@ -108,12 +109,17 @@ class RGB implements IColor {
 
 class HSB implements IColor {
 
-  int hue;
-  int saturation;
-  int brightness;
-  int alpha;
+  int h;
+  int s;
+  int b;
+  int a;
  
   HSB(int raw) {
+    this.h = 0;
+    this.s = 0;
+    this.b = 0;
+    this.a = 0;
+
     this.setFromRaw(raw);
   }
 
@@ -122,16 +128,16 @@ class HSB implements IColor {
   }
   
   HSB(int _hue, int _saturation, int _brightness, int _alpha) {
-      this.hue = _hue;
-      this.saturation = _saturation;
-      this.brightness = _brightness;
-      this.alpha = _alpha;
+      this.h = _hue;
+      this.s = _saturation;
+      this.b = _brightness;
+      this.a = _alpha;
   }
   
    // Stay in RGB most of the time
   int toRaw() {
     colorMode(HSB, 360, 100, 100, 255);
-    int c = color(this.hue, this.saturation, this.brightness, this.alpha);
+    int c = color(this.h, this.s, this.b, this.a);
     colorMode(RGB, 255, 255, 255, 255);
     return c;
   }
@@ -139,12 +145,11 @@ class HSB implements IColor {
   void setFromRaw(int raw) {
 
       colorMode(HSB, 360, 100, 100, 255);
-      this.hue = int(hue(raw));
-      this.saturation = int(saturation(raw));
-      this.brightness = int(brightness(raw));
-      this.alpha = int(alpha(raw));
+      this.h = int(hue(raw));
+      this.s = int(saturation(raw));
+      this.b = int(brightness(raw));
+      this.a = int(alpha(raw));
       colorMode(RGB, 255, 255, 255, 255);
-
   }
   
 }
@@ -172,9 +177,9 @@ class TriadHarmony implements Harmony {
   ArrayList<IColor> generate(IColor clr) {
     ArrayList<IColor> list = new ArrayList<IColor>(); 
     HSB hsb = new HSB(clr.toRaw());
-    list.add(new HSB(hsb.hue, hsb.saturation, hsb.brightness));
-    list.add(new HSB(hsb.hue + 120 % 360, hsb.saturation, hsb.brightness));
-    list.add(new HSB(hsb.hue + 240 % 360, hsb.saturation, hsb.brightness));  
+    list.add(new HSB(hsb.h, hsb.s, hsb.b));
+    list.add(new HSB(hsb.h + 120 % 360, hsb.s, hsb.b));
+    list.add(new HSB(hsb.h + 240 % 360, hsb.s, hsb.b));  
     return list;
   }
 }
@@ -185,11 +190,11 @@ class MonochromeHarmony implements Harmony {
   ArrayList<IColor> generate(IColor clr) {
     ArrayList<IColor> list = new ArrayList<IColor>();
     HSB hsb = new HSB(clr.toRaw());
-    list.add(new HSB(hsb.hue, hsb.saturation, hsb.brightness));
-    list.add(new HSB(hsb.hue, hsb.saturation + 20 % 100, hsb.brightness));
-    list.add(new HSB(hsb.hue, hsb.saturation + 40 % 100, hsb.brightness));
-    list.add(new HSB(hsb.hue, hsb.saturation + 60 % 100, hsb.brightness));
-    list.add(new HSB(hsb.hue, hsb.saturation + 80 % 100, hsb.brightness)); 
+    list.add(new HSB(hsb.h, hsb.s, hsb.b));
+    list.add(new HSB(hsb.h, hsb.s + 20 % 100, hsb.b));
+    list.add(new HSB(hsb.h, hsb.s + 40 % 100, hsb.b));
+    list.add(new HSB(hsb.h, hsb.s + 60 % 100, hsb.b));
+    list.add(new HSB(hsb.h, hsb.s + 80 % 100, hsb.b)); 
     return list;
   }
 }
@@ -197,11 +202,11 @@ class AnalagousHarmony implements Harmony {
   ArrayList<IColor> generate(IColor clr) {
     ArrayList<IColor> list = new ArrayList<IColor>();
     HSB hsb = new HSB(clr.toRaw());
-    list.add(new HSB(hsb.hue - 40 % 360, hsb.saturation, hsb.brightness));
-    list.add(new HSB(hsb.hue - 20 % 360, hsb.saturation, hsb.brightness));
-    list.add(new HSB(hsb.hue, hsb.saturation, hsb.brightness));
-    list.add(new HSB(hsb.hue + 20 % 360, hsb.saturation, hsb.brightness));
-    list.add(new HSB(hsb.hue + 40 % 360, hsb.saturation, hsb.brightness));
+    list.add(new HSB(hsb.h - 40 % 360, hsb.s, hsb.b));
+    list.add(new HSB(hsb.h - 20 % 360, hsb.s, hsb.b));
+    list.add(new HSB(hsb.h, hsb.s, hsb.b));
+    list.add(new HSB(hsb.h + 20 % 360, hsb.s, hsb.b));
+    list.add(new HSB(hsb.h + 40 % 360, hsb.s, hsb.b));
     return list;  
   }
 }
@@ -210,15 +215,11 @@ class ShadeHarmony implements Harmony {
   ArrayList<IColor> generate(IColor clr) {
     ArrayList<IColor> list = new ArrayList<IColor>();
     HSB hsb = new HSB(clr.toRaw());
-    list.add(new HSB(hsb.hue, hsb.saturation, hsb.brightness));
-    list.add(new HSB(hsb.hue, hsb.saturation, hsb.brightness + 20 % 100));
-    list.add(new HSB(hsb.hue, hsb.saturation, hsb.brightness + 40 % 100));
-    list.add(new HSB(hsb.hue, hsb.saturation, hsb.brightness + 60 % 100));
-    list.add(new HSB(hsb.hue, hsb.saturation, hsb.brightness + 80 % 100));
+    list.add(new HSB(hsb.h, hsb.s, hsb.b));
+    list.add(new HSB(hsb.h, hsb.s, hsb.b + 20 % 100));
+    list.add(new HSB(hsb.h, hsb.s, hsb.b + 40 % 100));
+    list.add(new HSB(hsb.h, hsb.s, hsb.b + 60 % 100));
+    list.add(new HSB(hsb.h, hsb.s, hsb.b + 80 % 100));
     return list;
   }
 }
-
-
-
-
