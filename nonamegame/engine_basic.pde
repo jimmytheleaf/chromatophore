@@ -23,9 +23,11 @@ class Entity {
 class Component {
 
   String name;
+  boolean active;
   
   Component(String _name) {
     this.name = _name;
+    this.active = true;
   }
 
 }

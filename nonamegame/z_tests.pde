@@ -13,7 +13,42 @@ void runTests() {
    runColorTests();
    runSceneTests();
    runTweenTest();
+   runCollisionTests();
+
 }
+void runCollisionTests() {
+
+  World w = new World();
+  CollisionSystem cs = new CollisionSystem(w);
+
+  Entity a = w.entity_manager.newEntity();
+  Entity b = w.entity_manager.newEntity();
+
+  cs.stopWatchingCollisionsFrom(a);
+  cs.stopWatchingCollisionsFrom(b);
+  cs.stopWatchingCollisionsTo(a);
+  cs.stopWatchingCollisionsTo(b);
+
+  assertTrue(cs.collisions_to_watch.size() == 0, "Shouldn't have anything to watch");
+
+  cs.watchCollision(a, b);
+  assertTrue(cs.collisions_to_watch.size() == 1, "Should have 1 thing to watch");
+
+  cs.stopWatchingCollisionsFrom(a);
+  assertTrue(cs.collisions_to_watch.size() == 0, "Shouldn't have anything to watch");
+  
+  cs.watchCollision(a, b);
+  assertTrue(cs.collisions_to_watch.size() == 1, "Should have 1 thing to watch");
+
+  cs.stopWatchingCollisionsTo(b);
+  assertTrue(cs.collisions_to_watch.size() == 0, "Shouldn't have anything to watch");
+
+  cs.watchCollision(a, b);
+  cs.reset();
+  assertTrue(cs.collisions_to_watch.size() == 0, "Shouldn't have anything to watch");
+
+}
+
 
 void runTweenTest() {
 

@@ -17,12 +17,14 @@ void setup()
   BehaviorSystem behavior_system = new BehaviorSystem(world);
   InputSystem input_system = new InputSystem(world);
   RenderingSystem rendering_system = new RenderingSystem(world);
+  CollisionSystem collision_system = new CollisionSystem(world);
 
   world.setSystem(tween_system);
   world.setSystem(movement_system);
   world.setSystem(behavior_system);
   world.setSystem(input_system);
   world.setSystem(rendering_system);
+  world.setSystem(collision_system);
 
   input_system.registerInput('W', ACTION_UP);
   input_system.registerInput('S', ACTION_DOWN);
