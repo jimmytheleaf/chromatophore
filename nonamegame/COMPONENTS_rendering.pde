@@ -1,22 +1,25 @@
 String RENDERING = "RenderingComponent";
 
 class RenderingComponent extends Component {
-	
-	ArrayList<Drawable> drawables;
 
-	RenderingComponent() {
-		super(RENDERING);
-		this.drawables = new ArrayList<Drawable>();
-	}
+  HashMap<Drawable, Integer> drawables;
 
-	RenderingComponent addDrawable(Drawable d) {
-		this.drawables.add(d);
-		return this;
-	}
+  RenderingComponent() {
+    super(RENDERING);
+    this.drawables = new HashMap<Drawable, Integer>();
+  }
 
-	RenderingComponent reset() {
-		this.drawables = new ArrayList<Drawable>();
-		return this;
-	}
+  RenderingComponent addDrawable(Drawable d) {
+    return this.addDrawable(d, 1);
+  }
 
+  RenderingComponent addDrawable(Drawable d, Integer layer) {
+    this.drawables.put(d, layer);
+    return this;
+  }
+
+  RenderingComponent reset() {
+    this.drawables = new HashMap<Drawable, Integer>();
+    return this;
+  }
 }

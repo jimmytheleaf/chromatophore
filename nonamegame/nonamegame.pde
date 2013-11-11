@@ -91,7 +91,7 @@ void setup()
   player.addComponent(r);
 
  final Shape player_shape = new Circle(t.pos, 50).setColor(new RGB(zbc[0], zbc[1], zbc[2], 255));
- player.addComponent(new RenderingComponent().addDrawable(player_shape));
+ player.addComponent(new RenderingComponent().addDrawable(player_shape, 0));
  player.addComponent(new Collider(player_shape));
 
  Behavior b = new Behavior();
