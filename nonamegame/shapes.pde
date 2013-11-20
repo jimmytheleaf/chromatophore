@@ -93,7 +93,6 @@ class Circle extends Shape {
     this.radius = radius;
   }
 
-
   void draw() {
     fill(this.getColor().toRaw());
     ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
@@ -102,6 +101,5 @@ class Circle extends Shape {
   String toString() {
       return "Circle: (" + this.pos.x + ", " + this.pos.y + ", r= " + this.radius + ")";
   }
-
   
 }

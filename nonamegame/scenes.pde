@@ -75,40 +75,39 @@ class TestLevel extends BaseScene {
 
           Entity player = p.a;
 
+          Transform t = (Transform) player.getComponent(TRANSFORM);
+          Circle player_shape = (Circle) ((ShapeComponent) player.getComponent(SHAPE)).shape;
+          Motion m = (Motion) player.getComponent(MOTION);
+
           if (p.b == world.getTaggedEntity(TAG_WALL_LEFT)) {
 
-
             printDebug("Collided: PLAYER and LEFT WALL");
-
-            Transform t = (Transform) player.getComponent(TRANSFORM);
-
-            // Hack
-            //Rectangle shape = (Rectangle) ((Collider) p.b.getComponent(COLLIDER)).getShape();
-
-            Motion m = (Motion) player.getComponent(MOTION);
+            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
             m.velocity.x = -m.velocity.x;
+            t.pos.x = wall.pos.x + wall.width + player_shape.radius;
 
           } else if (p.b == world.getTaggedEntity(TAG_WALL_RIGHT)) {
             printDebug("Collided: PLAYER and RIGHT WALL");
 
-            Transform t = (Transform) player.getComponent(TRANSFORM);
-            Motion m = (Motion) player.getComponent(MOTION);
+            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
             m.velocity.x = -m.velocity.x;
+            t.pos.x = wall.pos.x - player_shape.radius;
+
 
           } else if (p.b == world.getTaggedEntity(TAG_WALL_TOP)) {
-            printDebug("Collided: PLAYER and TOP WALL");
-          
 
-            Transform t = (Transform) player.getComponent(TRANSFORM);
-            Motion m = (Motion) player.getComponent(MOTION);
+            printDebug("Collided: PLAYER and TOP WALL");
+            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
             m.velocity.y = -m.velocity.y;
+            t.pos.y = wall.pos.y + wall.height + player_shape.radius;
 
           } else if (p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
-            printDebug("Collided: PLAYER and BOTTOM WALL");
 
-            Transform t = (Transform) player.getComponent(TRANSFORM);
-            Motion m = (Motion) player.getComponent(MOTION);
+            printDebug("Collided: PLAYER and BOTTOM WALL");
+            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
             m.velocity.y = -m.velocity.y;
+            t.pos.y = wall.pos.y - player_shape.radius;
+
           }  
 
         }
