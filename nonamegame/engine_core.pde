@@ -6,6 +6,7 @@ class World {
     SystemManager system_manager;
     TagManager tag_manager;
     GroupManager group_manager;
+    SceneManager scene_manager;
 
     ViewPort view_port;
     Clock clock;
@@ -16,14 +17,27 @@ class World {
 
     World(int width, int height) {
       
+      // Entity management
       this.entity_manager = new EntityManager(this);
-      this.system_manager = new SystemManager();      
       this.tag_manager = new TagManager();
       this.group_manager = new GroupManager();
+
+      // Systems and scenes
+      this.system_manager = new SystemManager();      
+      this.scene_manager = new SceneManager();
       
    	  this.view_port = new ViewPort(width, height);
    	  this.clock = new Clock();
+      
     }
+
+    void resetEntities() {
+      this.entity_manager = new EntityManager(this);
+      this.tag_manager = new TagManager();
+      this.group_manager = new GroupManager();
+
+    }
+
 
     void setSystem(System s) {
     	this.system_manager.addSystem(s);
@@ -46,6 +60,15 @@ class World {
 		
 
     	return clock.dt;
+    }
+
+    Entity tagEntity(Entity entity, String tag) {
+    	tag_manager.registerEntity(tag, entity);
+    	return entity;
+    }
+
+    Entity getTaggedEntity(String tag) {
+    	return tag_manager.getEntity(tag);
     }
 
 }

@@ -3,7 +3,9 @@ interface BehaviorCallback {
 	void update(float dt);
 }
 
-interface Collidable {}
+interface Collidable {
+	Shape getShape();
+}
 
 interface InputResponseFunction {
 
@@ -12,4 +14,5 @@ interface InputResponseFunction {
 
 interface Drawable {
 	public void draw();
+	public String toString();
 }

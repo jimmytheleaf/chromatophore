@@ -81,6 +81,20 @@ class SceneManager {
     return this.scenes.get(name);
   }
 
+  void setCurrentScene(String name) {
+    this.current_scene = this.scenes.get(name);
+    this.current_scene.enter();
+  }
+
+  void setCurrentScene(Scene scene) {
+    this.current_scene = scene;
+    this.current_scene.enter();
+  }
+
+  Scene getCurrentScene() {
+    return this.current_scene;
+  }
+
 
 }
 
@@ -110,7 +124,14 @@ class GroupManager {
       group_to_entities = new MultiMap<String, Entity>();
     }
 
-    // TODO
+    /*
+    void addEntityToGroup(Entity e, String g) {
+      group_to_entities.put(g, e);
+    }
+
+    Entity[] getEntitiesInGroup(String group) {
+      return group_to_entities
+    }*/
 
 }
 

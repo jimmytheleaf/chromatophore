@@ -2,11 +2,11 @@ String RENDERING = "RenderingComponent";
 
 class RenderingComponent extends Component {
 
-  HashMap<Drawable, Integer> drawables;
+  HashMap<Drawable, Integer> drawables_to_layer;
 
   RenderingComponent() {
     super(RENDERING);
-    this.drawables = new HashMap<Drawable, Integer>();
+    this.drawables_to_layer = new HashMap<Drawable, Integer>();
   }
 
   RenderingComponent addDrawable(Drawable d) {
@@ -14,12 +14,12 @@ class RenderingComponent extends Component {
   }
 
   RenderingComponent addDrawable(Drawable d, Integer layer) {
-    this.drawables.put(d, layer);
+    this.drawables_to_layer.put(d, layer);
     return this;
   }
 
   RenderingComponent reset() {
-    this.drawables = new HashMap<Drawable, Integer>();
+    this.drawables_to_layer = new HashMap<Drawable, Integer>();
     return this;
   }
 }

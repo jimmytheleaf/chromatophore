@@ -24,12 +24,11 @@ class RenderingSystem extends System {
       // Sort out by layer
       for (Entity e : this.world.entity_manager.component_store.get(RENDERING).keySet()) {
 
-
         RenderingComponent r = (RenderingComponent) e.getComponent(RENDERING);
 
-        for (Drawable d : r.drawables.keySet()) {
+        for (Drawable d : r.drawables_to_layer.keySet()) {
 
-          int z = r.drawables.get(d);
+          int z = r.drawables_to_layer.get(d);
 
           if (!this.z_tracker.containsKey(z)) {
             this.z_tracker.put(z, new ArrayList<Drawable>());
@@ -47,7 +46,7 @@ class RenderingSystem extends System {
         }
 
       }
-
+      
       for (int i = max_z; i >= min_z; i--) {
 
         if (this.z_tracker.containsKey(i)) {
@@ -57,6 +56,7 @@ class RenderingSystem extends System {
           }
         }
       }
+      
     }
   }
 }

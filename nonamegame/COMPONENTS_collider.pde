@@ -25,5 +25,9 @@ class Collider extends Component {
 		this.collidable = _collidable;
 	}
 
+	Shape getShape() {
+		return this.collidable.getShape();
+	}
+
 }
 

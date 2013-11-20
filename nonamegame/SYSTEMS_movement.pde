@@ -10,14 +10,18 @@ class MovementSystem extends System {
 
     // Bizarre way to get around including Set
 
-      // Entities with motion
-    for (Entity e : this.world.entity_manager.component_store.get(MOTION).keySet()) {
 
-      if (this.world.entity_manager.component_store.get(TRANSFORM).containsKey(e)) {
+   HashMap<Entity, Component> motion_store = this.world.entity_manager.component_store.get(MOTION);
 
-        Transform t = (Transform) e.getComponent(TRANSFORM);
-        Motion m = (Motion) e.getComponent(MOTION);
-        this.update(t, m, dt);
+  if (motion_store != null) {
+      for (Entity e : motion_store.keySet()) {
+
+        if (this.world.entity_manager.component_store.get(TRANSFORM).containsKey(e)) {
+
+          Transform t = (Transform) e.getComponent(TRANSFORM);
+          Motion m = (Motion) e.getComponent(MOTION);
+          this.update(t, m, dt);
+        }
       }
     }
   }

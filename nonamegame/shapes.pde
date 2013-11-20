@@ -28,6 +28,10 @@ abstract class Shape implements Drawable, Collidable {
 
   // public abstract boolean collidesWith(Collidable collidable)
 
+  // Dumb collider thing
+  Shape getShape() {
+    return this;
+  }
 }
 
 class Point extends Shape {
@@ -43,6 +47,10 @@ class Point extends Shape {
   void draw() {
     fill(this.getColor().toRaw());
     point(this.pos.x, this.pos.y);
+  }
+
+  String toString() {
+      return "Point: (" + this.pos.x + ", " + this.pos.y + ")";
   }
 
 }
@@ -69,6 +77,10 @@ class Rectangle extends Shape  {
     rect(this.pos.x, this.pos.y, this.width, this.height);
   }
 
+  String toString() {
+      return "Rectangle: (" + this.pos.x + ", " + this.pos.y + ", w=" + this.width + " h=" + this.height + ")";
+  }
+
 }
 
 class Circle extends Shape {
@@ -90,5 +102,10 @@ class Circle extends Shape {
     fill(this.getColor().toRaw());
     ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
   }
+
+  String toString() {
+      return "Circle: (" + this.pos.x + ", " + this.pos.y + ", r= " + this.radius + ")";
+  }
+
   
 }
