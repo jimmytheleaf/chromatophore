@@ -3,9 +3,7 @@ interface BehaviorCallback {
 	void update(float dt);
 }
 
-interface Collidable {
-	Shape getShape();
-}
+interface Collidable {}
 
 interface InputResponseFunction {
 

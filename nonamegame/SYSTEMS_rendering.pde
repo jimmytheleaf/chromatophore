@@ -2,16 +2,16 @@ String RENDERING_SYSTEM = "RenderingSystem";
 
 class RenderingSystem extends System {
 
-  HashMap<Integer, ArrayList<Drawable>> z_tracker;
+  HashMap<Integer, ArrayList<ShapeComponent>> z_tracker;
 
   RenderingSystem(World w) {
     super(RENDERING_SYSTEM, w);
-    this.z_tracker = new HashMap<Integer, ArrayList<Drawable>>();
+    this.z_tracker = new HashMap<Integer, ArrayList<ShapeComponent>>();
   }
 
   void drawDrawables() { 
 
-    if (this.world.entity_manager.component_store.containsKey(RENDERING)) {
+    if (this.world.entity_manager.component_store.containsKey(SHAPE)) {
 
       // Clear arrays
       for (Integer key :  this.z_tracker.keySet()) {
@@ -22,27 +22,24 @@ class RenderingSystem extends System {
       int max_z = -100000;
 
       // Sort out by layer
-      for (Entity e : this.world.entity_manager.component_store.get(RENDERING).keySet()) {
+      for (Entity e : this.world.entity_manager.component_store.get(SHAPE).keySet()) {
 
-        RenderingComponent r = (RenderingComponent) e.getComponent(RENDERING);
+        ShapeComponent sc = (ShapeComponent) e.getComponent(SHAPE);
 
-        for (Drawable d : r.drawables_to_layer.keySet()) {
+        int z = sc.z;
 
-          int z = r.drawables_to_layer.get(d);
+        if (!this.z_tracker.containsKey(z)) {
+          this.z_tracker.put(z, new ArrayList<ShapeComponent>());
+        }
 
-          if (!this.z_tracker.containsKey(z)) {
-            this.z_tracker.put(z, new ArrayList<Drawable>());
-          }
+        this.z_tracker.get(z).add(sc);
 
-          this.z_tracker.get(z).add(d);
-
-          if (z < min_z) { 
-            min_z = z;
-          }
-          if (z > max_z) { 
-            max_z = z;
-          }
-
+        if (z < min_z) { 
+          min_z = z;
+        }
+        
+        if (z > max_z) { 
+          max_z = z;
         }
 
       }
@@ -51,12 +48,12 @@ class RenderingSystem extends System {
 
         if (this.z_tracker.containsKey(i)) {
 
-          for (Drawable d : this.z_tracker.get(i)) {
-              d.draw();
+          for (ShapeComponent sc : this.z_tracker.get(i)) {
+              sc.shape.draw();
           }
         }
       }
-      
+
     }
   }
 }

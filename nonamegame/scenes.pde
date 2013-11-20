@@ -83,7 +83,7 @@ class TestLevel extends BaseScene {
             Transform t = (Transform) player.getComponent(TRANSFORM);
 
             // Hack
-            Rectangle shape = (Rectangle) ((Collider) p.b.getComponent(COLLIDER)).getShape();
+            //Rectangle shape = (Rectangle) ((Collider) p.b.getComponent(COLLIDER)).getShape();
 
             Motion m = (Motion) player.getComponent(MOTION);
             m.velocity.x = -m.velocity.x;
@@ -154,9 +154,14 @@ Entity createRectangle(World world, int x, int y, int w, int h, IColor c) {
     final Entity rectangle = world.entity_manager.newEntity();
     Transform rt = new Transform(x, y);
     rectangle.addComponent(rt);
+
     final Shape rectangle_shape = new Rectangle(rt.pos, w, h).setColor(c);
-    rectangle.addComponent(new RenderingComponent().addDrawable(rectangle_shape, 1));
-    rectangle.addComponent(new Collider(rectangle_shape));
+    rectangle.addComponent(new ShapeComponent(rectangle_shape, 1));
+
+
+    // rectangle.addComponent(new RenderingComponent().addDrawable(rectangle_shape, 1));
+    // rectangle.addComponent(new Collider(rectangle_shape));
+
     return rectangle;
 }
 
@@ -224,8 +229,11 @@ void setUpPlayer(World world) {
   player.addComponent(r);
 
  final Shape player_shape = new Circle(t.pos, 50).setColor(new RGB(zbc[0], zbc[1], zbc[2], 255));
- player.addComponent(new RenderingComponent().addDrawable(player_shape, 0));
- player.addComponent(new Collider(player_shape));
+
+ player.addComponent(new ShapeComponent(player_shape, 0));
+
+//  player.addComponent(new RenderingComponent().addDrawable(player_shape, 0));
+// player.addComponent(new Collider(player_shape));
 
  Behavior b = new Behavior();
 

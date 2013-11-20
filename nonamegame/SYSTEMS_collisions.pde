@@ -55,11 +55,11 @@ class CollisionSystem extends System {
 
       for (CollisionPair pair : collisions_to_watch) {
 
-        Collider ca = (Collider) pair.a.getComponent(COLLIDER);
-        Collider cb = (Collider) pair.b.getComponent(COLLIDER);
+        ShapeComponent ca = (ShapeComponent) pair.a.getComponent(SHAPE);
+        ShapeComponent cb = (ShapeComponent) pair.b.getComponent(SHAPE);
 
-        if (ca != null && cb != null && ca.active && cb.active) {
-          if (this.checkCollision(ca.collidable, cb.collidable)) {
+        if (ca != null && cb != null && ca.collideable && cb.collideable) {
+          if (this.checkCollision(ca.shape, cb.shape)) {
             this._collisions.add(pair);
           }
         }
@@ -70,7 +70,7 @@ class CollisionSystem extends System {
 
 
   // Returns a collision pair if collides, null if not
-  Boolean checkCollision(Collidable a, Collidable b) {
+  Boolean checkCollision(Shape a, Shape b) {
 
     if (a == b) { 
       return false;
@@ -91,7 +91,7 @@ class CollisionSystem extends System {
     }
   }
 
-  private Boolean pointCollision(Point pa, Collidable b) {
+  private Boolean pointCollision(Point pa, Shape b) {
 
     if (b instanceof Circle) {
 
@@ -118,15 +118,15 @@ class CollisionSystem extends System {
     }
   }
 
-  private Boolean rectangleCollision(Rectangle ra, Collidable b) {
+  private Boolean rectangleCollision(Rectangle ra, Shape b) {
 
     if (b instanceof Circle) {
 
-      return circleCollision((Circle) b, (Collidable) ra);
+      return circleCollision((Circle) b, (Shape) ra);
     } 
     else if (b instanceof Point) {
 
-       return pointCollision((Point) b, (Collidable) ra);
+       return pointCollision((Point) b, (Shape) ra);
 
     } 
     else if (b instanceof Rectangle) {
@@ -152,7 +152,7 @@ class CollisionSystem extends System {
     }
   }
 
-  private Boolean circleCollision(Circle ca, Collidable b) {
+  private Boolean circleCollision(Circle ca, Shape b) {
 
     if (b instanceof Circle) {
 
@@ -161,7 +161,7 @@ class CollisionSystem extends System {
       return ca.pos.dist(cb.pos) < added_radii;
     } 
     else if (b instanceof Point) {
-      return pointCollision((Point) b, (Collidable) ca);
+      return pointCollision((Point) b, (Shape) ca);
     } 
     else if (b instanceof Rectangle) {
 

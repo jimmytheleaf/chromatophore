@@ -28,10 +28,6 @@ abstract class Shape implements Drawable, Collidable {
 
   // public abstract boolean collidesWith(Collidable collidable)
 
-  // Dumb collider thing
-  Shape getShape() {
-    return this;
-  }
 }
 
 class Point extends Shape {
