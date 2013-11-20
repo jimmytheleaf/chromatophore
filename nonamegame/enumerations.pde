@@ -10,11 +10,17 @@ String ACTION_RIGHT = "Right";
 
 
 String TAG_PLAYER = "player";
-
-String LEVEL_ONE = "l1";
-
-
+String TAG_PLATFORM = "platform";
 String TAG_WALL_TOP = "TOP";
 String TAG_WALL_BOTTOM = "BOTTOM";
 String TAG_WALL_LEFT = "LEFT";
 String TAG_WALL_RIGHT = "RIGHT";
+
+
+
+String TEST_LEVEL = "testlevel";
+
+
+
+String LEVEL_ONE = "l1";
+

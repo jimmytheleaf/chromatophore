@@ -9,6 +9,7 @@ void setup()
   size(960, 640, P2D);
   runTests();
   colorMode(RGB, 255, 255, 255, 255);
+  rectMode(CORNER);
 
   world = new World(960, 640);
 
@@ -17,10 +18,16 @@ void setup()
   background(63, 63, 63);
   noStroke();
 
-  TestLevel testLevel = new TestLevel(world);
+  // LevelOne level_one = new LevelOne(world);
 
-  world.scene_manager.addScene(testLevel);
-  world.scene_manager.setCurrentScene(testLevel);
+  // world.scene_manager.addScene(level_one);
+  // world.scene_manager.setCurrentScene(level_one);
+
+  LevelTwo level_two = new LevelTwo(world);
+
+  world.scene_manager.addScene(level_two);
+  world.scene_manager.setCurrentScene(level_two);
+
 
 }
 

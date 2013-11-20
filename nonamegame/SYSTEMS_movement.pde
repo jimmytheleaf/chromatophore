@@ -20,10 +20,22 @@ class MovementSystem extends System {
 
           Transform t = (Transform) e.getComponent(TRANSFORM);
           Motion m = (Motion) e.getComponent(MOTION);
+
+          Gravity g = (Gravity) e.getComponent(GRAVITY);
+
+          if (g != null) {
+            this.applySimpleGravity(m, g, dt);
+          }
+
           this.update(t, m, dt);
         }
       }
     }
+  }
+
+  void applySimpleGravity(Motion movement, Gravity g, float dt) {
+      movement.velocity.y += (g.force.y * dt);
+      movement.velocity.x += (g.force.x * dt);
   }
 
   void update (Transform transform, Motion movement, float dt) {

@@ -26,13 +26,7 @@ class BaseScene extends Scene {
 
 	void draw() {
 
-	 	this.world.updateClock();
-
-		update(this.world.clock.dt);
-
-		// background(63, 63, 63);
-		  
-		  
+    // Extended class responsible for updating
 		RenderingSystem rendering_system = (RenderingSystem) this.world.getSystem(RENDERING_SYSTEM);
 		rendering_system.drawDrawables();
 
@@ -40,7 +34,211 @@ class BaseScene extends Scene {
 
 }
 
+class LevelOne extends BaseScene {
 
+  int corners_touched;
+
+  LevelOne(World _w) {
+    super(LEVEL_ONE, _w);
+    corners_touched = 0;
+  }
+
+  void init() {
+      super.init();   
+      
+      Entity player = PLAYER_UTILS.getNewPlayerEntity(world);
+      PLAYER_UTILS.addRectangleShape(player, 330, 170, 300, 300, new RGB(0, 0, 0, 255));
+      PLAYER_UTILS.addMotion(player, 500, 200, 200);
+      PLAYER_UTILS.addSpaceshipMovement(player, 100);
+
+      setUpWalls(this.world, new RGB(0, 0, 0, 255));
+      background(255, 255, 255);
+  }
+
+
+  void draw() {
+
+    this.world.updateClock();
+    this.update(this.world.clock.dt);
+
+    //background(255, 255, 255);
+    super.draw();
+
+    textSize(100);
+    
+    fill(255, 255, 255, 255);
+
+    text("" + corners_touched, 40, 140);
+    printDebug("Corners Touched: " + corners_touched);
+    if (corners_touched == 4) {
+      printDebug("WIN");
+      text("YOU WIN", 40, 340); 
+    }
+
+  }
+
+  void update(float dt) {
+
+    super.update(dt);
+
+    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
+    ArrayList<CollisionPair> collisions = collision_system.getCollisions();
+
+    collidePlayerAgainstWalls(collisions, false);
+
+    this.updateWinCondition();
+
+  }
+
+  void updateWinCondition() {
+
+    color black = color(0, 0, 0, 255);
+    loadPixels();
+
+    corners_touched = 0;
+    
+    if (getPixel(181, 21) == black) {
+      corners_touched++;
+    }
+
+    if (getPixel(181, 619) == black) {
+      corners_touched++;
+    }
+
+    if (getPixel(779, 21) == black) {
+      corners_touched++;
+    }
+
+    if (getPixel(779, 619) == black) {
+      corners_touched++;
+    }
+  }
+
+}
+
+
+class LevelTwo extends BaseScene {
+
+  RGB world_color = new RGB(0, 0, 0, 255);
+
+  LevelTwo(World _w) {
+    super(LEVEL_ONE, _w);
+  }
+
+  void init() {
+
+      super.init();
+      
+      Entity player = PLAYER_UTILS.getNewPlayerEntity(world);
+      PLAYER_UTILS.addRectangleShape(player, 405, 20, 150, 150, world_color);
+      PLAYER_UTILS.addMotion(player, 1000, 600, 0);
+      PLAYER_UTILS.addPlatformerMovement(player, 100, 1000);
+      PLAYER_UTILS.addGravity(player, 0, 600);
+
+      setUpWalls(this.world, world_color);
+
+      setUpPlatform(this.world, 405, 170, 150, 10, new RGB(0, 0, 0, 255));
+
+      background(255, 255, 255);
+
+      this.world.updateClock();
+
+  }
+
+
+  void draw() {
+
+    this.world.updateClock();
+    this.update(this.world.clock.dt);
+
+    background(255, 255, 255);
+    super.draw();
+
+    textSize(100);
+    
+    if (checkWinCondition()) {
+      fill(0, 0, 0, 255);
+      text("YOU WIN", 40, 340); 
+
+    }
+
+  }
+
+  void update(float dt) {
+
+    super.update(dt);
+
+    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
+    ArrayList<CollisionPair> collisions = collision_system.getCollisions();
+
+    checkJumpability(world.getTaggedEntity(TAG_PLAYER), collisions);
+    collidePlayerAgainstWalls(collisions, false);
+    collidePlayerAgainstPlatform(collisions, world_color);
+
+    this.updateWinCondition();
+
+  }
+
+  void updateWinCondition() {
+
+  }
+
+  boolean checkWinCondition() {
+    return world_color.r == 255f;
+  }
+
+}
+
+
+void collidePlayerAgainstPlatform(ArrayList<CollisionPair> collisions, RGB world_color) {
+
+  CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
+
+  for (CollisionPair p : collisions) {
+
+    if (p.a == world.getTaggedEntity(TAG_PLAYER) && p.b == world.getTaggedEntity(TAG_PLATFORM)) {
+
+      Entity player = p.a;
+      Transform t = (Transform) player.getComponent(TRANSFORM);
+      Motion m = (Motion) player.getComponent(MOTION);
+
+      Rectangle player_shape = (Rectangle) ((ShapeComponent) player.getComponent(SHAPE)).shape;
+
+      Rectangle platform_shape = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
+
+
+      // TODO fix horizontal collision
+      if (player_shape instanceof Rectangle) {
+
+        if (collision_system.rectangleCollision(player_shape, platform_shape) &&
+            m.velocity.y > 0)  {
+            
+            t.pos.y = platform_shape.pos.y - ((Rectangle)player_shape).height;
+            m.velocity.y = 0;
+        
+        } else if (collision_system.rectangleCollision(player_shape, platform_shape) &&
+            m.velocity.y < 0)  {
+            
+            t.pos.y = platform_shape.pos.y + platform_shape.height;
+            m.velocity.y = -m.velocity.y;
+
+            world_color.r += 30;
+            world_color.g += 30;
+            world_color.b += 30;
+        } 
+
+
+      }
+
+    }
+  }
+  
+
+}
+
+color getPixel(int x, int y) {
+  return pixels[x + y * width]; 
+}
 
 
 
@@ -48,7 +246,7 @@ class TestLevel extends BaseScene {
 
 
 	TestLevel(World _w) {
-		super(LEVEL_ONE, _w);
+		super(TEST_LEVEL, _w);
 	}
 
 	void init() {
@@ -66,55 +264,7 @@ class TestLevel extends BaseScene {
     CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
     ArrayList<CollisionPair> collisions = collision_system.getCollisions();
 
-    if (collisions.size() > 0) {
-      printDebug("Detected collisions: " + collisions.size());
-
-      for (CollisionPair p : collisions) {
-
-        if (p.a == world.getTaggedEntity(TAG_PLAYER)) {
-
-          Entity player = p.a;
-
-          Transform t = (Transform) player.getComponent(TRANSFORM);
-          Circle player_shape = (Circle) ((ShapeComponent) player.getComponent(SHAPE)).shape;
-          Motion m = (Motion) player.getComponent(MOTION);
-
-          if (p.b == world.getTaggedEntity(TAG_WALL_LEFT)) {
-
-            printDebug("Collided: PLAYER and LEFT WALL");
-            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
-            m.velocity.x = -m.velocity.x;
-            t.pos.x = wall.pos.x + wall.width + player_shape.radius;
-
-          } else if (p.b == world.getTaggedEntity(TAG_WALL_RIGHT)) {
-            printDebug("Collided: PLAYER and RIGHT WALL");
-
-            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
-            m.velocity.x = -m.velocity.x;
-            t.pos.x = wall.pos.x - player_shape.radius;
-
-
-          } else if (p.b == world.getTaggedEntity(TAG_WALL_TOP)) {
-
-            printDebug("Collided: PLAYER and TOP WALL");
-            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
-            m.velocity.y = -m.velocity.y;
-            t.pos.y = wall.pos.y + wall.height + player_shape.radius;
-
-          } else if (p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
-
-            printDebug("Collided: PLAYER and BOTTOM WALL");
-            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
-            m.velocity.y = -m.velocity.y;
-            t.pos.y = wall.pos.y - player_shape.radius;
-
-          }  
-
-        }
-
-      }
-    }
-
+    collidePlayerAgainstWalls(collisions, true);
 
   }
 
@@ -127,188 +277,105 @@ class TestLevel extends BaseScene {
 
 }
 
-void setUpWalls(World world, IColor c) {
+void checkJumpability(Entity player, ArrayList<CollisionPair> collisions) {
 
-    Entity left = createRectangle(world, 0, 0, 180, 640, c);
-    Entity right = createRectangle(world, 780, 0, 180, 640, c);
-    Entity top = createRectangle(world, 0, 0, 960, 20, c);
-    Entity bottom = createRectangle(world, 0, 620, 960, 20, c);
+    boolean jumpable = false;
 
-    world.tagEntity(left, TAG_WALL_LEFT);
-    world.tagEntity(right, TAG_WALL_RIGHT);
-    world.tagEntity(top, TAG_WALL_TOP);
-    world.tagEntity(bottom, TAG_WALL_BOTTOM);
+    for (CollisionPair p : collisions) {
 
-    CollisionSystem cs = (CollisionSystem) world.getSystem(COLLISION_SYSTEM);
-    Entity player = world.getTaggedEntity(TAG_PLAYER);
+        if (p.a == player && p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
+          jumpable = true; 
+        }
+    }
 
-    cs.watchCollision(player, left);
-    cs.watchCollision(player, right);
-    cs.watchCollision(player, top);
-    cs.watchCollision(player, bottom);
-}
-
-Entity createRectangle(World world, int x, int y, int w, int h, IColor c) {
-
-    final Entity rectangle = world.entity_manager.newEntity();
-    Transform rt = new Transform(x, y);
-    rectangle.addComponent(rt);
-
-    final Shape rectangle_shape = new Rectangle(rt.pos, w, h).setColor(c);
-    rectangle.addComponent(new ShapeComponent(rectangle_shape, 1));
+    Jumper j = (Jumper) player.getComponent(JUMPER);
+    j.jumpable = jumpable;
 
 
-    // rectangle.addComponent(new RenderingComponent().addDrawable(rectangle_shape, 1));
-    // rectangle.addComponent(new Collider(rectangle_shape));
-
-    return rectangle;
 }
 
 
-void setUpPlayer(World world) {
+void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean bounce) {
 
-  final Entity player = world.entity_manager.newEntity();
+  if (collisions.size() > 0) {
+      printDebug("Detected collisions: " + collisions.size());
 
-  world.tagEntity(player, TAG_PLAYER);
+      for (CollisionPair p : collisions) {
 
-  Transform t = new Transform(500, 500);
-  player.addComponent(t);
+        if (p.a == world.getTaggedEntity(TAG_PLAYER)) {
 
-  Motion m = new Motion();
-  m.max_speed = 500;
-  m.drag.x = 200;
-  m.drag.y = 200;
+          Entity player = p.a;
+          Transform t = (Transform) player.getComponent(TRANSFORM);
+          Shape player_shape = ((ShapeComponent) player.getComponent(SHAPE)).shape;
+          Motion m = (Motion) player.getComponent(MOTION);
 
-  player.addComponent(m);
+          if (p.b == world.getTaggedEntity(TAG_WALL_LEFT)) {
 
-  InputResponse r = new InputResponse(); 
-
-  r.addInputResponseFunction(new InputResponseFunction() {
-      public void update(InputSystem input_system) {
-
-        Motion m = (Motion) player.getComponent(MOTION);
-
-          if (input_system.actionHeld(ACTION_UP)) {
-            if (m.velocity.y >= 0) {
-               m.velocity.y = 0;
-            }
-             m.velocity.y -= 100;
-
-            // printDebug("Action Held: UP");
-          } else if (input_system.actionHeld(ACTION_DOWN)) {
+            printDebug("Collided: PLAYER and LEFT WALL");
+            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
             
-            if (m.velocity.y <= 0) {
-              m.velocity.y = 0;
+            if (bounce) {
+              m.velocity.x = -m.velocity.x;
             }
-             m.velocity.y += 100;
 
-            // printDebug("Action Held: DOWN");
+            if (player_shape instanceof Circle) {
+              t.pos.x = wall.pos.x + wall.width + ((Circle) player_shape).radius;
+            } else if (player_shape instanceof Rectangle) {
+              t.pos.x = wall.pos.x + wall.width;
+            }
+
+
+          } else if (p.b == world.getTaggedEntity(TAG_WALL_RIGHT)) {
+            printDebug("Collided: PLAYER and RIGHT WALL");
+
+            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
+
+            if (bounce) {
+              m.velocity.x = -m.velocity.x;
+            }
+
+            if (player_shape instanceof Circle) {
+              t.pos.x = wall.pos.x - ((Circle) player_shape).radius;
+            } else if (player_shape instanceof Rectangle) {
+              t.pos.x = wall.pos.x - ((Rectangle) player_shape).width;
+
+            }
+
+          } else if (p.b == world.getTaggedEntity(TAG_WALL_TOP)) {
+
+            printDebug("Collided: PLAYER and TOP WALL");
+            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
+
+            if (bounce) {
+              m.velocity.y = -m.velocity.y;
+            }
+
+            if (player_shape instanceof Circle) {
+              t.pos.y = wall.pos.y + wall.height + ((Circle) player_shape).radius;
+            } else if (player_shape instanceof Rectangle) {
+              t.pos.y = wall.pos.y + wall.height;
+            }
+
+          } else if (p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
+
+            printDebug("Collided: PLAYER and BOTTOM WALL");
+            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
+
+            if (bounce) {
+              m.velocity.y = -m.velocity.y;
+            }
+
+            if (player_shape instanceof Circle) {
+              t.pos.y = wall.pos.y - ((Circle) player_shape).radius;
+            } else if (player_shape instanceof Rectangle) {
+              t.pos.y = wall.pos.y - ((Rectangle) player_shape).height;
+            }
 
           }
 
-          if (input_system.actionHeld(ACTION_LEFT)) {
-            if (m.velocity.x >= 0) {
-              m.velocity.x = 0;
-            }
-              m.velocity.x -= 100;
-            // printDebug("Action Held: LEFT");
-
-          } else if (input_system.actionHeld(ACTION_RIGHT)) {
-            if (m.velocity.x <= 0) {
-              m.velocity.x = 0;
-            }
-              m.velocity.x += 100;
-            // printDebug("Action Held: RIGHT");
-
-          }
-
-      }
-  });
-
-  player.addComponent(r);
-
- final Shape player_shape = new Circle(t.pos, 50).setColor(new RGB(zbc[0], zbc[1], zbc[2], 255));
-
- player.addComponent(new ShapeComponent(player_shape, 0));
-
-//  player.addComponent(new RenderingComponent().addDrawable(player_shape, 0));
-// player.addComponent(new Collider(player_shape));
-
- Behavior b = new Behavior();
-
-
-  b.addBehavior(new BehaviorCallback() {
-      public void update(float dt) {
-        Transform t = (Transform) player.getComponent(TRANSFORM);
-        Motion m = (Motion) player.getComponent(MOTION);
-
-        if (t.pos.x <= 0) {
-          t.pos.x = 0;
-          m.velocity.x = -m.velocity.x;
-        }
-
-        if (t.pos.x >= width) {
-          t.pos.x = width;
-          m.velocity.x = -m.velocity.x;
-        }
-
-        if (t.pos.y <= 0) {
-          t.pos.y = 0;
-          m.velocity.y = -m.velocity.y;
-        }
-
-        if (t.pos.y >= height) {
-          t.pos.y = height;
-          m.velocity.y = -m.velocity.y;
-        }
-      }
-  });
-
- // Shift to analagous colors
- 
- /* 
- b.addBehavior(new BehaviorCallback() {
-
-      final HSB player_hsb = new HSB(player_shape.getColor().toRaw());
-           
-      ArrayList<IColor> analagous = new AnalagousHarmony().generate(player_hsb);
-      int current = 0;
-      HSB next_color = player_hsb;
-
-      int i = 0;
-      public void update(float dt) {
-
-        player_shape.setColor(player_hsb);
-        
-        printDebug("Got here: " + ((HSB) player_shape.clr).h + " , " + next_color.h);
-
-        if (((HSB) player_shape.clr).h == next_color.h) {
-          printDebug("Got here: " + ((HSB) player_shape.clr).h + " , " + next_color.h);
-          current++;
-          if (current >= analagous.size()) {
-            i++;
-            current = 0;
-          }
-
-
-          next_color = new HSB(analagous.get(current).toRaw());
-
-        
-          tween_system.addTween(0.1, new TweenVariable() {
-                              public float initial() {           
-                                return ((HSB) player_shape.clr).h; }
-                              public void setValue(float value) { 
-                                ((HSB) player_shape.clr).h = int(value); 
-                              }  
-                          }, next_color.h, EasingFunctions.linear);
-       
         }
 
       }
-  });
-  */
-
-  player.addComponent(b);
-
+    }
 
 }
