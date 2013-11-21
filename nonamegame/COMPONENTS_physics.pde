@@ -23,6 +23,11 @@ class Physics extends Component {
     forces.y += force.y;
   }
 
+  void applyForce(float x, float y) {
+    forces.x += x;
+    forces.y += y;
+  }
+
   void clearForces() {
     forces.x = 0;
     forces.y = 0;

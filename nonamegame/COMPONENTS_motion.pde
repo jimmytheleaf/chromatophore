@@ -9,6 +9,7 @@ class Motion extends Component {
 	float max_speed = 1000000;
 	float min_acceleration = 0;
 	float max_acceleration = 10000000;
+	float damping = 1;
 
 	boolean active;
 

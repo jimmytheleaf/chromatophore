@@ -96,4 +96,8 @@ class Vec2 {
   return this;
 	}
 
+	String toString() {
+		return "VEC2(" + x + ", " + y + ")";
+	}
+
 }

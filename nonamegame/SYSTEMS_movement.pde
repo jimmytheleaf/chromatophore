@@ -42,11 +42,16 @@ class MovementSystem extends System {
 
 
     if (movement.acceleration.x != 0 || movement.acceleration.y != 0 ) {
+
       float acceleration_effect_x = movement.acceleration.x * dt;
       float acceleration_effect_y = movement.acceleration.y * dt;
 
       movement.velocity.x =  movement.velocity.x  + acceleration_effect_x;
       movement.velocity.y =  movement.velocity.y  + acceleration_effect_y;
+    
+      // printDebug("Velocity before acceleration: " + movement.velocity);
+      // printDebug("Acceleration: " + movement.acceleration);
+      // printDebug("Velocity after acceleration: " + movement.velocity);
     }
 
 
@@ -101,5 +106,9 @@ class MovementSystem extends System {
 
       transform.move(movement_x, movement_y);
     }
+
+    movement.velocity.x = movement.velocity.x * movement.damping;
+    movement.velocity.y = movement.velocity.y * movement.damping;
+    
   }
 }

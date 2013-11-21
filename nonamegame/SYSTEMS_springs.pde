@@ -14,6 +14,15 @@ class Spring {
     this.b = b;
     this.stiffness = stiffness;
     this.damping = damping;
+    this.target_length = target_length;
+  }
+
+  String toString() {
+
+    return "Spring: (" + a + " and " + b + 
+            ", stiffness: " + this.stiffness + 
+            ", damping: " + this.damping + 
+            ", target_length: " + this.target_length + ")";
   }
 
 }
@@ -61,22 +70,28 @@ class SpringSystem extends System {
         // Only pull, don't push
 
         if (len >= s.target_length) {
+
+            printDebug("Pulling with spring: " + s);
+
+            // TODO: attach to middle. For now just happens to work that it's a circle
             point_buffer.x = a_transform.pos.x - b_transform.pos.x;
             point_buffer.y = a_transform.pos.y - b_transform.pos.y;
 
             point_buffer.divide(len);
             point_buffer.multiply(len - s.target_length);
 
-            velocity_buffer = a_motion.velocity.subtract(b_motion.velocity);
+            velocity_buffer = b_motion.velocity.subtract(a_motion.velocity);
 
             force_buffer.x = point_buffer.x * s.stiffness - (velocity_buffer.x * s.damping);
             force_buffer.y = point_buffer.y * s.stiffness - (velocity_buffer.y * s.damping);
 
-            a_physics.applyForce(force_buffer);
+            printDebug("Applying force to first entity: " + force_buffer);
+            b_physics.applyForce(force_buffer);
 
             force_buffer.negative();
 
-            b_physics.applyForce(force_buffer);
+            printDebug("Applying force to second entity: " + force_buffer);
+            a_physics.applyForce(force_buffer);
 
         }
 

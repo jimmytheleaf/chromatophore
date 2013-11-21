@@ -1,5 +1,5 @@
 
-boolean DEBUG = false;
+boolean DEBUG = true;
 
 void printDebug(String line) {
 	if (DEBUG) {

@@ -17,6 +17,13 @@ class BaseScene extends Scene {
 	  BehaviorSystem behavior_system = (BehaviorSystem) this.world.getSystem(BEHAVIOR_SYSTEM);
 	  behavior_system.updateBehaviors(dt);
 
+
+    SpringSystem springs = (SpringSystem) this.world.getSystem(SPRING_SYSTEM);
+    springs.update(dt);
+
+    PhysicsSystem physics = (PhysicsSystem) this.world.getSystem(PHYSICS_SYSTEM);
+    physics.update(dt);
+
 	  MovementSystem movement_system = (MovementSystem) this.world.getSystem(MOVEMENT_SYSTEM);
 	  movement_system.updateMovables(dt);
 
@@ -48,7 +55,7 @@ class LevelOne extends BaseScene {
       
       Entity player = PLAYER_UTILS.getNewPlayerEntity(world);
       PLAYER_UTILS.addRectangleShape(player, 330, 170, 300, 300, new RGB(0, 0, 0, 255));
-      PLAYER_UTILS.addMotion(player, 500, 200, 200);
+      PLAYER_UTILS.addMotion(player, 500, 200, 200, 1);
       PLAYER_UTILS.addSpaceshipMovement(player, 100);
 
       setUpWalls(this.world, new RGB(0, 0, 0, 255));
@@ -72,7 +79,7 @@ class LevelOne extends BaseScene {
     printDebug("Corners Touched: " + corners_touched);
     if (corners_touched == 4) {
       printDebug("WIN");
-      text("YOU WIN", 40, 340); 
+      text("THE WINNER IS YOU", 40, 340); 
     }
 
   }
@@ -122,7 +129,7 @@ class LevelTwo extends BaseScene {
   RGB world_color = new RGB(0, 0, 0, 255);
 
   LevelTwo(World _w) {
-    super(LEVEL_ONE, _w);
+    super(LEVEL_TWO, _w);
   }
 
   void init() {
@@ -134,7 +141,7 @@ class LevelTwo extends BaseScene {
 
       Entity player = PLAYER_UTILS.getNewPlayerEntity(world);
       PLAYER_UTILS.addRectangleShape(player, 405, 20, 150, 150, world_color);
-      PLAYER_UTILS.addMotion(player, 1000, 1000, 0);
+      PLAYER_UTILS.addMotion(player, 1000, 1000, 0, 1);
       PLAYER_UTILS.addPlatformerMovement(player, 100, 1000);
       PLAYER_UTILS.addGravity(player, 0, 600);
 
@@ -161,7 +168,7 @@ class LevelTwo extends BaseScene {
     
     if (checkWinCondition()) {
       fill(0, 0, 0, 255);
-      text("YOU WIN", 40, 340); 
+      text("THE WINNER IS YOU", 40, 340); 
 
     }
 
@@ -191,6 +198,142 @@ class LevelTwo extends BaseScene {
   }
 
 }
+
+
+class LevelThree extends BaseScene {
+
+  RGB world_color = new RGB(63, 63, 63, 255);
+
+  LevelThree(World _w) {
+    super(LEVEL_THREE, _w);
+  }
+
+  void init() {
+
+      super.init();
+      
+      this.world.updateClock();
+      this.world.stopClock();
+
+      Entity player = PLAYER_UTILS.getNewPlayerEntity(world);
+      PLAYER_UTILS.addCircleShape(player, 480, 320, 100, world_color);
+      PLAYER_UTILS.addMotion(player, 1000, 0, 0, .98f);
+      PLAYER_UTILS.addPhysics(player, 1);
+      PLAYER_UTILS.addForceMovement(player, 130);
+
+      Entity mount = setUpSpringMount(world, 480, 320, 10000f);
+
+      SpringSystem springs = (SpringSystem) this.world.getSystem(SPRING_SYSTEM);
+
+      springs.addSpring(mount, player, 0.7, 0.06, 1);
+
+      setUpWalls(this.world, world_color);
+
+      background(255, 255, 255);
+
+
+  }
+
+
+  void draw() {
+
+    this.world.startClock();
+    this.world.updateClock();
+    this.update(this.world.clock.dt);
+
+    background(255, 255, 255);
+    super.draw();
+
+    textSize(100);
+    
+    if (checkWinCondition()) {
+      fill(0, 0, 0, 255);
+      text("THE WINNER IS YOU", 40, 340); 
+
+    }
+
+  }
+
+  void update(float dt) {
+
+    super.update(dt);
+
+    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
+    ArrayList<CollisionPair> collisions = collision_system.getCollisions();
+
+    collidePlayerAgainstWalls(collisions, true, this.world_color);
+
+    this.updateWinCondition();
+
+  }
+
+  void updateWinCondition() {
+
+  }
+
+  boolean checkWinCondition() {
+    return world_color.r >  254f;
+  }
+
+}
+
+
+
+/*
+class TestLevel extends BaseScene {
+
+
+	TestLevel(World _w) {
+		super(TEST_LEVEL, _w);
+	}
+
+	void init() {
+
+  		super.init();	  
+      setUpPlayer(this.world);
+      setUpWalls(this.world, new RGB(zbc[2], zbc[0], zbc[1], 255));
+
+	}
+
+  void update(float dt) {
+
+    super.update(dt);
+
+    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
+    ArrayList<CollisionPair> collisions = collision_system.getCollisions();
+
+    collidePlayerAgainstWalls(collisions, true);
+
+  }
+
+	void draw() {
+
+	  background(63, 63, 63);
+	  super.draw();
+
+	}
+
+}
+*/
+
+void checkJumpability(Entity player, ArrayList<CollisionPair> collisions) {
+
+    boolean jumpable = false;
+
+    for (CollisionPair p : collisions) {
+
+        if (p.a == player && p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
+          jumpable = true; 
+        }
+    }
+
+    Jumper j = (Jumper) player.getComponent(JUMPER);
+    j.jumpable = jumpable;
+
+
+}
+
+
 
 
 void collidePlayerAgainstPlatform(ArrayList<CollisionPair> collisions, RGB world_color) {
@@ -239,66 +382,13 @@ void collidePlayerAgainstPlatform(ArrayList<CollisionPair> collisions, RGB world
 
 }
 
-color getPixel(int x, int y) {
-  return pixels[x + y * width]; 
-}
-
-
-
-class TestLevel extends BaseScene {
-
-
-	TestLevel(World _w) {
-		super(TEST_LEVEL, _w);
-	}
-
-	void init() {
-
-  		super.init();	  
-      setUpPlayer(this.world);
-      setUpWalls(this.world, new RGB(zbc[2], zbc[0], zbc[1], 255));
-
-	}
-
-  void update(float dt) {
-
-    super.update(dt);
-
-    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
-    ArrayList<CollisionPair> collisions = collision_system.getCollisions();
-
-    collidePlayerAgainstWalls(collisions, true);
-
-  }
-
-	void draw() {
-
-	  background(63, 63, 63);
-	  super.draw();
-
-	}
-
-}
-
-void checkJumpability(Entity player, ArrayList<CollisionPair> collisions) {
-
-    boolean jumpable = false;
-
-    for (CollisionPair p : collisions) {
-
-        if (p.a == player && p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
-          jumpable = true; 
-        }
-    }
-
-    Jumper j = (Jumper) player.getComponent(JUMPER);
-    j.jumpable = jumpable;
-
-
-}
-
 
 void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean bounce) {
+    collidePlayerAgainstWalls(collisions, bounce, null);
+}
+
+
+void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean bounce, RGB world_color) {
 
   if (collisions.size() > 0) {
       printDebug("Detected collisions: " + collisions.size());
@@ -327,6 +417,12 @@ void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean boun
               t.pos.x = wall.pos.x + wall.width;
             }
 
+            if (world_color != null) {
+              world_color.r +=40;
+              world_color.b -=10;
+              world_color.g -=10;
+            }
+
 
           } else if (p.b == world.getTaggedEntity(TAG_WALL_RIGHT)) {
             printDebug("Collided: PLAYER and RIGHT WALL");
@@ -344,6 +440,13 @@ void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean boun
 
             }
 
+
+            if (world_color != null) {
+              world_color.r +=40;
+              world_color.b -=10;
+              world_color.g -=10;
+            }
+
           } else if (p.b == world.getTaggedEntity(TAG_WALL_TOP)) {
 
             printDebug("Collided: PLAYER and TOP WALL");
@@ -359,6 +462,13 @@ void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean boun
               t.pos.y = wall.pos.y + wall.height;
             }
 
+
+            if (world_color != null) {
+              world_color.r +=40;
+              world_color.b -=10;
+              world_color.g -=10;
+            }
+
           } else if (p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
 
             printDebug("Collided: PLAYER and BOTTOM WALL");
@@ -372,6 +482,13 @@ void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean boun
               t.pos.y = wall.pos.y - ((Circle) player_shape).radius;
             } else if (player_shape instanceof Rectangle) {
               t.pos.y = wall.pos.y - ((Rectangle) player_shape).height;
+            }
+
+
+            if (world_color != null) {
+              world_color.r +=40;
+              world_color.b -=10;
+              world_color.g -=10;
             }
 
           }

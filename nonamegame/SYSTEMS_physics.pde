@@ -25,6 +25,10 @@ class PhysicsSystem extends System {
           Motion m = (Motion) e.getComponent(MOTION);
 
 
+          // In physics system we only accelerate when there are forces on us. Zero out
+          m.acceleration.x = 0;
+          m.acceleration.y = 0;
+
           this.applyForces(p, m);
         }
       }
@@ -36,11 +40,17 @@ class PhysicsSystem extends System {
     force_buffer.x = p.forces.x;
     force_buffer.y = p.forces.y;
 
-    force_buffer.multiply(p.invmass);
+    if (force_buffer.x != 0 || force_buffer.y != 0) {
 
-    m.acceleration.add(force_buffer);
+      force_buffer.multiply(p.invmass);
 
-    p.clearForces();
+      m.acceleration.add(force_buffer);
+
+      p.clearForces();
+
+      printDebug("Applying forces: " + force_buffer.x + ", " + force_buffer.y);
+      printDebug("Accelerating object: " + m.acceleration.x + ", " + m.acceleration.y);
+    }
 
   }
 

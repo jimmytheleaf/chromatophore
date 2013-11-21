@@ -20,12 +20,31 @@
 
 	}
 
-	void addMotion(Entity player, int max_speed, int drag_x, int drag_y) {
+
+	void addCircleShape(Entity player, int x, int y, int radius, IColor c) {
+
+	  	Transform t = new Transform(x, y);
+	  	player.addComponent(t);
+
+		final Shape player_shape = new Circle(t.pos, radius).setColor(c);
+	 	player.addComponent(new ShapeComponent(player_shape, 1));
+
+	}
+
+	void addPhysics(Entity player, float mass) {
+
+	  	Physics p = new Physics(mass);
+	  	player.addComponent(p);
+
+	}
+
+	void addMotion(Entity player, int max_speed, int drag_x, int drag_y, float damping) {
 
 	  	  Motion m = new Motion();
 		  m.max_speed = max_speed;
 		  m.drag.x = drag_x;
 		  m.drag.y = drag_y;
+		  m.damping = damping;
 
 		  player.addComponent(m);
 
@@ -90,7 +109,46 @@
 	}
 
 
-	 void addPlatformerMovement(final Entity player, final int responsiveness, final int jump_power) {
+
+	void addForceMovement(final Entity player, final float force) {
+
+		InputResponse r = new InputResponse(); 
+
+  		r.addInputResponseFunction(new InputResponseFunction() {
+      		
+      		public void update(InputSystem input_system) {
+
+		        Physics p = (Physics) player.getComponent(PHYSICS);
+
+		          if (input_system.actionHeld(ACTION_UP)) {
+
+		          	p.applyForce(0, -force);
+	
+		          } else if (input_system.actionHeld(ACTION_DOWN)) {
+		            
+		           	p.applyForce(0, force);
+
+		          } 
+
+		          if (input_system.actionHeld(ACTION_LEFT)) {
+
+		           	p.applyForce(-force, 0);
+
+		          } else if (input_system.actionHeld(ACTION_RIGHT)) {
+		           	
+		           	p.applyForce(force, 0);
+		          
+		          }
+
+		      }
+	  });
+
+	  player.addComponent(r);
+
+	}
+
+
+	void addPlatformerMovement(final Entity player, final int responsiveness, final int jump_power) {
 
 		InputResponse r = new InputResponse(); 
 
@@ -146,15 +204,6 @@ PlayerUtils PLAYER_UTILS = new PlayerUtils();
 
 
 
-void addCircleShape(Entity player, int x, int y, int radius, IColor c) {
-
-  	Transform t = new Transform(x, y);
-  	player.addComponent(t);
-
-	final Shape player_shape = new Circle(t.pos, radius).setColor(c);
- 	player.addComponent(new ShapeComponent(player_shape, 0));
-
-}
 
 
 

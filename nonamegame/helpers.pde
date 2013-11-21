@@ -9,3 +9,9 @@ char normalizeInput(char key) {
   return key; 
   
 }
+
+
+color getPixel(int x, int y) {
+  return pixels[x + y * width]; 
+}
+

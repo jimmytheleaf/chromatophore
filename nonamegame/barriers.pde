@@ -1,6 +1,28 @@
 
 
 
+Entity setUpSpringMount(World world, int x, int y, float mass) {
+
+    Entity mount = world.entity_manager.newEntity();
+    Transform t = new Transform(x, y);
+    mount.addComponent(t);
+
+    Physics p = new Physics(mass);
+    mount.addComponent(p);
+
+    Motion m = new Motion();
+    m.max_speed = 0;
+    mount.addComponent(m);
+
+    final Shape mount_shape = new Circle(t.pos, 1).setColor(new RGB(255, 0, 0, 255));
+    mount.addComponent(new ShapeComponent(mount_shape, 0));
+
+    world.tagEntity(mount, TAG_SPRING_MOUNT);
+
+    return mount;
+
+}
+
 
 void setUpPlatform(World world, int x, int y, int w, int h, IColor c) {
 
@@ -44,6 +66,8 @@ Entity createRectangle(World world, int x, int y, int w, int h, IColor c) {
 
     final Shape rectangle_shape = new Rectangle(rt.pos, w, h).setColor(c);
     rectangle.addComponent(new ShapeComponent(rectangle_shape, 1));
+
+
 
 
     // rectangle.addComponent(new RenderingComponent().addDrawable(rectangle_shape, 1));
