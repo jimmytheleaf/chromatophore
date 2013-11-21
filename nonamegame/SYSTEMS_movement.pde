@@ -16,18 +16,21 @@ class MovementSystem extends System {
   if (motion_store != null) {
       for (Entity e : motion_store.keySet()) {
 
-        if (this.world.entity_manager.component_store.get(TRANSFORM).containsKey(e)) {
+        if (e.active) {
 
-          Transform t = (Transform) e.getComponent(TRANSFORM);
-          Motion m = (Motion) e.getComponent(MOTION);
+          if (this.world.entity_manager.component_store.get(TRANSFORM).containsKey(e)) {
 
-          Gravity g = (Gravity) e.getComponent(GRAVITY);
+            Transform t = (Transform) e.getComponent(TRANSFORM);
+            Motion m = (Motion) e.getComponent(MOTION);
 
-          if (g != null) {
-            this.applySimpleGravity(m, g, dt);
+            Gravity g = (Gravity) e.getComponent(GRAVITY);
+
+            if (g != null) {
+              this.applySimpleGravity(m, g, dt);
+            }
+
+            this.update(t, m, dt);
           }
-
-          this.update(t, m, dt);
         }
       }
     }

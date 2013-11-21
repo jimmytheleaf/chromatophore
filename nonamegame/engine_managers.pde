@@ -118,20 +118,30 @@ class TagManager {
 
 class GroupManager {
 
-    MultiMap<String, Entity> group_to_entities;
+    HashMap<String, ArrayList<Entity>> group_to_entities;
 
     GroupManager() {
-      group_to_entities = new MultiMap<String, Entity>();
+      group_to_entities = new HashMap<String, ArrayList<Entity>>();
     }
 
-    /*
-    void addEntityToGroup(Entity e, String g) {
-      group_to_entities.put(g, e);
+    void addEntityToGroup(Entity e, String group) {
+      if (!group_to_entities.containsKey(group)) {
+        group_to_entities.put(group, new ArrayList<Entity>());
+      }
+      group_to_entities.get(group).add(e);
     }
 
-    Entity[] getEntitiesInGroup(String group) {
-      return group_to_entities
-    }*/
+    ArrayList<Entity> getEntitiesInGroup(String group) {
+      if (!group_to_entities.containsKey(group)) {
+        group_to_entities.put(group, new ArrayList<Entity>());
+      }
+      return group_to_entities.get(group);
+    }
+
+    boolean isEntityInGroup(Entity e, String group) {
+      ArrayList<Entity> entities =  group_to_entities.get(group);
+      return entities.contains(e);
+    }
 
 }
 

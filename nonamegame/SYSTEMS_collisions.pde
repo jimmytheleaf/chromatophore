@@ -58,7 +58,9 @@ class CollisionSystem extends System {
         ShapeComponent ca = (ShapeComponent) pair.a.getComponent(SHAPE);
         ShapeComponent cb = (ShapeComponent) pair.b.getComponent(SHAPE);
 
-        if (ca != null && cb != null && ca.collideable && cb.collideable) {
+        if (pair.a.active && pair.b.active && 
+            ca != null && cb != null && 
+            ca.collideable && cb.collideable) {
           if (this.checkCollision(ca.shape, cb.shape)) {
             this._collisions.add(pair);
           }

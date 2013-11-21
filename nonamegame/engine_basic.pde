@@ -2,10 +2,12 @@ class Entity {
  
    int id;
    World world;
+   boolean active;
   
    Entity(int _id, World w) {
       this.id = _id; 
       this.world = w;
+      this.active = true;
    } 
 
     void addComponent(Component c) {

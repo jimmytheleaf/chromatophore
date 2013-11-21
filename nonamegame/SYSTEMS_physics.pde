@@ -19,7 +19,8 @@ class PhysicsSystem extends System {
 
       for (Entity e : physics_store.keySet()) {
 
-        if (this.world.entity_manager.component_store.get(MOTION).containsKey(e)) {
+
+        if (e.active && this.world.entity_manager.component_store.get(MOTION).containsKey(e)) {
 
           Physics p = (Physics) physics_store.get(e);
           Motion m = (Motion) e.getComponent(MOTION);

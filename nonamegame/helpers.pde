@@ -15,3 +15,7 @@ color getPixel(int x, int y) {
   return pixels[x + y * width]; 
 }
 
+int randomint(int min, int max) {
+	return int(random(min, max));
+}
+

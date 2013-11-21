@@ -1,3 +1,4 @@
+Vec2 center = new Vec2(480, 320);
 
 class BaseScene extends Scene {
 

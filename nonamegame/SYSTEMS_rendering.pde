@@ -24,22 +24,24 @@ class RenderingSystem extends System {
       // Sort out by layer
       for (Entity e : this.world.entity_manager.component_store.get(SHAPE).keySet()) {
 
-        ShapeComponent sc = (ShapeComponent) e.getComponent(SHAPE);
+        if (e.active) {
+          ShapeComponent sc = (ShapeComponent) e.getComponent(SHAPE);
 
-        int z = sc.z;
+          int z = sc.z;
 
-        if (!this.z_tracker.containsKey(z)) {
-          this.z_tracker.put(z, new ArrayList<ShapeComponent>());
-        }
+          if (!this.z_tracker.containsKey(z)) {
+            this.z_tracker.put(z, new ArrayList<ShapeComponent>());
+          }
 
-        this.z_tracker.get(z).add(sc);
+          this.z_tracker.get(z).add(sc);
 
-        if (z < min_z) { 
-          min_z = z;
-        }
-        
-        if (z > max_z) { 
-          max_z = z;
+          if (z < min_z) { 
+            min_z = z;
+          }
+          
+          if (z > max_z) { 
+            max_z = z;
+          }
         }
 
       }

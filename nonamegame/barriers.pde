@@ -65,13 +65,24 @@ Entity createRectangle(World world, int x, int y, int w, int h, IColor c) {
     rectangle.addComponent(rt);
 
     final Shape rectangle_shape = new Rectangle(rt.pos, w, h).setColor(c);
-    rectangle.addComponent(new ShapeComponent(rectangle_shape, 1));
-
-
-
+    rectangle.addComponent(new ShapeComponent(rectangle_shape, 2));
 
     // rectangle.addComponent(new RenderingComponent().addDrawable(rectangle_shape, 1));
     // rectangle.addComponent(new Collider(rectangle_shape));
 
     return rectangle;
+}
+
+
+void setUpCollectables(World world, int num, IColor c) {
+
+    CollisionSystem cs = (CollisionSystem) world.getSystem(COLLISION_SYSTEM);
+    Entity player = world.getTaggedEntity(TAG_PLAYER);
+
+    for (int i = 0; i < num; i++) {
+        Entity collectable = createRectangle(world, randomint(185, 775), randomint(25, 615), 5, 5, c);
+        world.group_manager.addEntityToGroup(collectable, GROUP_COLLECTABLES);
+        cs.watchCollision(player, collectable);
+    }
+
 }

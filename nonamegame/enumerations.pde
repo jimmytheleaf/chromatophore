@@ -17,6 +17,7 @@ String TAG_WALL_LEFT = "LEFT";
 String TAG_WALL_RIGHT = "RIGHT";
 String TAG_SPRING_MOUNT = "springmount";
 
+String GROUP_COLLECTABLES = "collectables";
 
 
 String TEST_LEVEL = "testlevel";

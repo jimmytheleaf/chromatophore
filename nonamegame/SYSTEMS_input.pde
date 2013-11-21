@@ -50,10 +50,13 @@ class InputSystem extends System {
 
     if (this.world.entity_manager.component_store.containsKey(INPUT_RESPONSE)) {
       for (Entity e : this.world.entity_manager.component_store.get(INPUT_RESPONSE).keySet()) {
-        InputResponse r = (InputResponse) e.getComponent(INPUT_RESPONSE);
 
-        for (InputResponseFunction response_func : r.responses) {
-          response_func.update(this);
+        if (e.active) {
+          InputResponse r = (InputResponse) e.getComponent(INPUT_RESPONSE);
+
+          for (InputResponseFunction response_func : r.responses) {
+            response_func.update(this);
+          }
         }
       }
     }
