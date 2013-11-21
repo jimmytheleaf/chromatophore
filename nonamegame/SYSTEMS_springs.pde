@@ -71,7 +71,7 @@ class SpringSystem extends System {
 
         if (len >= s.target_length) {
 
-            printDebug("Pulling with spring: " + s);
+            // printDebug("Pulling with spring: " + s);
 
             // TODO: attach to middle. For now just happens to work that it's a circle
             point_buffer.x = a_transform.pos.x - b_transform.pos.x;
@@ -85,12 +85,12 @@ class SpringSystem extends System {
             force_buffer.x = point_buffer.x * s.stiffness - (velocity_buffer.x * s.damping);
             force_buffer.y = point_buffer.y * s.stiffness - (velocity_buffer.y * s.damping);
 
-            printDebug("Applying force to first entity: " + force_buffer);
+            // printDebug("Applying force to first entity: " + force_buffer);
             b_physics.applyForce(force_buffer);
 
             force_buffer.negative();
 
-            printDebug("Applying force to second entity: " + force_buffer);
+            // printDebug("Applying force to second entity: " + force_buffer);
             a_physics.applyForce(force_buffer);
 
         }

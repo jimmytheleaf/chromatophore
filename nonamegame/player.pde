@@ -120,24 +120,34 @@
 
 		        Physics p = (Physics) player.getComponent(PHYSICS);
 
-		          if (input_system.actionHeld(ACTION_UP)) {
+		        boolean up_or_down = false;
+		        boolean left_or_right = false;
+
+		        if (input_system.actionHeld(ACTION_UP)) {
 
 		          	p.applyForce(0, -force);
+		          	up_or_down = true;
 	
-		          } else if (input_system.actionHeld(ACTION_DOWN)) {
+		        } else if (input_system.actionHeld(ACTION_DOWN)) {
 		            
 		           	p.applyForce(0, force);
+		          	up_or_down = true;
 
 		          } 
 
 		          if (input_system.actionHeld(ACTION_LEFT)) {
 
 		           	p.applyForce(-force, 0);
+		           	left_or_right = true;
 
 		          } else if (input_system.actionHeld(ACTION_RIGHT)) {
 		           	
 		           	p.applyForce(force, 0);
-		          
+		          	left_or_right = true;
+		          }
+
+		          if (up_or_down && left_or_right) {
+		          	p.normalizeForces(force);
 		          }
 
 		      }

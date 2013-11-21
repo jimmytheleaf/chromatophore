@@ -48,8 +48,8 @@ class PhysicsSystem extends System {
 
       p.clearForces();
 
-      printDebug("Applying forces: " + force_buffer.x + ", " + force_buffer.y);
-      printDebug("Accelerating object: " + m.acceleration.x + ", " + m.acceleration.y);
+      // printDebug("Applying forces: " + force_buffer.x + ", " + force_buffer.y);
+      // printDebug("Accelerating object: " + m.acceleration.x + ", " + m.acceleration.y);
     }
 
   }

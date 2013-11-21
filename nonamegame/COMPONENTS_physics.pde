@@ -33,4 +33,9 @@ class Physics extends Component {
     forces.y = 0;
   }
 
+  void normalizeForces(float force) {
+
+    forces.scaleTo(force);
+  }
+
 }

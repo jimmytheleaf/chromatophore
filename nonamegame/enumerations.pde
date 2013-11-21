@@ -24,4 +24,9 @@ String TEST_LEVEL = "testlevel";
 String LEVEL_ONE = "l1";
 String LEVEL_TWO = "l2";
 String LEVEL_THREE = "l3";
-
+String LEVEL_FOUR = "l4";
+String LEVEL_FIVE = "l5";
+String LEVEL_SIX = "l6";
+String LEVEL_SEVEN = "l7";
+String LEVEL_EIGHT = "l8";
+String LEVEL_NINE = "l9";
