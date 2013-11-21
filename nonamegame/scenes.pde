@@ -129,25 +129,28 @@ class LevelTwo extends BaseScene {
 
       super.init();
       
+      this.world.updateClock();
+      this.world.stopClock();
+
       Entity player = PLAYER_UTILS.getNewPlayerEntity(world);
       PLAYER_UTILS.addRectangleShape(player, 405, 20, 150, 150, world_color);
-      PLAYER_UTILS.addMotion(player, 1000, 600, 0);
+      PLAYER_UTILS.addMotion(player, 1000, 1000, 0);
       PLAYER_UTILS.addPlatformerMovement(player, 100, 1000);
       PLAYER_UTILS.addGravity(player, 0, 600);
 
       setUpWalls(this.world, world_color);
 
-      setUpPlatform(this.world, 405, 170, 150, 10, new RGB(0, 0, 0, 255));
+      setUpPlatform(this.world, 405, 170, 150, 10, new RGB(63, 63, 63, 255));
 
       background(255, 255, 255);
 
-      this.world.updateClock();
 
   }
 
 
   void draw() {
 
+    this.world.startClock();
     this.world.updateClock();
     this.update(this.world.clock.dt);
 
@@ -184,7 +187,7 @@ class LevelTwo extends BaseScene {
   }
 
   boolean checkWinCondition() {
-    return world_color.r == 255f;
+    return world_color.r >  254f;
   }
 
 }

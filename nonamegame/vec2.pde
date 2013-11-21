@@ -40,6 +40,12 @@ class Vec2 {
 		return this;
 	}
 
+	Vec2 divide(float divisor) {
+		this.x = this.x / divisor;
+		this.y = this.y / divisor;
+		return this;
+	}
+
 	Vec2 negative() {
 		this.x = - this.x;
 		this.y = - this.y;

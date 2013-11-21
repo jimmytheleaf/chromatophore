@@ -47,6 +47,14 @@ class World {
       return this.system_manager.getSystem(name);
     }
 
+    void stopClock() {
+      this.clock.stop();
+    }
+
+    void startClock() {
+      this.clock.start();
+    }
+
     float updateClock() {
 
     	clock.update();
@@ -92,6 +100,7 @@ class Clock {
 	int now;
 	float dt;
 	int ticks;
+  boolean running;
 
 	Clock() {
 
@@ -100,18 +109,29 @@ class Clock {
 		this.now = this.start_time;
 		this.dt = 0;
 		this.ticks = 0;
+    this.running = true;
 
 	}
 
 	void update() {
 		
-		ticks++;
+    if (this.running) {
+  		ticks++;
 
-		this.now = millis();
-		this.dt = (this.now - this.last_time) / 1000.0;
-		this.last_time = this.now;
+  		this.now = millis();
+  		this.dt = (this.now - this.last_time) / 1000.0;
+  		this.last_time = this.now;
+    }
 
 	}
+
+  void stop() {
+    this.running = false;
+  }
+
+  void start() {
+    this.running = true;
+  }
 
 	float fps() {
 		return 1 / this.dt;
