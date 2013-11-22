@@ -100,8 +100,8 @@ class LevelGateway extends Scene {
     }
 
     fill(0, 255, 255, 255);
-    text(mouse_gridposition.toString(), 20, 340);
-    text(mousePosToLevel(), 20, 440);
+    //text(mouse_gridposition.toString(), 20, 340);
+    //text(mousePosToLevel(), 20, 440);
 
 
     if (checkWinCondition()) {
