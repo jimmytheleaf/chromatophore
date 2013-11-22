@@ -153,7 +153,7 @@ class GroupManager {
 
     boolean isEntityInGroup(Entity e, String group) {
       ArrayList<Entity> entities =  group_to_entities.get(group);
-      return entities.contains(e);
+      return entities != null && entities.contains(e);
     }
 
     void removeEntityFromGroup(Entity e, String group) {

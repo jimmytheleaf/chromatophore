@@ -18,6 +18,7 @@ String TAG_WALL_RIGHT = "RIGHT";
 String TAG_SPRING_MOUNT = "springmount";
 
 String GROUP_COLLECTABLES = "collectables";
+String GROUP_BULLETS = "bullets";
 
 
 String TEST_LEVEL = "testlevel";

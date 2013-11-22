@@ -5,8 +5,9 @@ class LevelFive extends BaseScene {
   RGB wall_color = new RGB(63, 63, 63, 255);
 
   RGB color_red = new RGB(255, 0, 0, 255);
-  RGB color_blue = new RGB(0, 0, 255, 255);
+  RGB color_green = new RGB(0, 255, 0, 255);
 
+  int NUM_COLLECTABLES = 2;
 
   LevelFive(World _w) {
     super(LEVEL_FIVE, _w);
@@ -16,13 +17,13 @@ class LevelFive extends BaseScene {
       super.init();   
       
       Entity player = PLAYER_UTILS.getNewPlayerEntity(world);
-      PLAYER_UTILS.addRectangleShape(player, int(center.x), int(center.y), 50, 75, player_color);
-      PLAYER_UTILS.addMotion(player, 100, 0, 0, 0.98);
+      PLAYER_UTILS.addCircleShape(player, int(center.x), int(center.y), 15, player_color);
+      PLAYER_UTILS.addMotion(player, 200, 0, 0, 0.98);
       PLAYER_UTILS.addSpaceshipMovement(player, 20);
 
-      setUpCollectables(world, 2, color_red);
-      setUpShooter(world, 300, 300, TWO_PI, 100f, color_blue);
-
+      setUpCollectables(world, NUM_COLLECTABLES, color_red);
+      setUpShooter(world, LEFT_X + 75, TOP_Y + 75, TWO_PI, 100f, color_green, 14);
+      setUpShooter(world, RIGHT_X - 75, BOTTOM_Y - 75, TWO_PI, 100f, color_green, 14);
 
       setUpWalls(this.world, wall_color);
       background(255, 255, 255);
@@ -56,7 +57,7 @@ class LevelFive extends BaseScene {
     ArrayList<CollisionPair> collisions = collision_system.getCollisions();
 
     collidePlayerAgainstWalls(collisions, false);
-    collidePlayerAgainstCollectables(collisions, player_color);
+    handleLevelCollisions(collisions, player_color);
 
     this.checkResetCondition();
 
@@ -76,7 +77,7 @@ class LevelFive extends BaseScene {
     }
 
     if (all_inactive) {
-      setUpCollectables(world, 5, color_red);
+      setUpCollectables(world, NUM_COLLECTABLES, color_red);
       background(255, 255, 255);
     }
   }
@@ -85,7 +86,7 @@ class LevelFive extends BaseScene {
     return player_color.r >  254f;
   }
 
-  void collidePlayerAgainstCollectables(ArrayList<CollisionPair> collisions, RGB player_color) {
+  void handleLevelCollisions(ArrayList<CollisionPair> collisions, RGB player_color) {
 
     CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
 
@@ -103,10 +104,18 @@ class LevelFive extends BaseScene {
           player_color.r += 15;
           player_color.g -= 15;
         } 
+      } else if (p.a == world.getTaggedEntity(TAG_PLAYER) && this.world.group_manager.isEntityInGroup(p.b, GROUP_BULLETS)) {
+
+        Pool<Entity> pool = ((PoolComponent) p.b.getComponent(POOL)).pool;
+        pool.giveBack(p.b);
+        player_color.r -= 15;
+        player_color.g += 15; 
 
       }
     }
   }
+
+
   
 
 }

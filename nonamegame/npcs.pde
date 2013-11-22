@@ -1,5 +1,8 @@
 
-
+final int TOP_Y = 20;
+final int BOTTOM_Y = 620;
+final int LEFT_X = 180;
+final int RIGHT_X = 680;
 
 Entity setUpSpringMount(World world, int x, int y, float mass) {
 
@@ -117,7 +120,7 @@ void setUpCollectables(World world, int num, IColor c) {
 
 }
 
-void setUpShooter(final World world, int x, int y, final float rotation, final float speed, final IColor c) {
+void setUpShooter(final World world, int x, int y, final float rotation, final float speed, final IColor c, final int ticks) {
 
     final Entity emitter = world.entity_manager.newEntity();
     final Transform t = new Transform(x, y);
@@ -153,18 +156,22 @@ void setUpShooter(final World world, int x, int y, final float rotation, final f
     b.addBehavior(new BehaviorCallback() {
         public void update(float dt) {
             // printDebug("creating bullet");
-            Entity bullet = bullets.getObject();
 
-            if (bullet != null) {
-                Transform bt = (Transform) bullet.getComponent(TRANSFORM);
-                bt.pos.x = int(t.pos.x);
-                bt.pos.y = int(t.pos.y);
-                bt.rotateTo(t.getRotation());
 
-                Motion m = (Motion)  bullet.getComponent(MOTION);
-                m.velocity.x = speed;
-                m.velocity.y = 0;
-                m.velocity.rotate(t.getRotation());
+            if (world.clock.ticks % ticks == 0) {
+                Entity bullet = bullets.getObject();
+
+                if (bullet != null) {
+                    Transform bt = (Transform) bullet.getComponent(TRANSFORM);
+                    bt.pos.x = int(t.pos.x);
+                    bt.pos.y = int(t.pos.y);
+                    bt.rotateTo(t.getRotation());
+
+                    Motion m = (Motion)  bullet.getComponent(MOTION);
+                    m.velocity.x = speed;
+                    m.velocity.y = 0;
+                    m.velocity.rotate(t.getRotation());
+                }
             }
        }
     });
@@ -190,10 +197,10 @@ Entity createBullet(final World world, int x, int y, float rotation, float speed
 
             Transform t = (Transform) bullet.getComponent(TRANSFORM);
     
-            if (t.pos.x < 0 || t.pos.x > width || t.pos.y < 0 || t.pos.y > height) {
-                printDebug("Giving back bullet");
+            if (t.pos.x < LEFT_X || t.pos.x > RIGHT_X || t.pos.y < TOP_Y || t.pos.y > BOTTOM_Y) {
+                // printDebug("Giving back bullet");
                 p.giveBack(bullet);
-                printDebug("Should now be inactive: " + bullet.active);
+                // printDebug("Should now be inactive: " + bullet.active);
 
             }
        }
@@ -201,6 +208,15 @@ Entity createBullet(final World world, int x, int y, float rotation, float speed
 
 
     bullet.addComponent(b);
+
+    PoolComponent pc = new PoolComponent(p);
+    bullet.addComponent(pc);
+
+    CollisionSystem cs = (CollisionSystem) world.getSystem(COLLISION_SYSTEM);
+    Entity player = world.getTaggedEntity(TAG_PLAYER);
+    cs.watchCollision(player, bullet);
+
+    world.group_manager.addEntityToGroup(bullet, GROUP_BULLETS);
 
     return bullet;
 }
