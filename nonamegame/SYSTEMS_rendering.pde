@@ -68,7 +68,7 @@ class RenderingSystem extends System {
              } else {
               
                 pushMatrix();
-                translate(shape.center().x, shape.center().y);
+                translate(shape.centerPosition().x, shape.centerPosition().y);
                 rotate(t.getRotation());
                 shape.drawAroundOrigin();
                 popMatrix();

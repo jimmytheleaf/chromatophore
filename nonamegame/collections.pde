@@ -45,7 +45,7 @@ abstract class Pool<T> {
 		available = new ArrayList<T>();
 	}
 
-	public T getObject() {
+	public T getPoolObject() {
 
 		T obj = null;
 

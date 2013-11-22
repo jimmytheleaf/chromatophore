@@ -190,19 +190,7 @@ Entity setUpShooter(final World world, int x, int y, final float rotation, final
 
     emitter.addComponent(t);
 
-    final Pool<Entity> bullets = new Pool<Entity>(80) {
-        protected Entity createObject() {
-            return createBullet(world, int(t.pos.x), int(t.pos.y), t.getRotation(), speed, c, this);
-        }
-
-        protected void recycleObject(Entity object) {
-            object.active = false;
-        }
-
-        protected void enableObject(Entity object) {
-            object.active = true;
-        }
-    };
+    final BulletPool bullets = new BulletPool(80, t, world, speed, c);
 
     Behavior b = new Behavior();
 
@@ -221,7 +209,7 @@ Entity setUpShooter(final World world, int x, int y, final float rotation, final
 
 
             if (world.clock.ticks % ticks == 0) {
-                Entity bullet = bullets.getObject();
+                Entity bullet = bullets.getPoolObject();
 
                 if (bullet != null) {
                     Transform bt = (Transform) bullet.getComponent(TRANSFORM);
@@ -244,7 +232,7 @@ Entity setUpShooter(final World world, int x, int y, final float rotation, final
 }
 
 // TODO pool
-Entity createBullet(final World world, int x, int y, float rotation, float speed, IColor c, final Pool<Entity> p) {
+Entity createBullet(final World world, int x, int y, float rotation, float speed, IColor c, final BulletPool p) {
 
     final Entity bullet = createCircle(world, x, y, 3, c);
 
@@ -284,5 +272,60 @@ Entity createBullet(final World world, int x, int y, float rotation, float speed
 
     return bullet;
 }
+
+
+
+
+ class BulletPool extends Pool<Entity> {
+
+        Transform t;
+        float speed;
+        IColor c;
+        World world;
+
+
+        BulletPool(int size, Transform t, World world, float speed, IColor c) {
+            super(size);
+            this.t = t;
+            this.speed = speed;
+            this.c = c;
+            this.world = world;
+        }
+
+        protected Entity createObject() {
+            return createBullet(world, int(t.pos.x), int(t.pos.y), t.getRotation(), speed, c, this);
+        }
+
+        protected void recycleObject(Entity object) {
+            object.active = false;
+        }
+
+        protected void enableObject(Entity object) {
+            object.active = true;
+        }
+
+        public Entity getPoolObject() {
+
+            Entity obj = null;
+
+            if (available.size() > 0) {
+                obj = available.get(0);
+                available.remove(obj);
+                used.add(obj);
+                enableObject(obj);
+            } else if (used.size() < max_size) {
+                obj = createObject();
+                used.add(obj);
+            }
+
+            return obj;
+        }
+
+        public void giveBack(Entity object) {
+            recycleObject(object);
+            used.remove(object);
+            available.add(object);
+        }
+    };
 
 

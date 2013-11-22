@@ -26,7 +26,7 @@ abstract class Shape implements Drawable, Collidable {
 
   public abstract void draw();
   public abstract void drawAroundOrigin();
-  public abstract Vec2 center();
+  public abstract Vec2 centerPosition();
 
   // public abstract boolean collidesWith(Collidable collidable)
 
@@ -56,7 +56,7 @@ class Point extends Shape {
       return "Point: (" + this.pos.x + ", " + this.pos.y + ")";
   }
 
-  Vec2 center() {
+  Vec2 centerPosition() {
     return this.pos;
   }
 
@@ -67,13 +67,13 @@ class Rectangle extends Shape  {
 
   int width; 
   int height;
-  private Vec2 center;
+  private Vec2 center_vec;
 
   Rectangle(Vec2 pos, int width, int height) {
     super(pos);
     this.width = width;
     this.height = height;
-    this.center = new Vec2(pos.x + this.width/2, pos.y + this.height/2);
+    this.center_vec = new Vec2(pos.x + this.width/2, pos.y + this.height/2);
   }
   Rectangle(float x, float y, int width, int height) {
     super(x, y);
@@ -99,10 +99,10 @@ class Rectangle extends Shape  {
   }
 
   // Keep one object, recalculate whenever called
-  Vec2 center() {
-    this.center.x = this.pos.x + this.width/2;
-    this.center.y = this.pos.y + this.height/2;
-    return this.center;
+  Vec2 centerPosition() {
+    this.center_vec.x = this.pos.x + this.width/2;
+    this.center_vec.y = this.pos.y + this.height/2;
+    return this.center_vec;
   }
 
 }
@@ -131,7 +131,7 @@ class Circle extends Shape {
     ellipse(0, 0, this.radius * 2, this.radius * 2);
   }
 
-   Vec2 center() {
+   Vec2 centerPosition() {
     return this.pos;
   }
 
