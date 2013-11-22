@@ -184,12 +184,12 @@ class LevelEight extends BaseScene {
 
     collidePlayerAgainstWalls(collisions, true);
 
-    mouse_gridposition.x = constrain(ceil((mouseX - LEFT_X)/cell_size), 0, grid_size - 1);
-    mouse_gridposition.y = constrain(ceil((mouseY - TOP_Y)/cell_size), 0, grid_size - 1);
+    mouse_gridposition.x = constrain(floor((mouseX - LEFT_X)/cell_size), 0, grid_size - 1);
+    mouse_gridposition.y = constrain(floor((mouseY - TOP_Y)/cell_size), 0, grid_size - 1);
 
 
-    player_gridposition.x = constrain(ceil((player_transform.pos.x - LEFT_X)/cell_size), 0, grid_size - 1);
-    player_gridposition.y = constrain(ceil((player_transform.pos.y - TOP_Y)/cell_size), 0, grid_size - 1);
+    player_gridposition.x = constrain(floor((player_transform.pos.x - LEFT_X)/cell_size), 0, grid_size - 1);
+    player_gridposition.y = constrain(floor((player_transform.pos.y - TOP_Y)/cell_size), 0, grid_size - 1);
 
     gol2.turnOn(player_gridposition.x, player_gridposition.y);
 

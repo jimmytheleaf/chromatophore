@@ -81,4 +81,71 @@ class LevelTwo extends BaseScene {
     return world_color.r >  254f;
   }
 
+  
+void checkJumpability(Entity player, ArrayList<CollisionPair> collisions) {
+
+    boolean jumpable = false;
+
+    for (CollisionPair p : collisions) {
+
+        if (p.a == player && p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
+          jumpable = true; 
+        }
+    }
+
+    Jumper j = (Jumper) player.getComponent(JUMPER);
+    j.jumpable = jumpable;
+
+
+}
+
+
+
+
+void collidePlayerAgainstPlatform(ArrayList<CollisionPair> collisions, RGB world_color) {
+
+  CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
+
+  for (CollisionPair p : collisions) {
+
+    if (p.a == world.getTaggedEntity(TAG_PLAYER) && p.b == world.getTaggedEntity(TAG_PLATFORM)) {
+
+      Entity player = p.a;
+      Transform t = (Transform) player.getComponent(TRANSFORM);
+      Motion m = (Motion) player.getComponent(MOTION);
+
+      Rectangle player_shape = (Rectangle) ((ShapeComponent) player.getComponent(SHAPE)).shape;
+
+      Rectangle platform_shape = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
+
+
+      // TODO fix horizontal collision
+      if (player_shape instanceof Rectangle) {
+
+        if (collision_system.rectangleCollision(player_shape, platform_shape) &&
+            m.velocity.y > 0)  {
+            
+            t.pos.y = platform_shape.pos.y - ((Rectangle)player_shape).height;
+            m.velocity.y = 0;
+        
+        } else if (collision_system.rectangleCollision(player_shape, platform_shape) &&
+            m.velocity.y < 0)  {
+            
+            t.pos.y = platform_shape.pos.y + platform_shape.height;
+            m.velocity.y = -m.velocity.y;
+
+            world_color.r += 30;
+            world_color.g += 30;
+            world_color.b += 30;
+        } 
+
+
+      }
+
+    }
+  }
+  
+
+}
+
 }
