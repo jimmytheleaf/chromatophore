@@ -14,8 +14,8 @@ class LevelSeven extends BaseScene {
 
   RGB collectable_color = new RGB(0, 0, 0, 255);
 
-  RGB wall_color = color_dark_grey;
-  RGB bg = color_grey;
+  RGB wall_color = color_grey;
+  RGB bg = color_dark_grey;
 
   ArrayList<Entity> remove_buffer = new ArrayList<Entity>();
 
@@ -67,13 +67,13 @@ class LevelSeven extends BaseScene {
     background(bg.r, bg.g, bg.b);
     super.draw();
 
-    textSize(100);
+    textSize(90);
     
     fill(255, 255, 255, 255);
 
     if (checkWinCondition()) {
-      fill(0, 0, 0, 255);
-      text("THE WINNER IS YOU", 40, 340); 
+      fill(255, 255, 255, 255);
+      text("THE WINNER IS YOU", 20, 340); 
     }
 
   }
@@ -85,7 +85,7 @@ class LevelSeven extends BaseScene {
     CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
     ArrayList<CollisionPair> collisions = collision_system.getCollisions();
 
-    collidePlayerAgainstWalls(collisions, true);
+    levelSevenWallCollisions(collisions);
     handleLevelCollisions(collisions, player_color);
 
     this.checkResetCondition();
@@ -140,7 +140,7 @@ class LevelSeven extends BaseScene {
   }
   
   boolean checkWinCondition() {
-    return false;
+    return player_transform.pos.x < 0 || player_transform.pos.x > width || player_transform.pos.y < 0 || player_transform.pos.y > height;
   }
 
   void handleLevelCollisions(ArrayList<CollisionPair> collisions, RGB player_color) {
@@ -170,6 +170,50 @@ class LevelSeven extends BaseScene {
       }
     }
   }
+
+  void levelSevenWallCollisions(ArrayList<CollisionPair> collisions) {
+
+  if (collisions.size() > 0) {
+      //printDebug("Detected collisions: " + collisions.size());
+
+      for (CollisionPair p : collisions) {
+
+        if (p.a == world.getTaggedEntity(TAG_PLAYER)) {
+
+          Entity player = p.a;
+          Transform t = (Transform) player.getComponent(TRANSFORM);
+          Shape player_shape = ((ShapeComponent) player.getComponent(SHAPE)).shape;
+          Motion m = (Motion) player.getComponent(MOTION);
+
+          if (p.b == world.getTaggedEntity(TAG_WALL_LEFT) || p.b == world.getTaggedEntity(TAG_WALL_RIGHT) || 
+            p.b == world.getTaggedEntity(TAG_WALL_TOP) || p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
+
+            Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
+
+            RGB wall_color = new RGB(0, 0, 0, 0);
+            wall_color.setFromRaw(wall.getColor().toRaw());
+      
+
+            if (wall_color.r > 0) {  
+
+              wall_color.r -=5;
+              wall_color.g -=5;
+              wall_color.b -=5;
+
+              t.pos.x = LEFT_X + 300;
+              t.pos.y = TOP_Y + 300;
+
+              wall.setColor(wall_color);
+            }
+
+          } 
+
+        }
+
+      }
+    }
+
+}
 
 
   
