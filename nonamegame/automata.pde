@@ -118,16 +118,32 @@ class Life {
 
 	int tick = 0;
 
+	int living = 0;
+
 	Life(int x, int y) {
 		this.cells = new CellGrid(x, y, false);
 	}
 
 	void turnOn(int x, int y) {
-		this.cells.getCell(x, y).setState(true);
+		this.setState(x, y, true);
+	}
+
+	void turnOn(float x, float y) {
+		this.setState(int(x), int(y), true);
+	}
+
+	void setState(int x, int y, boolean value) {
+			this.cells.getCell(x, y).setState(value);
+	}
+
+	void toggle(int x, int y) {
+			this.cells.getCell(x, y).invertState();
 	}
 
 	void updateFrame() {
 		tick++;
+
+		living = 0;
 
 		for (int x = 0; x < cells.xsize; x++) {
 			for (int y = 0; y < cells.ysize; y++) {
@@ -150,6 +166,9 @@ class Life {
 			for (int y = 0; y < cells.ysize; y++) {
 				Cell cell = cells.getCell(x, y);
 				cell.transitionState();
+				if (cell.alive) {
+					living++;
+				}
 			}
 		}
 	}

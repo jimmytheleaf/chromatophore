@@ -31,7 +31,7 @@ void setup()
   LevelThree level_three = new LevelThree(world);
 
   world.scene_manager.addScene(level_three);
-  world.scene_manager.setCurrentScene(level_three);
+  // world.scene_manager.setCurrentScene(level_three);
 
   LevelFour level_four = new LevelFour(world);
 
@@ -49,7 +49,7 @@ void setup()
 
   LevelSeven level_seven = new LevelSeven(world);
   world.scene_manager.addScene(level_seven);
-  // world.scene_manager.setCurrentScene(level_seven);
+  world.scene_manager.setCurrentScene(level_seven);
 
 
 }

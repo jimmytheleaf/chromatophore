@@ -20,12 +20,17 @@ class LevelSeven extends BaseScene {
   ArrayList<Entity> remove_buffer = new ArrayList<Entity>();
 
   Vec2 mouse_gridposition;
+  Vec2 player_gridposition;
 
   int NUM_COLLECTABLES = 4;
 
   int grid_size = 40;
   Life gol;
+  Life gol2;
+
   int cell_size;
+
+  Transform player_transform;
 
   LevelSeven(World _w) {
     super(LEVEL_SEVEN, _w);
@@ -34,6 +39,7 @@ class LevelSeven extends BaseScene {
   void init() {
 
       mouse_gridposition = new Vec2(0, 0);
+      player_gridposition = new Vec2(0, 0);
 
       this.gol = new Life(grid_size, grid_size);
       this.gol.turnOn(1, 5);
@@ -84,6 +90,7 @@ class LevelSeven extends BaseScene {
 
       copyCells(this.gol, 25);
 
+      this.gol2 = new Life(grid_size, grid_size);
 
       cell_size = 600 / grid_size;
 
@@ -98,6 +105,7 @@ class LevelSeven extends BaseScene {
       PLAYER_UTILS.addMotion(player, 200, 0, 0, 0.98);
       PLAYER_UTILS.addSpaceshipMovement(player, 20);
 
+      player_transform = (Transform) player.getComponent(TRANSFORM);
 
       setUpWalls(this.world, wall_color);
       background(bg.r, bg.g, bg.b);
@@ -109,33 +117,47 @@ class LevelSeven extends BaseScene {
     this.world.updateClock();
     this.update(this.world.clock.dt);
 
-    background(bg.r, bg.g, bg.b);
+    background(gol.living, gol.living, gol.living);
     super.draw();
 
 
-    fill(255, 255, 255);
     for (int i = 0; i < grid_size; i++) {
       for (int j = 0; j < grid_size; j++) {
 
-          
-          Cell cell = this.gol.cells.getCell(i, j);
-          if (cell != null && cell.alive) {
+           Cell cell2 = this.gol2.cells.getCell(i, j);
+            
+          if (cell2 != null && cell2.alive) {
+              fill(0, 255, 100, 100);
               rect(LEFT_X + (i * cell_size), 
                 TOP_Y + (j * cell_size),
                 cell_size,
                 cell_size);
           }
-            
+
+
+          Cell cell = this.gol.cells.getCell(i, j);
+          if (cell != null && cell.alive) {
+              fill(255, 255, 255, 255);
+              rect(LEFT_X + (i * cell_size), 
+                TOP_Y + (j * cell_size),
+                cell_size,
+                cell_size);
+          }
+
+         
       }
     }
 
-    textSize(100);
+    textSize(90);
     
     fill(255, 255, 255, 255);
-    //text(mouse_gridposition.toString(), 40, 340);
+    text(gol.living, 20, 340);
+
+    fill(0, 255, 100, 255);
+    text(gol2.living, 780, 340);
 
     if (checkWinCondition()) {
-      fill(0, 0, 0, 255);
+      fill(255, 255, 255, 255);
       text("THE WINNER IS YOU", 40, 340); 
     }
 
@@ -150,24 +172,34 @@ class LevelSeven extends BaseScene {
 
     collidePlayerAgainstWalls(collisions, true);
 
-    mouse_gridposition.x = constrain(ceil((mouseX - LEFT_X)/cell_size), 0, grid_size);
-    mouse_gridposition.y = constrain(ceil((mouseY - TOP_Y)/cell_size), 0, grid_size);
+    mouse_gridposition.x = constrain(ceil((mouseX - LEFT_X)/cell_size), 0, grid_size - 1);
+    mouse_gridposition.y = constrain(ceil((mouseY - TOP_Y)/cell_size), 0, grid_size - 1);
+
+
+    player_gridposition.x = constrain(ceil((player_transform.pos.x - LEFT_X)/cell_size), 0, grid_size - 1);
+    player_gridposition.y = constrain(ceil((player_transform.pos.y - TOP_Y)/cell_size), 0, grid_size - 1);
+
+    gol2.turnOn(player_gridposition.x, player_gridposition.y);
 
     if (world.clock.ticks % 5 == 0) {
       this.gol.updateFrame();
     }
 
+     if (world.clock.ticks % 10 == 0) {
+      this.gol2.updateFrame();
+    }
+
   }
 
   void mouseClicked() {
-      this.gol.turnOn(int(mouse_gridposition.x), int(mouse_gridposition.y));
+      this.gol.toggle(int(mouse_gridposition.x), int(mouse_gridposition.y));
   }
 
 
 
   
   boolean checkWinCondition() {
-    return false;
+    return gol.living == 0;
   }
 
   void copyCells(Life gol, int yoffset) {
