@@ -18,39 +18,9 @@ void setup()
   background(63, 63, 63);
   noStroke();
 
-  LevelOne level_one = new LevelOne(world);
-
-  world.scene_manager.addScene(level_one);
-  // world.scene_manager.setCurrentScene(level_one);
-
-  LevelTwo level_two = new LevelTwo(world);
-
-  world.scene_manager.addScene(level_two);
-  // world.scene_manager.setCurrentScene(level_two);
-
-  LevelThree level_three = new LevelThree(world);
-
-  world.scene_manager.addScene(level_three);
-  // world.scene_manager.setCurrentScene(level_three);
-
-  LevelFour level_four = new LevelFour(world);
-
-  world.scene_manager.addScene(level_four);
-  // world.scene_manager.setCurrentScene(level_four);
-
-  LevelFive level_five = new LevelFive(world);
-  world.scene_manager.addScene(level_five);
-  //world.scene_manager.setCurrentScene(level_five);
-
-  LevelSix level_six = new LevelSix(world);
-  world.scene_manager.addScene(level_six);
-  //world.scene_manager.setCurrentScene(level_six);
-
-
-  LevelSeven level_seven = new LevelSeven(world);
-  world.scene_manager.addScene(level_seven);
-  world.scene_manager.setCurrentScene(level_seven);
-
+  LevelGateway gateway = new LevelGateway(world);
+  world.scene_manager.addScene(gateway);
+  world.scene_manager.setCurrentScene(gateway);
 
 }
 

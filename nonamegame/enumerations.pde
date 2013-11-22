@@ -32,3 +32,4 @@ String LEVEL_SIX = "l6";
 String LEVEL_SEVEN = "l7";
 String LEVEL_EIGHT = "l8";
 String LEVEL_NINE = "l9";
+String LEVEL_GATEWAY = "gateway";

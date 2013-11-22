@@ -29,17 +29,34 @@ class LevelOne extends BaseScene {
     //background(255, 255, 255);
     super.draw();
 
-    textSize(100);
+    textSize(75);
     
     fill(255, 255, 255, 255);
 
     text("" + corners_touched, 40, 140);
-    printDebug("Corners Touched: " + corners_touched);
-    if (corners_touched == 4) {
-      printDebug("WIN");
+
+    if (checkWinCondition()) {
+
+       fill(255, 255, 255, 255);
       text("THE WINNER IS YOU", 40, 340); 
+      if (!won) {
+        won = true;
+        this.win_time = this.world.clock.total_time;
+      } 
+
+
     }
 
+     if (won) {
+        if (this.world.clock.total_time - this.win_time > 3) {
+          this.world.scene_manager.setCurrentScene(LEVEL_GATEWAY);
+        }
+    }
+
+  }
+
+  boolean checkWinCondition() {
+    return corners_touched == 4;
   }
 
   void update(float dt) {

@@ -2,9 +2,13 @@ Vec2 center = new Vec2(480, 320);
 
 class BaseScene extends Scene {
 
+  boolean won;
+  float win_time = 0;
+
 
 	BaseScene(String _name, World _w) {
 		super(_name, _w);
+    won = false;
 	}
 
 	void update(float dt) {
@@ -17,13 +21,6 @@ class BaseScene extends Scene {
 
 	  BehaviorSystem behavior_system = (BehaviorSystem) this.world.getSystem(BEHAVIOR_SYSTEM);
 	  behavior_system.updateBehaviors(dt);
-
-
-    SpringSystem springs = (SpringSystem) this.world.getSystem(SPRING_SYSTEM);
-    springs.update(dt);
-
-    PhysicsSystem physics = (PhysicsSystem) this.world.getSystem(PHYSICS_SYSTEM);
-    physics.update(dt);
 
 	  MovementSystem movement_system = (MovementSystem) this.world.getSystem(MOVEMENT_SYSTEM);
 	  movement_system.updateMovables(dt);

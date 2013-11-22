@@ -107,6 +107,7 @@ class Clock {
 	float dt;
 	int ticks;
   boolean running;
+  float total_time;
 
 	Clock() {
 
@@ -116,6 +117,7 @@ class Clock {
 		this.dt = 0;
 		this.ticks = 0;
     this.running = true;
+    this.total_time = 0;
 
 	}
 
@@ -127,6 +129,7 @@ class Clock {
   		this.now = millis();
   		this.dt = (this.now - this.last_time) / 1000.0;
   		this.last_time = this.now;
+      this.total_time += this.dt;
     }
 
 	}

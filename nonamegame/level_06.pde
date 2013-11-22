@@ -58,13 +58,24 @@ class LevelSix extends BaseScene {
     background(bg.r, bg.g, bg.b);
     super.draw();
 
-    textSize(100);
+    textSize(75);
     
     fill(255, 255, 255, 255);
 
     if (checkWinCondition()) {
-      fill(0, 0, 0, 255);
+
+       fill(255, 255, 255, 255);
       text("THE WINNER IS YOU", 40, 340); 
+      if (!won) {
+        won = true;
+        this.win_time = this.world.clock.total_time;
+      } 
+    }
+
+     if (won) {
+        if (this.world.clock.total_time - this.win_time > 3) {
+          this.world.scene_manager.setCurrentScene(LEVEL_GATEWAY);
+        }
     }
 
   }

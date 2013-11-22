@@ -148,7 +148,7 @@ class LevelEight extends BaseScene {
       }
     }
 
-    textSize(90);
+    textSize(75);
     
     fill(255, 255, 255, 255);
     text(gol.living, 20, 340);
@@ -157,8 +157,20 @@ class LevelEight extends BaseScene {
     text(gol2.living, 780, 340);
 
     if (checkWinCondition()) {
+
       fill(255, 255, 255, 255);
       text("THE WINNER IS YOU", 40, 340); 
+      if (!won) {
+        won = true;
+        this.win_time = this.world.clock.total_time;
+      } 
+
+    }
+
+     if (won) {
+        if (this.world.clock.total_time - this.win_time > 3) {
+          this.world.scene_manager.setCurrentScene(LEVEL_GATEWAY);
+        }
     }
 
   }
@@ -199,7 +211,7 @@ class LevelEight extends BaseScene {
 
   
   boolean checkWinCondition() {
-    return gol.living == 0;
+    return gol.tick > 0 && gol.living == 0;
   }
 
   void copyCells(Life gol, int yoffset) {
