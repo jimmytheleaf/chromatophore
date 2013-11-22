@@ -60,8 +60,8 @@ class LevelGateway extends Scene {
 
   void update(float dt) {
 
-    mouse_gridposition.x = constrain(ceil((mouseX - LEFT_X)/cell_size), 0, grid_size - 1);
-    mouse_gridposition.y = constrain(ceil((mouseY - TOP_Y)/cell_size), 0, grid_size - 1);
+    mouse_gridposition.x = constrain(floor((mouseX - LEFT_X)/cell_size), 0, grid_size - 1);
+    mouse_gridposition.y = constrain(floor((mouseY - TOP_Y)/cell_size), 0, grid_size - 1);
 
   }
 
@@ -100,8 +100,8 @@ class LevelGateway extends Scene {
     }
 
     fill(0, 255, 255, 255);
-   // text(mouse_gridposition.toString(), 20, 340);
-    //text(mousePosToLevel(), 20, 440);
+    text(mouse_gridposition.toString(), 20, 340);
+    text(mousePosToLevel(), 20, 440);
 
 
     if (checkWinCondition()) {

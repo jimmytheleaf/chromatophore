@@ -37,12 +37,15 @@ class LevelOne extends BaseScene {
 
     if (checkWinCondition()) {
 
-       fill(255, 255, 255, 255);
+      fill(255, 255, 255, 255);
       text("THE WINNER IS YOU", 40, 340); 
       if (!won) {
         won = true;
         this.win_time = this.world.clock.total_time;
       } 
+
+        text(this.win_time, 40, 140); 
+        text(this.world.clock.total_time, 40, 440); 
 
 
     }
