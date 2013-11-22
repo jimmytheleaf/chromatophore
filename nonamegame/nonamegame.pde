@@ -7,7 +7,7 @@ void setup()
 {
 
   size(960, 640, P2D);
-  runTests();
+  //runTests();
   colorMode(RGB, 255, 255, 255, 255);
   rectMode(CORNER);
 
@@ -44,7 +44,13 @@ void setup()
 
   LevelSix level_six = new LevelSix(world);
   world.scene_manager.addScene(level_six);
-  world.scene_manager.setCurrentScene(level_six);
+  // world.scene_manager.setCurrentScene(level_six);
+
+
+  LevelSeven level_seven = new LevelSeven(world);
+  world.scene_manager.addScene(level_seven);
+  world.scene_manager.setCurrentScene(level_seven);
+
 
 }
 
@@ -107,5 +113,12 @@ void keyPressed() {
 
   InputSystem input_system = (InputSystem) world.getSystem(INPUT_SYSTEM);
   input_system.keyPressed(key);
+
+}
+
+void mouseClicked() {
+ 
+  Scene current_scene = world.scene_manager.getCurrentScene();
+  current_scene.mouseClicked();
 
 }

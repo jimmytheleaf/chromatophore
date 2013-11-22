@@ -77,9 +77,16 @@ class Scene {
   void draw() {
     // Implement by extending class
   }
+
+  void mouseClicked() {
+    // Implement by extending class
+  }
+
   
   String getName() {
     return this.name;
   }
+
+
   
 }
