@@ -1,21 +1,37 @@
 
-class LevelFive extends BaseScene {
+class LevelSix extends BaseScene {
 
-  RGB player_color = new RGB(0, 255, 0, 255);
-  RGB wall_color = new RGB(63, 63, 63, 255);
+  RGB player_color = new RGB(0, 255, 100, 255);
+  RGB color_grey = new RGB(63, 63, 63, 255);
+  RGB color_dark_grey = new RGB(21, 21, 21, 255);
 
   RGB color_red = new RGB(255, 0, 0, 255);
   RGB color_green = new RGB(0, 255, 0, 255);
+  RGB color_blue = new RGB(0, 0, 255, 255);
+  RGB color_black = new RGB(0, 0, 0, 255);
+  RGB color_white = new RGB(255, 255, 255, 255);
+  RGB bullet_color = new RGB(147, 176, 205, 255);
+
+  RGB collectable_color = new RGB(0, 0, 0, 255);
+
+  RGB wall_color = color_dark_grey;
+  RGB bg = color_grey;
 
   ArrayList<Entity> remove_buffer = new ArrayList<Entity>();
 
-  int NUM_COLLECTABLES = 2;
+  int NUM_COLLECTABLES = 4;
 
-  LevelFive(World _w) {
-    super(LEVEL_FIVE, _w);
+  LevelSix(World _w) {
+    super(LEVEL_SIX, _w);
   }
 
   void init() {
+
+
+      collectable_color.r = zbc[randomint(0, 3)];
+      collectable_color.g = zbc[randomint(0, 3)];
+      collectable_color.b = zbc[randomint(0, 3)];
+
       super.init();   
       
       Entity player = PLAYER_UTILS.getNewPlayerEntity(world);
@@ -23,12 +39,14 @@ class LevelFive extends BaseScene {
       PLAYER_UTILS.addMotion(player, 200, 0, 0, 0.98);
       PLAYER_UTILS.addSpaceshipMovement(player, 20);
 
-      setUpCollectables(world, NUM_COLLECTABLES, color_red);
-      setUpShooter(world, LEFT_X + 75, TOP_Y + 75, TWO_PI, 100f, color_green, 14);
-      setUpShooter(world, RIGHT_X - 75, BOTTOM_Y - 75, TWO_PI, 100f, color_green, 14);
+      setUpCollectables(world, NUM_COLLECTABLES, collectable_color, true);
+      setUpShooter(world, LEFT_X + 75, TOP_Y + 75, TWO_PI, 100f, bullet_color, 25);
+      setUpShooter(world, RIGHT_X - 75, BOTTOM_Y - 75, TWO_PI, 100f, bullet_color, 25);
+      setUpShooter(world, RIGHT_X - 75, TOP_Y + 75, TWO_PI, 100f, bullet_color, 25);
+      setUpShooter(world, LEFT_X + 75, BOTTOM_Y - 75, TWO_PI, 100f, bullet_color, 25);
 
       setUpWalls(this.world, wall_color);
-      background(255, 255, 255);
+      background(bg.r, bg.g, bg.b);
   }
 
 
@@ -37,7 +55,7 @@ class LevelFive extends BaseScene {
     this.world.updateClock();
     this.update(this.world.clock.dt);
 
-    background(255, 255, 255);
+    background(bg.r, bg.g, bg.b);
     super.draw();
 
     textSize(100);
@@ -58,7 +76,7 @@ class LevelFive extends BaseScene {
     CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
     ArrayList<CollisionPair> collisions = collision_system.getCollisions();
 
-    collidePlayerAgainstWalls(collisions, false);
+    collidePlayerAgainstWalls(collisions, true);
     handleLevelCollisions(collisions, player_color);
 
     this.checkResetCondition();
@@ -69,7 +87,8 @@ class LevelFive extends BaseScene {
 
     ArrayList<Entity> collectables = this.world.group_manager.getEntitiesInGroup(GROUP_COLLECTABLES);
 
-   boolean all_inactive = true;
+    
+    boolean all_inactive = true;
     for (int i = 0; i < collectables.size(); i++) {
       Entity e = collectables.get(i);
       if (e.active) { 
@@ -86,7 +105,12 @@ class LevelFive extends BaseScene {
     remove_buffer.clear();
 
     if (all_inactive) {
-      setUpCollectables(world, NUM_COLLECTABLES, color_red);
+
+      collectable_color.r = zbc[randomint(0, 3)];
+      collectable_color.g = zbc[randomint(0, 3)];
+      collectable_color.b = zbc[randomint(0, 3)];
+
+      setUpCollectables(world, NUM_COLLECTABLES, collectable_color, true);
       background(255, 255, 255);
     }
   }
@@ -103,22 +127,17 @@ class LevelFive extends BaseScene {
 
       if (p.a == world.getTaggedEntity(TAG_PLAYER) && this.world.group_manager.isEntityInGroup(p.b, GROUP_COLLECTABLES)) {
 
-        Entity player = p.a;
-
         p.b.active = false;
+        // Play a sound
+        
 
-        Shape bshape = ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
-
-        if (bshape.getColor() == color_red) {        
-          player_color.r += 15;
-          player_color.g -= 15;
-        } 
       } else if (p.a == world.getTaggedEntity(TAG_PLAYER) && this.world.group_manager.isEntityInGroup(p.b, GROUP_BULLETS)) {
 
         Pool<Entity> pool = ((PoolComponent) p.b.getComponent(POOL)).pool;
         pool.giveBack(p.b);
-        player_color.r -= 15;
-        player_color.g += 15; 
+        player_color.r += 15;
+        player_color.g -= 5;
+        player_color.b -= 5;
 
       }
     }

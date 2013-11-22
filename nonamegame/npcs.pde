@@ -89,9 +89,11 @@ Entity createCircle(World world, int x, int y, int radius, IColor c) {
 
 }
 
-
-
 void setUpCollectables(World world, int num, IColor c) {
+    setUpCollectables(world, num, c, false);
+}
+
+void setUpCollectables(World world, int num, IColor c, boolean do_rotate) {
 
     CollisionSystem cs = (CollisionSystem) world.getSystem(COLLISION_SYSTEM);
     Entity player = world.getTaggedEntity(TAG_PLAYER);
@@ -102,19 +104,19 @@ void setUpCollectables(World world, int num, IColor c) {
         world.group_manager.addEntityToGroup(collectable, GROUP_COLLECTABLES);
         cs.watchCollision(player, collectable);
 
-        /*
-        Behavior b = new Behavior();
+        if (do_rotate) {
+            Behavior b = new Behavior();
 
-        b.addBehavior(new BehaviorCallback() {
-            public void update(float dt) {
-                Transform t = (Transform) collectable.getComponent(TRANSFORM);
-                t.rotate(dt * 5);
-            }
-        });
+            b.addBehavior(new BehaviorCallback() {
+                public void update(float dt) {
+                    Transform t = (Transform) collectable.getComponent(TRANSFORM);
+                    t.rotate(dt * 5);
+                }
+            });
 
 
-        collectable.addComponent(b);
-        */
+            collectable.addComponent(b);
+        }
 
     }
 
@@ -128,7 +130,7 @@ void setUpShooter(final World world, int x, int y, final float rotation, final f
 
     emitter.addComponent(t);
 
-    final Pool<Entity> bullets = new Pool<Entity>(30) {
+    final Pool<Entity> bullets = new Pool<Entity>(50) {
         protected Entity createObject() {
             return createBullet(world, int(t.pos.x), int(t.pos.y), t.getRotation(), speed, c, this);
         }
