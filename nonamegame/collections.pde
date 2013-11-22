@@ -31,3 +31,46 @@ class MultiMap<K, V> {
 	}
 	*/
 }
+
+// Very simple pool
+abstract class Pool<T> {
+
+	ArrayList<T> used;
+	ArrayList<T> available;
+	int max_size;
+
+	Pool(int size) {
+		this.max_size = size;
+		used = new ArrayList<T>();
+		available = new ArrayList<T>();
+	}
+
+	public T getObject() {
+
+		T obj = null;
+
+		if (available.size() > 0) {
+			obj = available.get(0);
+			available.remove(obj);
+			used.add(obj);
+			enableObject(obj);
+		} else if (used.size() < max_size) {
+			obj = createObject();
+			used.add(obj);
+		}
+
+		return obj;
+	}
+
+	public void giveBack(T object) {
+		recycleObject(object);
+		used.remove(object);
+		available.add(object);
+	}
+
+	protected abstract T createObject();
+	protected abstract void recycleObject(T object);
+	protected abstract void enableObject(T object);
+
+
+}

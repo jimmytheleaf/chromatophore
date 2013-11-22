@@ -125,12 +125,26 @@ void setUpShooter(final World world, int x, int y, final float rotation, final f
 
     emitter.addComponent(t);
 
+    final Pool<Entity> bullets = new Pool<Entity>(30) {
+        protected Entity createObject() {
+            return createBullet(world, int(t.pos.x), int(t.pos.y), t.getRotation(), speed, c, this);
+        }
+
+        protected void recycleObject(Entity object) {
+            object.active = false;
+        }
+
+        protected void enableObject(Entity object) {
+            object.active = true;
+        }
+    };
+
     Behavior b = new Behavior();
 
     // Rotate Emitter
     b.addBehavior(new BehaviorCallback() {
         public void update(float dt) {
-            printDebug("rotating");
+            // printDebug("rotating");
             t.rotate(dt);
        }
     });
@@ -138,8 +152,20 @@ void setUpShooter(final World world, int x, int y, final float rotation, final f
     // Emit stuff
     b.addBehavior(new BehaviorCallback() {
         public void update(float dt) {
-            printDebug("creating bullet");
-            createBullet(world, int(t.pos.x), int(t.pos.y), t.getRotation(), speed, c);
+            // printDebug("creating bullet");
+            Entity bullet = bullets.getObject();
+
+            if (bullet != null) {
+                Transform bt = (Transform) bullet.getComponent(TRANSFORM);
+                bt.pos.x = int(t.pos.x);
+                bt.pos.y = int(t.pos.y);
+                bt.rotateTo(t.getRotation());
+
+                Motion m = (Motion)  bullet.getComponent(MOTION);
+                m.velocity.x = speed;
+                m.velocity.y = 0;
+                m.velocity.rotate(t.getRotation());
+            }
        }
     });
 
@@ -147,7 +173,7 @@ void setUpShooter(final World world, int x, int y, final float rotation, final f
 }
 
 // TODO pool
-void createBullet(final World world, int x, int y, float rotation, float speed, IColor c) {
+Entity createBullet(final World world, int x, int y, float rotation, float speed, IColor c, final Pool<Entity> p) {
 
     final Entity bullet = createCircle(world, x, y, 3, c);
 
@@ -165,9 +191,9 @@ void createBullet(final World world, int x, int y, float rotation, float speed, 
             Transform t = (Transform) bullet.getComponent(TRANSFORM);
     
             if (t.pos.x < 0 || t.pos.x > width || t.pos.y < 0 || t.pos.y > height) {
-                printDebug("Removing bullet");
-                world.removeEntity(bullet);
-                printDebug("Should now be null: " + bullet);
+                printDebug("Giving back bullet");
+                p.giveBack(bullet);
+                printDebug("Should now be inactive: " + bullet.active);
 
             }
        }
@@ -176,6 +202,7 @@ void createBullet(final World world, int x, int y, float rotation, float speed, 
 
     bullet.addComponent(b);
 
-
-
+    return bullet;
 }
+
+

@@ -22,11 +22,7 @@ class BehaviorSystem extends System {
         }
       }
 
-      printDebug("Entity buffer has: " + entity_buffer.size() + " Entries");
-
       for (int i = 0; i < entity_buffer.size(); i++) {
-
-          printDebug("Grabbing behavior");
 
           Behavior b = (Behavior) (entity_buffer.get(i)).getComponent(BEHAVIOR);
 
