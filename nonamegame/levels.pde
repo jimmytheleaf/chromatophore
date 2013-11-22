@@ -119,7 +119,7 @@ void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean boun
 void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean bounce, RGB world_color) {
 
   if (collisions.size() > 0) {
-      printDebug("Detected collisions: " + collisions.size());
+      //printDebug("Detected collisions: " + collisions.size());
 
       for (CollisionPair p : collisions) {
 
@@ -132,7 +132,7 @@ void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean boun
 
           if (p.b == world.getTaggedEntity(TAG_WALL_LEFT)) {
 
-            printDebug("Collided: PLAYER and LEFT WALL");
+            //printDebug("Collided: PLAYER and LEFT WALL");
             Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
             
             if (bounce) {
@@ -153,7 +153,7 @@ void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean boun
 
 
           } else if (p.b == world.getTaggedEntity(TAG_WALL_RIGHT)) {
-            printDebug("Collided: PLAYER and RIGHT WALL");
+            //printDebug("Collided: PLAYER and RIGHT WALL");
 
             Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
 
@@ -177,7 +177,7 @@ void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean boun
 
           } else if (p.b == world.getTaggedEntity(TAG_WALL_TOP)) {
 
-            printDebug("Collided: PLAYER and TOP WALL");
+           // printDebug("Collided: PLAYER and TOP WALL");
             Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
 
             if (bounce) {
@@ -199,7 +199,7 @@ void collidePlayerAgainstWalls(ArrayList<CollisionPair> collisions, boolean boun
 
           } else if (p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
 
-            printDebug("Collided: PLAYER and BOTTOM WALL");
+            // printDebug("Collided: PLAYER and BOTTOM WALL");
             Rectangle wall = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
 
             if (bounce) {

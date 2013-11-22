@@ -73,6 +73,20 @@ Entity createRectangle(World world, int x, int y, int w, int h, IColor c) {
     return rectangle;
 }
 
+Entity createCircle(World world, int x, int y, int radius, IColor c) {
+
+    final Entity circle = world.entity_manager.newEntity();
+    Transform t = new Transform(x, y);
+    circle.addComponent(t);
+
+    final Shape circle_shape = new Circle(t.pos, radius).setColor(c);
+    circle.addComponent(new ShapeComponent(circle_shape, 2));
+
+   return circle;
+
+}
+
+
 
 void setUpCollectables(World world, int num, IColor c) {
 
@@ -80,9 +94,88 @@ void setUpCollectables(World world, int num, IColor c) {
     Entity player = world.getTaggedEntity(TAG_PLAYER);
 
     for (int i = 0; i < num; i++) {
-        Entity collectable = createRectangle(world, randomint(185, 775), randomint(25, 615), 5, 5, c);
+
+        final Entity collectable = createRectangle(world, randomint(185, 775), randomint(25, 615), 6, 6, c);
         world.group_manager.addEntityToGroup(collectable, GROUP_COLLECTABLES);
         cs.watchCollision(player, collectable);
+
+        /*
+        Behavior b = new Behavior();
+
+        b.addBehavior(new BehaviorCallback() {
+            public void update(float dt) {
+                Transform t = (Transform) collectable.getComponent(TRANSFORM);
+                t.rotate(dt * 5);
+            }
+        });
+
+
+        collectable.addComponent(b);
+        */
+
     }
+
+}
+
+void setUpShooter(final World world, int x, int y, final float rotation, final float speed, final IColor c) {
+
+    final Entity emitter = world.entity_manager.newEntity();
+    final Transform t = new Transform(x, y);
+    t.rotateTo(rotation);
+
+    emitter.addComponent(t);
+
+    Behavior b = new Behavior();
+
+    // Rotate Emitter
+    b.addBehavior(new BehaviorCallback() {
+        public void update(float dt) {
+            printDebug("rotating");
+            t.rotate(dt);
+       }
+    });
+
+    // Emit stuff
+    b.addBehavior(new BehaviorCallback() {
+        public void update(float dt) {
+            printDebug("creating bullet");
+            createBullet(world, int(t.pos.x), int(t.pos.y), t.getRotation(), speed, c);
+       }
+    });
+
+    emitter.addComponent(b);
+}
+
+// TODO pool
+void createBullet(final World world, int x, int y, float rotation, float speed, IColor c) {
+
+    final Entity bullet = createCircle(world, x, y, 3, c);
+
+    Motion motion = new Motion();
+    bullet.addComponent(motion);
+    motion.velocity.x = speed;
+    motion.velocity.rotate(rotation);
+
+
+    Behavior b = new Behavior();
+
+    b.addBehavior(new BehaviorCallback() {
+        public void update(float dt) {
+
+            Transform t = (Transform) bullet.getComponent(TRANSFORM);
+    
+            if (t.pos.x < 0 || t.pos.x > width || t.pos.y < 0 || t.pos.y > height) {
+                printDebug("Removing bullet");
+                world.removeEntity(bullet);
+                printDebug("Should now be null: " + bullet);
+
+            }
+       }
+    });
+
+
+    bullet.addComponent(b);
+
+
 
 }

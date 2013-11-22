@@ -36,7 +36,12 @@ void setup()
   LevelFour level_four = new LevelFour(world);
 
   world.scene_manager.addScene(level_four);
-  world.scene_manager.setCurrentScene(level_four);
+ // world.scene_manager.setCurrentScene(level_four);
+
+  LevelFive level_five = new LevelFive(world);
+  world.scene_manager.addScene(level_five);
+  world.scene_manager.setCurrentScene(level_five);
+
 }
 
 

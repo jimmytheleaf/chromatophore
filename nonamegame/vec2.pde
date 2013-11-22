@@ -100,4 +100,19 @@ class Vec2 {
 		return "VEC2(" + x + ", " + y + ")";
 	}
 
+	Vec2 rotate(float theta) {
+
+		float c = cos(theta);
+		float s = sin(theta);
+
+		float new_x = c * this.x - s * this.y;
+	  	float new_y = s * this.x + c * this.y;
+
+	  	this.x = new_x;
+	  	this.y = new_y;
+
+	  	return this;
+
+	}
+
 }

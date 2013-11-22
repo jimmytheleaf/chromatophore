@@ -79,6 +79,12 @@ class World {
     	return tag_manager.getEntity(tag);
     }
 
+    void removeEntity(Entity entity) {
+      this.entity_manager.removeEntityReferencesAndComponents(entity);
+      this.group_manager.clearEntityFromGroups(entity);
+      entity = null;
+    }
+
 }
 
 class ViewPort {

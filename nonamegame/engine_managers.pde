@@ -40,6 +40,19 @@ class EntityManager {
       return null;
 
    }
+
+   void removeEntityReferencesAndComponents(Entity entity) {
+
+      for (String key : component_store.keySet()) {
+          HashMap<Entity, Component> store = component_store.get(key);
+
+          // Garbage collect component
+          if (store.containsKey(entity)) {
+            store.remove(entity);
+          }
+      }
+
+   }
   
 }
 
@@ -141,6 +154,21 @@ class GroupManager {
     boolean isEntityInGroup(Entity e, String group) {
       ArrayList<Entity> entities =  group_to_entities.get(group);
       return entities.contains(e);
+    }
+
+    void removeEntityFromGroup(Entity e, String group) {
+      ArrayList<Entity> entities =  group_to_entities.get(group);
+      if (entities != null) {
+        entities.remove(e);
+      }    
+    }
+
+    void clearEntityFromGroups(Entity e) {
+
+      for (String group : group_to_entities.keySet()) {
+        removeEntityFromGroup(e, group);
+      }
+
     }
 
 }

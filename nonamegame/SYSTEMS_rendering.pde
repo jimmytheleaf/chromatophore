@@ -3,10 +3,12 @@ String RENDERING_SYSTEM = "RenderingSystem";
 class RenderingSystem extends System {
 
   HashMap<Integer, ArrayList<ShapeComponent>> z_tracker;
+  HashMap<ShapeComponent, Transform> transforms;
 
   RenderingSystem(World w) {
     super(RENDERING_SYSTEM, w);
     this.z_tracker = new HashMap<Integer, ArrayList<ShapeComponent>>();
+    this.transforms = new HashMap<ShapeComponent, Transform>();
   }
 
   void drawDrawables() { 
@@ -25,7 +27,11 @@ class RenderingSystem extends System {
       for (Entity e : this.world.entity_manager.component_store.get(SHAPE).keySet()) {
 
         if (e.active) {
+          
           ShapeComponent sc = (ShapeComponent) e.getComponent(SHAPE);
+          Transform t = (Transform) e.getComponent(TRANSFORM);
+
+          transforms.put(sc, t);
 
           int z = sc.z;
 
@@ -51,7 +57,25 @@ class RenderingSystem extends System {
         if (this.z_tracker.containsKey(i)) {
 
           for (ShapeComponent sc : this.z_tracker.get(i)) {
-              sc.shape.draw();
+
+             Transform t = transforms.get(sc);
+             Shape shape = sc.shape;
+            
+             if (t.getRotation() == 0) {
+
+                shape.draw();
+
+             } else {
+              
+                pushMatrix();
+                translate(shape.center().x, shape.center().y);
+                rotate(t.getRotation());
+                shape.drawAroundOrigin();
+                popMatrix();
+              
+             }
+
+
           }
         }
       }

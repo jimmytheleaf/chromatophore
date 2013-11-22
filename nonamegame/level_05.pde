@@ -1,29 +1,28 @@
 
-class LevelFour extends BaseScene {
+class LevelFive extends BaseScene {
 
-  int corners_touched;
-  RGB player_color = new RGB(0, 0, 255, 255);
-  RGB wall_color = new RGB(255, 0, 0, 255);
+  RGB player_color = new RGB(0, 255, 0, 255);
+  RGB wall_color = new RGB(63, 63, 63, 255);
 
-  RGB color_green = new RGB(0, 255, 0, 255);
+  RGB color_red = new RGB(255, 0, 0, 255);
   RGB color_blue = new RGB(0, 0, 255, 255);
 
 
-  LevelFour(World _w) {
-    super(LEVEL_FOUR, _w);
-    corners_touched = 0;
+  LevelFive(World _w) {
+    super(LEVEL_FIVE, _w);
   }
 
   void init() {
       super.init();   
       
       Entity player = PLAYER_UTILS.getNewPlayerEntity(world);
-      PLAYER_UTILS.addCircleShape(player, int(center.x), int(center.y), 20, player_color);
-      PLAYER_UTILS.addMotion(player, 500, 0, 0, .05);
-      PLAYER_UTILS.addSpaceshipMovement(player, 100);
+      PLAYER_UTILS.addRectangleShape(player, int(center.x), int(center.y), 50, 75, player_color);
+      PLAYER_UTILS.addMotion(player, 100, 0, 0, 0.98);
+      PLAYER_UTILS.addSpaceshipMovement(player, 20);
 
-      setUpCollectables(world, 25, color_green);
-      setUpCollectables(world, 25, color_blue);
+      setUpCollectables(world, 2, color_red);
+      setUpShooter(world, 300, 300, TWO_PI, 100f, color_blue);
+
 
       setUpWalls(this.world, wall_color);
       background(255, 255, 255);
@@ -35,6 +34,7 @@ class LevelFour extends BaseScene {
     this.world.updateClock();
     this.update(this.world.clock.dt);
 
+    background(255, 255, 255);
     super.draw();
 
     textSize(100);
@@ -76,16 +76,13 @@ class LevelFour extends BaseScene {
     }
 
     if (all_inactive) {
-      for (int i = 0; i < collectables.size(); i++) {
-        Entity e = collectables.get(i);
-        e.active = true;
-      }
+      setUpCollectables(world, 5, color_red);
       background(255, 255, 255);
     }
   }
   
   boolean checkWinCondition() {
-    return player_color.g >  254f;
+    return player_color.r >  254f;
   }
 
   void collidePlayerAgainstCollectables(ArrayList<CollisionPair> collisions, RGB player_color) {
@@ -102,14 +99,10 @@ class LevelFour extends BaseScene {
 
         Shape bshape = ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
 
-        if (bshape.getColor() == color_green) {        
-          player_color.g += 15;
-          player_color.b -= 15;
-        } else if (bshape.getColor()  == color_blue) {        
+        if (bshape.getColor() == color_red) {        
+          player_color.r += 15;
           player_color.g -= 15;
-          player_color.b += 15;
-        }
-
+        } 
 
       }
     }

@@ -25,6 +25,8 @@ abstract class Shape implements Drawable, Collidable {
   }
 
   public abstract void draw();
+  public abstract void drawAroundOrigin();
+  public abstract Vec2 center();
 
   // public abstract boolean collidesWith(Collidable collidable)
 
@@ -45,8 +47,17 @@ class Point extends Shape {
     point(this.pos.x, this.pos.y);
   }
 
+  void drawAroundOrigin() {
+    fill(this.getColor().toRaw());
+    point(0, 0);
+  }
+
   String toString() {
       return "Point: (" + this.pos.x + ", " + this.pos.y + ")";
+  }
+
+  Vec2 center() {
+    return this.pos;
   }
 
 }
@@ -56,11 +67,13 @@ class Rectangle extends Shape  {
 
   int width; 
   int height;
+  private Vec2 center;
 
   Rectangle(Vec2 pos, int width, int height) {
     super(pos);
     this.width = width;
     this.height = height;
+    this.center = new Vec2(pos.x + this.width/2, pos.y + this.height/2);
   }
   Rectangle(float x, float y, int width, int height) {
     super(x, y);
@@ -69,12 +82,27 @@ class Rectangle extends Shape  {
   }
 
   void draw() {
+    rectMode(CORNER);
     fill(this.getColor().toRaw());
     rect(this.pos.x, this.pos.y, this.width, this.height);
   }
 
+  void drawAroundOrigin() {
+    rectMode(CENTER);
+    fill(this.getColor().toRaw());
+    rect(0, 0, this.width, this.height);
+  }
+
+
   String toString() {
       return "Rectangle: (" + this.pos.x + ", " + this.pos.y + ", w=" + this.width + " h=" + this.height + ")";
+  }
+
+  // Keep one object, recalculate whenever called
+  Vec2 center() {
+    this.center.x = this.pos.x + this.width/2;
+    this.center.y = this.pos.y + this.height/2;
+    return this.center;
   }
 
 }
@@ -96,6 +124,15 @@ class Circle extends Shape {
   void draw() {
     fill(this.getColor().toRaw());
     ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
+  }
+
+  void drawAroundOrigin() {
+    fill(this.getColor().toRaw());
+    ellipse(0, 0, this.radius * 2, this.radius * 2);
+  }
+
+   Vec2 center() {
+    return this.pos;
   }
 
   String toString() {
