@@ -2,7 +2,7 @@
 final int TOP_Y = 20;
 final int BOTTOM_Y = 620;
 final int LEFT_X = 180;
-final int RIGHT_X = 680;
+final int RIGHT_X = 780;
 
 Entity setUpSpringMount(World world, int x, int y, float mass) {
 
@@ -122,15 +122,75 @@ void setUpCollectables(World world, int num, IColor c, boolean do_rotate) {
 
 }
 
-void setUpShooter(final World world, int x, int y, final float rotation, final float speed, final IColor c, final int ticks) {
+Entity setUpMovingShooter(final World world, int x, int y, final float rotation, final float speed, final IColor c, final int ticks) {
+
+    final Entity emitter = setUpShooter(world, x, y, rotation, speed, c, ticks);
+
+    final Transform t = (Transform) emitter.getComponent(TRANSFORM);
+
+    IColor emitter_col = new RGB(zbc[0], zbc[0], zbc[0], 180);
+    final Shape circle_shape = new Circle(t.pos, 4).setColor(emitter_col);
+    emitter.addComponent(new ShapeComponent(circle_shape, 2));
+
+
+    Behavior b = (Behavior) emitter.getComponent(BEHAVIOR);
+
+
+    final Motion motion = new Motion();
+    emitter.addComponent(motion);
+    motion.max_speed = 500;
+    //motion.damping = .98;
+    motion.acceleration.x = 5;
+    motion.acceleration.y = 5;
+
+     b.addBehavior(new BehaviorCallback() {
+      public void update(float dt) {
+
+        if (t.pos.x <= LEFT_X) {
+          t.pos.x = RIGHT_X;
+        }
+
+        if (t.pos.x >= RIGHT_X) {
+          t.pos.x = LEFT_X;
+        }
+
+        if (t.pos.y <= TOP_Y) {
+          t.pos.y = BOTTOM_Y;
+        }
+
+        if (t.pos.y >= BOTTOM_Y) {
+          t.pos.y = TOP_Y;
+        }
+      }
+  });
+
+     b.addBehavior(new BehaviorCallback() {
+
+        float clock = 0;
+          public void update(float dt) {
+            clock+= dt;
+            t.pos.x += cos(clock);
+            t.pos.y += cos(clock);
+
+          }
+    });
+
+
+     return emitter;
+
+}
+
+Entity setUpShooter(final World world, int x, int y, final float rotation, final float speed, final IColor c, final int ticks) {
 
     final Entity emitter = world.entity_manager.newEntity();
+
+
     final Transform t = new Transform(x, y);
     t.rotateTo(rotation);
 
     emitter.addComponent(t);
 
-    final Pool<Entity> bullets = new Pool<Entity>(50) {
+    final Pool<Entity> bullets = new Pool<Entity>(80) {
         protected Entity createObject() {
             return createBullet(world, int(t.pos.x), int(t.pos.y), t.getRotation(), speed, c, this);
         }
@@ -179,6 +239,8 @@ void setUpShooter(final World world, int x, int y, final float rotation, final f
     });
 
     emitter.addComponent(b);
+
+    return emitter;
 }
 
 // TODO pool
