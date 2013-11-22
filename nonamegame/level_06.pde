@@ -74,7 +74,7 @@ class LevelSix extends BaseScene {
 
      if (won) {
         if (this.world.clock.total_time - this.win_time > 3) {
-          this.world.scene_manager.setCurrentScene(LEVEL_GATEWAY);
+          this.world.scene_manager.setCurrentScene(gateway);
         }
     }
 

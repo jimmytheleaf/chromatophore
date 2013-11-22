@@ -66,7 +66,7 @@ class LevelGateway extends Scene {
   }
 
   void enter() {    
-    super.enter();
+    // super.enter();
     world.resetEntities();
     level++;
     active_fill = new RGB(255 - level * (255 / 8), 255 - level * (255 / 8), 255 - level * (255 / 8), 255);

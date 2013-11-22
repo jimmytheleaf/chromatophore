@@ -2,6 +2,7 @@ int width = 960;
 int height = 640;
 
 World world;
+LevelGateway gateway;
 
 void setup() 
 {
@@ -18,7 +19,7 @@ void setup()
   background(63, 63, 63);
   noStroke();
 
-  LevelGateway gateway = new LevelGateway(world);
+  gateway = new LevelGateway(world);
   world.scene_manager.addScene(gateway);
   world.scene_manager.setCurrentScene(gateway);
 

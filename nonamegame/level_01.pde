@@ -44,15 +44,14 @@ class LevelOne extends BaseScene {
         this.win_time = this.world.clock.total_time;
       } 
 
-        text(this.win_time, 40, 140); 
-        text(this.world.clock.total_time, 40, 440); 
-
+       // text(this.win_time, 40, 140); 
+        //text(this.world.clock.total_time, 40, 440); 
 
     }
 
      if (won) {
         if (this.world.clock.total_time - this.win_time > 3) {
-          this.world.scene_manager.setCurrentScene(LEVEL_GATEWAY);
+          this.world.scene_manager.setCurrentScene(gateway);
         }
     }
 
