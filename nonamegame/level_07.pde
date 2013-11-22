@@ -36,9 +36,54 @@ class LevelSeven extends BaseScene {
       mouse_gridposition = new Vec2(0, 0);
 
       this.gol = new Life(grid_size, grid_size);
-      this.gol.turnOn(5, 5);
-      this.gol.turnOn(5, 6);
-      this.gol.turnOn(6, 6);
+      this.gol.turnOn(1, 5);
+      this.gol.turnOn(1, 6);
+      this.gol.turnOn(2, 5);
+      this.gol.turnOn(2, 6);
+ 
+      this.gol.turnOn(11, 5);
+      this.gol.turnOn(11, 6);
+      this.gol.turnOn(11, 7);
+      this.gol.turnOn(12, 4);
+      this.gol.turnOn(12, 8);
+
+      this.gol.turnOn(13, 3);
+      this.gol.turnOn(13, 9);
+      this.gol.turnOn(14, 3);
+      this.gol.turnOn(14, 9);
+      this.gol.turnOn(15, 6);
+
+      this.gol.turnOn(16, 4);
+      this.gol.turnOn(16, 8);
+
+      this.gol.turnOn(17, 5);
+      this.gol.turnOn(17, 6);
+      this.gol.turnOn(17, 7);
+      this.gol.turnOn(18, 6);
+
+      this.gol.turnOn(21, 3);
+      this.gol.turnOn(21, 4);
+      this.gol.turnOn(21, 5);
+
+      this.gol.turnOn(22, 3);
+      this.gol.turnOn(22, 4);
+      this.gol.turnOn(22, 5);      
+
+      this.gol.turnOn(23, 2);
+      this.gol.turnOn(23, 6);
+
+      this.gol.turnOn(25, 1);
+      this.gol.turnOn(25, 2);
+      this.gol.turnOn(25, 6);
+      this.gol.turnOn(25, 7);
+
+      this.gol.turnOn(35, 3);
+      this.gol.turnOn(35, 4);
+      this.gol.turnOn(36, 3);
+      this.gol.turnOn(36, 4);
+
+      copyCells(this.gol, 25);
+
 
       cell_size = 600 / grid_size;
 
@@ -125,6 +170,20 @@ class LevelSeven extends BaseScene {
     return false;
   }
 
+  void copyCells(Life gol, int yoffset) {
+    for (int i = 0; i < grid_size; i++) {
+      for (int j = 0; j < grid_size; j++) {
+          Cell cell = gol.cells.getCell(i, j);
+          Cell cell2 = gol.cells.getCell(i, j + yoffset);
+
+          if (cell != null && cell2 != null) {
+
+            cell2.setState(cell.getState());
+          }
+
+      }   
+    }
+  }
  
 
   
