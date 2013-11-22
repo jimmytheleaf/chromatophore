@@ -107,7 +107,7 @@ class LevelFour extends BaseScene {
           player_color.b -= 15;
         } else if (bshape.getColor()  == color_blue) {        
           player_color.g -= 15;
-          player_color.b += 15;
+          player_color.b = constrain(player_color.b + 15, 0, 255);
         }
 
 
