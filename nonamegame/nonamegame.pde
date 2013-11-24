@@ -11,6 +11,7 @@ void setup()
   //runTests();
   colorMode(RGB, 255, 255, 255, 255);
   rectMode(CORNER);
+  frameRate(60);
 
   world = new World(960, 640);
 

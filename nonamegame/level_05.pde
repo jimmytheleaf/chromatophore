@@ -120,16 +120,16 @@ class LevelFive extends BaseScene {
 
         Shape bshape = ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
 
-        if (bshape.getColor() == color_red) {        
-          player_color.r += 15;
-          player_color.g -= 15;
-        } 
+          player_color.r = constrain(player_color.r + 15, 0, 255);
+          player_color.g = constrain(player_color.g - 15, 0, 255);
+
       } else if (p.a == world.getTaggedEntity(TAG_PLAYER) && this.world.group_manager.isEntityInGroup(p.b, GROUP_BULLETS)) {
 
         Pool<Entity> pool = ((PoolComponent) p.b.getComponent(POOL)).pool;
         pool.giveBack(p.b);
-        player_color.r -= 15;
-        player_color.g += 15; 
+        
+        player_color.r = constrain(player_color.r - 10, 0, 255);
+        player_color.g = constrain(player_color.g + 10, 0, 255);
 
       }
     }

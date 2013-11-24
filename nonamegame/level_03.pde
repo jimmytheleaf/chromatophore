@@ -19,7 +19,8 @@ class LevelThree extends BaseScene {
       PLAYER_UTILS.addCircleShape(player, 480, 320, 100, world_color);
       PLAYER_UTILS.addMotion(player, 1000, 0, 0, .98f);
       PLAYER_UTILS.addPhysics(player, 1);
-      PLAYER_UTILS.addForceMovement(player, 141.7);
+      //PLAYER_UTILS.addForceMovement(player, 141.7);
+      PLAYER_UTILS.addForceMovement(player, 500);
 
       Entity mount = setUpSpringMount(world, 480, 320, 10000f);
 
