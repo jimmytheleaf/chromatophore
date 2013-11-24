@@ -1,8 +1,16 @@
+import ddf.minim.Minim;
+import ddf.minim.AudioPlayer;
+
 int width = 960;
 int height = 640;
 
 World world;
 LevelGateway gateway;
+
+Minim minim;
+AudioManager audio_manager;
+
+boolean playing;
 
 void setup() 
 {
@@ -24,6 +32,11 @@ void setup()
   world.scene_manager.addScene(gateway);
   world.scene_manager.setCurrentScene(gateway);
 
+  minim = new Minim(this);
+
+  audio_manager = new AudioManager(minim);
+  audio_manager.storeSound("slowdrag.mp3");
+  playing = false;
 }
 
 
@@ -65,6 +78,12 @@ void update(float dt) {
 
 void draw() 
 {
+  if (!playing) {
+      AudioPlayer player = audio_manager.getSound("slowdrag.mp3");
+      player.loop();
+      player.play();
+      playing = true;
+  }
 
   Scene current_scene = world.scene_manager.getCurrentScene();
   current_scene.draw();
@@ -92,5 +111,29 @@ void mouseClicked() {
  
   Scene current_scene = world.scene_manager.getCurrentScene();
   current_scene.mouseClicked();
+
+}
+
+
+class AudioManager {
+
+
+  Minim minim;
+
+  HashMap<String, AudioPlayer> sounds;
+
+  AudioManager(Minim minim) {
+    this.sounds = new HashMap<String, AudioPlayer>();
+    this.minim = minim;
+  }
+
+  void storeSound(String filename) {
+    sounds.put(filename, minim.loadFile(filename));
+  }
+
+  AudioPlayer getSound(String filename) {
+    return this.sounds.get(filename);
+  }
+
 
 }
