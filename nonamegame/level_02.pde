@@ -6,6 +6,10 @@ class LevelTwo extends BaseScene {
   AudioPlayer hit;
   AudioPlayer land;
 
+  Entity fade;
+
+  boolean transitioning_out = false;
+
   LevelTwo(World _w) {
     super(LEVEL_TWO, _w);
   }
@@ -27,9 +31,11 @@ class LevelTwo extends BaseScene {
 
       setUpPlatform(this.world, 405, 170, 150, 10, new RGB(63, 63, 63, 255));
 
-      background(255, 255, 255);
       hit = audio_manager.getSound(SOUND_L2HIT);
       land = audio_manager.getSound(SOUND_L2LAND);
+
+      fade = fullScreenFadeBox(world, true);
+      addFadeEffect(fade, 3, true);
 
   }
 
@@ -37,8 +43,6 @@ class LevelTwo extends BaseScene {
   void draw() {
 
     this.world.startClock();
-    this.world.updateClock();
-    this.update(this.world.clock.dt);
 
     background(255, 255, 255);
     super.draw();
@@ -54,11 +58,14 @@ class LevelTwo extends BaseScene {
         this.win_time = this.world.clock.total_time;
       } 
     }
-     if (won) {
-        if (this.world.clock.total_time - this.win_time > 3) {
-          this.world.scene_manager.setCurrentScene(gateway);
-        }
+    
+    if (won) {
+        triggerTransition();
     }
+
+
+    this.world.updateClock();
+    this.update(this.world.clock.dt);
 
   }
 
@@ -66,22 +73,26 @@ class LevelTwo extends BaseScene {
 
     super.update(dt);
 
-    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
-    ArrayList<CollisionPair> collisions = collision_system.getCollisions();
+    // If we haven't transitioned away...
+    if (this.world.scene_manager.getCurrentScene() == this) {
 
-    checkJumpability(world.getTaggedEntity(TAG_PLAYER), collisions);
-    collidePlayerAgainstWalls(collisions, false);
-    collidePlayerAgainstPlatform(collisions, world_color);
+      CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
+      ArrayList<CollisionPair> collisions = collision_system.getCollisions();
 
-    this.updateWinCondition();
+      checkJumpability(world.getTaggedEntity(TAG_PLAYER), collisions);
+      collidePlayerAgainstWalls(collisions, false);
+      collidePlayerAgainstPlatform(collisions, world_color);
+
+      this.updateWinCondition();
 
 
-    if (!hit.isPlaying()) {
-      hit.rewind();
-    }
+      if (!hit.isPlaying()) {
+        hit.rewind();
+      }
 
-    if (!land.isPlaying()) {
-      land.rewind();
+      if (!land.isPlaying()) {
+        land.rewind();
+      }
     }
   }
 
@@ -94,71 +105,86 @@ class LevelTwo extends BaseScene {
   }
 
   
-void checkJumpability(Entity player, ArrayList<CollisionPair> collisions) {
+  void checkJumpability(Entity player, ArrayList<CollisionPair> collisions) {
 
-    Jumper j = (Jumper) player.getComponent(JUMPER);
+      Jumper j = (Jumper) player.getComponent(JUMPER);
+
+      for (CollisionPair p : collisions) {
+
+          if (p.a == player && p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
+
+            if (!j.jumpable) {
+              j.jumpable = true;
+              land.play();
+            } 
+          }
+      }
+
+  }
+
+
+
+
+  void collidePlayerAgainstPlatform(ArrayList<CollisionPair> collisions, RGB world_color) {
+
+    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
 
     for (CollisionPair p : collisions) {
 
-        if (p.a == player && p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
+      if (p.a == world.getTaggedEntity(TAG_PLAYER) && p.b == world.getTaggedEntity(TAG_PLATFORM)) {
 
-          if (!j.jumpable) {
-            j.jumpable = true;
-            land.play();
+        Entity player = p.a;
+        Transform t = (Transform) player.getComponent(TRANSFORM);
+        Motion m = (Motion) player.getComponent(MOTION);
+
+        Rectangle player_shape = (Rectangle) ((ShapeComponent) player.getComponent(SHAPE)).shape;
+
+        Rectangle platform_shape = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
+
+
+        // TODO fix horizontal collision
+        if (player_shape instanceof Rectangle) {
+
+          if (collision_system.rectangleCollision(player_shape, platform_shape) &&
+              m.velocity.y > 0)  {
+              
+              t.pos.y = platform_shape.pos.y - ((Rectangle)player_shape).height;
+              m.velocity.y = 0;
+          
+          } else if (collision_system.rectangleCollision(player_shape, platform_shape) &&
+              m.velocity.y < 0)  {
+              
+              t.pos.y = platform_shape.pos.y + platform_shape.height;
+              m.velocity.y = -m.velocity.y;
+
+              world_color.r += 30;
+              world_color.g += 30;
+              world_color.b += 30;
+              hit.play();
           } 
+
+
         }
-    }
-
-}
-
-
-
-
-void collidePlayerAgainstPlatform(ArrayList<CollisionPair> collisions, RGB world_color) {
-
-  CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
-
-  for (CollisionPair p : collisions) {
-
-    if (p.a == world.getTaggedEntity(TAG_PLAYER) && p.b == world.getTaggedEntity(TAG_PLATFORM)) {
-
-      Entity player = p.a;
-      Transform t = (Transform) player.getComponent(TRANSFORM);
-      Motion m = (Motion) player.getComponent(MOTION);
-
-      Rectangle player_shape = (Rectangle) ((ShapeComponent) player.getComponent(SHAPE)).shape;
-
-      Rectangle platform_shape = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
-
-
-      // TODO fix horizontal collision
-      if (player_shape instanceof Rectangle) {
-
-        if (collision_system.rectangleCollision(player_shape, platform_shape) &&
-            m.velocity.y > 0)  {
-            
-            t.pos.y = platform_shape.pos.y - ((Rectangle)player_shape).height;
-            m.velocity.y = 0;
-        
-        } else if (collision_system.rectangleCollision(player_shape, platform_shape) &&
-            m.velocity.y < 0)  {
-            
-            t.pos.y = platform_shape.pos.y + platform_shape.height;
-            m.velocity.y = -m.velocity.y;
-
-            world_color.r += 30;
-            world_color.g += 30;
-            world_color.b += 30;
-            hit.play();
-        } 
-
 
       }
+    }
+    
 
+  }
+
+   void triggerTransition() {
+    if (!transitioning_out) {
+      fade = fullScreenFadeBox(world, false);
+
+      transitioning_out = true;      
+      ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+      addFadeEffect(fade, 3, false); 
+      schedule_system.doAfter(new ScheduleEntry() { 
+                                public void run() { 
+                                  world.scene_manager.setCurrentScene(gateway);
+                                }
+                              }, 3.1);
     }
   }
-  
-
-}
 
 }

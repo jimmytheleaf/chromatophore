@@ -14,9 +14,6 @@ class BaseScene extends Scene {
 
 	void update(float dt) {
 
-    ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
-    schedule_system.update(dt);
-
 	  TweenSystem tween_system = (TweenSystem) this.world.getSystem(TWEEN_SYSTEM);
 	  tween_system.update(dt);
 
@@ -28,6 +25,9 @@ class BaseScene extends Scene {
 
 	  MovementSystem movement_system = (MovementSystem) this.world.getSystem(MOVEMENT_SYSTEM);
 	  movement_system.updateMovables(dt);
+
+    ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+    schedule_system.update(dt);
 
     // Handle Collisions in child class
 

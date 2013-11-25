@@ -38,11 +38,12 @@ class LevelTitle extends BaseScene {
                                 public void run() { 
                                   addFadeEffect(fade, 5, false);
                                   addVolumeFader(chimes, 5, false);
-                                  printDebug("Running fade out effect");
+                                    printDebug("Running fade in effect");
 
                                 }
                               }, 15);
 
+      final LevelGateway gwy = gateway;
       schedule_system.doAfter(new ScheduleEntry() { public void run() {  world.scene_manager.setCurrentScene(gwy); } } , 20);
 
   }
@@ -68,6 +69,14 @@ class LevelTitle extends BaseScene {
 
 
   void update(float dt) {
+
+    /*
+    if (start == 0) {
+      start = this.world.clock.total_time;  
+    } else if (this.world.clock.total_time - start > 20) {
+       this.world.scene_manager.setCurrentScene(gateway);
+    } */
+
 
     super.update(dt);
   }

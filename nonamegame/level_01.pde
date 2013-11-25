@@ -5,6 +5,10 @@ class LevelOne extends BaseScene {
   Boolean[] corners;
   color black = color(0, 0, 0, 255);
   AudioPlayer audio_player;
+  Entity fade;
+
+  boolean transitioning_out = false;
+  boolean cleared = false;
 
   LevelOne(World _w) {
     super(LEVEL_ONE, _w);
@@ -20,7 +24,6 @@ class LevelOne extends BaseScene {
       PLAYER_UTILS.addSpaceshipMovement(player, 100);
 
       setUpWalls(this.world, new RGB(0, 0, 0, 255));
-      background(255, 255, 255);
       audio_player = audio_manager.getSound(SOUND_L1CORNER);
 
       corners = new Boolean[4];
@@ -28,11 +31,15 @@ class LevelOne extends BaseScene {
       corners[1] = false;
       corners[2] = false;
       corners[3] = false;
-      
+
   }
 
 
   void draw() {
+    if (!cleared) {
+      cleared = true;
+      background(255, 255, 255);
+    }
 
     this.world.updateClock();
     this.update(this.world.clock.dt);
@@ -54,17 +61,15 @@ class LevelOne extends BaseScene {
         won = true;
         this.win_time = this.world.clock.total_time;
       } 
-
        // text(this.win_time, 40, 140); 
         //text(this.world.clock.total_time, 40, 440); 
 
     }
 
      if (won) {
-        if (this.world.clock.total_time - this.win_time > 3) {
-          this.world.scene_manager.setCurrentScene(gateway);
-        }
+        triggerTransition();
     }
+    
 
   }
 
@@ -128,6 +133,21 @@ class LevelOne extends BaseScene {
         audio_player.play();
         corners[3] = true;
       }
+    }
+  }
+
+  void triggerTransition() {
+    if (!transitioning_out) {
+      fade = fullScreenFadeBox(world, false);
+
+      transitioning_out = true;      
+      ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+      addFadeEffect(fade, 3, false); 
+      schedule_system.doAfter(new ScheduleEntry() { 
+                                public void run() { 
+                                  world.scene_manager.setCurrentScene(gateway);
+                                }
+                              }, 3.1);
     }
   }
 

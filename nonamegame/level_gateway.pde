@@ -14,6 +14,7 @@ class LevelGateway extends Scene {
   float oscillation_amount = 70;
 
   Entity fade;
+  boolean transitioning_out = false;
 
   LevelGateway(World _w) {
 
@@ -65,7 +66,7 @@ class LevelGateway extends Scene {
 
     ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
     schedule_system.update(dt);
-    
+
     TweenSystem tween_system = (TweenSystem) this.world.getSystem(TWEEN_SYSTEM);
     tween_system.update(dt);
 
@@ -80,14 +81,11 @@ class LevelGateway extends Scene {
     level++;
     active_fill = new RGB(255 - level * (255 / 8), 255 - level * (255 / 8), 255 - level * (255 / 8), 255);
     fade = fullScreenFadeBox(world, true);
-    addFadeEffect(fade, 5, true);
-
+    addFadeEffect(fade, 3, true);
+    transitioning_out = false;
   }
 
   void draw() {
-
-    this.world.updateClock();
-    this.update(this.world.clock.dt);
 
     background(level * (255 / 9), level * (255 / 9), level * (255 / 9), 255);
 
@@ -126,6 +124,10 @@ class LevelGateway extends Scene {
     RenderingSystem rendering_system = (RenderingSystem) this.world.getSystem(RENDERING_SYSTEM);
     rendering_system.drawDrawables();
 
+
+    this.world.updateClock();
+    this.update(this.world.clock.dt);
+
   }
 
   int yVal(int i) {
@@ -149,14 +151,31 @@ class LevelGateway extends Scene {
 
   void mouseClicked() {
       if (mousePosToLevel() == level && level < 9) {
-        world.removeEntity(fade);
-        world.scene_manager.setCurrentScene(levels.get(level - 1));
+        triggerTransition(level - 1);
       }
   }
 
-
   int mousePosToLevel() {
     return int((mouse_gridposition.x + 1) + (mouse_gridposition.y) * 3);
+  }
+
+  void triggerTransition(final int level) {
+    if (!transitioning_out) {
+      transitioning_out = true;
+
+      final Scene level_to = levels.get(level);
+      
+      ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+      addFadeEffect(fade, 3, false); 
+      schedule_system.doAfter(new ScheduleEntry() { 
+                                public void run() { 
+                                  world.scene_manager.setCurrentScene(level_to);
+                                  world.removeEntity(fade);
+                                }
+                              }, 3.1);
+
+
+    }
   }
 
 }

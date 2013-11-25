@@ -64,7 +64,6 @@ void addFadeEffect(Entity e, float fade_length, boolean fade_in) {
                           }, 1, EasingFunctions.linear);
        
     } else {
-       
 
          tween_system.addTween(fade_length, new TweenVariable() {
                               public float initial() {           
