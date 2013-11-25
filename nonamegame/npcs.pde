@@ -75,7 +75,7 @@ void addFadeEffect(Entity e, float fade_length, boolean fade_in) {
     }
 }
 
-void addVolumeFader(final AudioPlayer player, float fade_length, boolean fade_in) {
+void addVolumeFader(final Controller player, float fade_length, boolean fade_in) {
     
     TweenSystem tween_system = (TweenSystem) this.world.getSystem(TWEEN_SYSTEM);
 

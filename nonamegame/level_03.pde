@@ -5,6 +5,8 @@ class LevelThree extends BaseScene {
   Vec2 center = new Vec2(480, 320);
   AudioOutput out;
   SineWave sine;
+  Entity fade;
+  boolean transitioning_out = false;
 
   LevelThree(World _w) {
     super(LEVEL_THREE, _w);
@@ -31,9 +33,6 @@ class LevelThree extends BaseScene {
       springs.addSpring(mount, player, 0.7, 0.06, 1);
 
       setUpWalls(this.world, world_color);
-
-      background(255, 255, 255);
-
       // get a line out from Minim, default bufferSize is 1024, default sample rate is 44100, bit depth is 16
       out = minim.getLineOut(Minim.STEREO);
       // create a sine wave Oscillator, set to 440 Hz, at 0.5 amplitude, sample rate from line out
@@ -48,6 +47,10 @@ class LevelThree extends BaseScene {
       //out.addSignal(sine3);
       out.mute();
 
+      fade = fullScreenFadeBox(world, true);
+      addFadeEffect(fade, 3, true);
+
+
 
   }
 
@@ -55,8 +58,7 @@ class LevelThree extends BaseScene {
   void draw() {
 
     this.world.startClock();
-    this.world.updateClock();
-    this.update(this.world.clock.dt);
+ 
 
     background(255, 255, 255);
     super.draw();
@@ -74,15 +76,12 @@ class LevelThree extends BaseScene {
 
     }
 
-     if (won) {
-        if (this.world.clock.total_time - this.win_time > 3) {
-          out.mute();
-          out.clearSignals();
-          out = null;
-          sine = null;
-          this.world.scene_manager.setCurrentScene(gateway);
-        }
+    if (won) {
+      triggerTransition();
     }
+
+    this.world.updateClock();
+    this.update(this.world.clock.dt);
 
   }
 
@@ -96,48 +95,52 @@ class LevelThree extends BaseScene {
 
     super.update(dt);
 
-    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
-    ArrayList<CollisionPair> collisions = collision_system.getCollisions();
+    // If we haven't transitioned away...
+    if (this.world.scene_manager.getCurrentScene() == this) {
 
-    collidePlayerAgainstWalls(collisions, true, this.world_color);
+        CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
+        ArrayList<CollisionPair> collisions = collision_system.getCollisions();
 
-    this.updateWinCondition();
+        collidePlayerAgainstWalls(collisions, true, this.world_color);
 
-    Entity player = world.getTaggedEntity(TAG_PLAYER);
-    ShapeComponent sc = (ShapeComponent) player.getComponent(SHAPE);
-    Circle c = (Circle) sc.shape;
+        this.updateWinCondition();
 
-    Transform t = (Transform) player.getComponent(TRANSFORM);    
-    float distance = t.pos.dist(center);
-    c.radius = 100 * (distance / 250);
+        Entity player = world.getTaggedEntity(TAG_PLAYER);
+        ShapeComponent sc = (ShapeComponent) player.getComponent(SHAPE);
+        Circle c = (Circle) sc.shape;
+
+        Transform t = (Transform) player.getComponent(TRANSFORM);    
+        float distance = t.pos.dist(center);
+        c.radius = 100 * (distance / 250);
 
 
-    if (distance > 10) {
-      out.unmute();
+        if (distance > 10) {
+          out.unmute();
 
-      float frequency = 440.0;
-      int interval = int(distance / 25);
+          float frequency = 440.0;
+          int interval = int(distance / 25);
 
-      if (distance < 50) {
-        frequency *= (6/5.0);
-      } else  if (distance < 100) {
-        frequency *= (5/4.0);
-      } else  if (distance < 150) {
-        frequency *= (4/3.0);
-      } else  if (distance < 200) {
-        frequency *= (3/2.0);
-      } else {
-        frequency *= 2.0;
-      }
+          if (distance < 50) {
+            frequency *= (6/5.0);
+          } else  if (distance < 100) {
+            frequency *= (5/4.0);
+          } else  if (distance < 150) {
+            frequency *= (4/3.0);
+          } else  if (distance < 200) {
+            frequency *= (3/2.0);
+          } else {
+            frequency *= 2.0;
+          }
 
-      sine.setFreq(frequency);
-      //sine2.setFreq(frequency * (5/4)); // Major Third
-      // sine3.setFreq(frequency * (3/2)); // Perfect fifth
+          sine.setFreq(frequency);
+          //sine2.setFreq(frequency * (5/4)); // Major Third
+          // sine3.setFreq(frequency * (3/2)); // Perfect fifth
 
-    } else {
-      //out.mute();
+        } else {
+          //out.mute();
+        }
+
     }
-
    
 
   }
@@ -148,6 +151,25 @@ class LevelThree extends BaseScene {
 
   boolean checkWinCondition() {
     return world_color.r >  254f;
+  }
+
+  void triggerTransition() {
+    if (!transitioning_out) {
+      fade = fullScreenFadeBox(world, false);
+
+      transitioning_out = true;      
+      ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+      addFadeEffect(fade, 3, false); 
+      addVolumeFader(out, 3, false);
+      schedule_system.doAfter(new ScheduleEntry() { 
+                                public void run() {
+                                  out.mute();
+                                  out.clearSignals();
+                                  world.scene_manager.setCurrentScene(gateway);
+                                }
+                              }, 3.1);
+         
+    }
   }
 
 }

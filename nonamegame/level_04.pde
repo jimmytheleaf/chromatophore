@@ -7,10 +7,14 @@ class LevelFour extends BaseScene {
 
   RGB color_green = new RGB(0, 255, 0, 255);
   RGB color_blue = new RGB(0, 0, 255, 255);
+  RGB color_white = new RGB(255, 255, 255, 255);
 
 
   AudioPlayer pu1;
   AudioPlayer pu2;
+
+  Entity fade;
+  boolean transitioning_out = false;
 
 
   LevelFour(World _w) {
@@ -39,19 +43,17 @@ class LevelFour extends BaseScene {
 
   void draw() {
 
-    this.world.updateClock();
-    this.update(this.world.clock.dt);
-
+   
     super.draw();
 
     textSize(75);
     
-    fill(255, 255, 255, 255);
+    //fill(255, 255, 255, 255);
 
     if (checkWinCondition()) {
 
-       fill(0, 0, 0, 255);
-      text("THE WINNER IS YOU", 40, 340); 
+      // fill(0, 0, 0, 255);
+      //text("THE WINNER IS YOU", 40, 340); 
       if (!won) {
         won = true;
         this.win_time = this.world.clock.total_time;
@@ -59,10 +61,11 @@ class LevelFour extends BaseScene {
     }
 
      if (won) {
-        if (this.world.clock.total_time - this.win_time > 3) {
-          this.world.scene_manager.setCurrentScene(gateway);
-        }
+        triggerTransition();
     }
+
+    this.world.updateClock();
+    this.update(this.world.clock.dt);
 
   }
 
@@ -70,22 +73,27 @@ class LevelFour extends BaseScene {
 
     super.update(dt);
 
-    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
-    ArrayList<CollisionPair> collisions = collision_system.getCollisions();
 
-    collidePlayerAgainstWalls(collisions, false);
-    collidePlayerAgainstCollectables(collisions, player_color);
+    // If we haven't transitioned away...
+    if (this.world.scene_manager.getCurrentScene() == this) {
 
-    this.checkResetCondition();
+      CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
+      ArrayList<CollisionPair> collisions = collision_system.getCollisions();
+
+      collidePlayerAgainstWalls(collisions, false);
+      collidePlayerAgainstCollectables(collisions, player_color);
+
+      this.checkResetCondition();
 
 
 
-    if (!pu1.isPlaying()) {
-      pu1.rewind();
-    }
+      if (!pu1.isPlaying()) {
+        pu1.rewind();
+      }
 
-    if (!pu2.isPlaying()) {
-      pu2.rewind();
+      if (!pu2.isPlaying()) {
+        pu2.rewind();
+      }
     }
   }
 
@@ -147,8 +155,25 @@ class LevelFour extends BaseScene {
           pu2.play();
         }
 
+        bshape.setColor(color_white);
+        bshape.draw(); // cheating
 
       }
+    }
+  }
+
+   void triggerTransition() {
+    if (!transitioning_out) {
+      fade = fullScreenFadeBox(world, false);
+
+      transitioning_out = true;      
+      ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+      addFadeEffect(fade, 3, false); 
+      schedule_system.doAfter(new ScheduleEntry() { 
+                                public void run() { 
+                                  world.scene_manager.setCurrentScene(gateway);
+                                }
+                              }, 3.1);
     }
   }
   
