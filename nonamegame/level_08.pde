@@ -32,6 +32,8 @@ class LevelEight extends BaseScene {
 
   Transform player_transform;
 
+  AudioPlayer chimes;
+
   LevelEight(World _w) {
     super(LEVEL_EIGHT, _w);
   }
@@ -109,6 +111,10 @@ class LevelEight extends BaseScene {
 
       setUpWalls(this.world, wall_color);
       background(bg.r, bg.g, bg.b);
+
+      chimes = audio_manager.getSound(SOUND_CHIMES);
+      chimes.loop();
+      chimes.play();
   }
 
 
@@ -169,6 +175,8 @@ class LevelEight extends BaseScene {
 
      if (won) {
         if (this.world.clock.total_time - this.win_time > 3) {
+          chimes.pause();
+
           this.world.scene_manager.setCurrentScene(gateway);
         }
     }
@@ -200,7 +208,6 @@ class LevelEight extends BaseScene {
      if (world.clock.ticks % 10 == 0) {
       this.gol2.updateFrame();
     }
-
   }
 
   void mouseClicked() {

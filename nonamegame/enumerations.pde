@@ -33,3 +33,14 @@ String LEVEL_SEVEN = "l7";
 String LEVEL_EIGHT = "l8";
 String LEVEL_NINE = "l9";
 String LEVEL_GATEWAY = "gateway";
+
+
+String SOUND_L1CORNER = "l1corners.mp3";
+String SOUND_L2JUMP = "l2jump.mp3";
+String SOUND_L2LAND = "l2land.mp3";
+String SOUND_L2HIT = "l2hit.mp3";
+String SOUND_L4PU1 = "l4pickup1.mp3";
+String SOUND_L4PU2 = "l4pickup2.mp3";
+String SOUND_L5HIT = "l5hit.mp3";
+String SOUND_L5PU = "l5pickup.mp3";
+String SOUND_CHIMES = "chimes.mp3";

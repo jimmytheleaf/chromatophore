@@ -3,6 +3,9 @@ class LevelTwo extends BaseScene {
 
   RGB world_color = new RGB(0, 0, 0, 255);
 
+  AudioPlayer hit;
+  AudioPlayer land;
+
   LevelTwo(World _w) {
     super(LEVEL_TWO, _w);
   }
@@ -25,7 +28,8 @@ class LevelTwo extends BaseScene {
       setUpPlatform(this.world, 405, 170, 150, 10, new RGB(63, 63, 63, 255));
 
       background(255, 255, 255);
-
+      hit = audio_manager.getSound(SOUND_L2HIT);
+      land = audio_manager.getSound(SOUND_L2LAND);
 
   }
 
@@ -71,6 +75,14 @@ class LevelTwo extends BaseScene {
 
     this.updateWinCondition();
 
+
+    if (!hit.isPlaying()) {
+      hit.rewind();
+    }
+
+    if (!land.isPlaying()) {
+      land.rewind();
+    }
   }
 
   void updateWinCondition() {
@@ -84,18 +96,18 @@ class LevelTwo extends BaseScene {
   
 void checkJumpability(Entity player, ArrayList<CollisionPair> collisions) {
 
-    boolean jumpable = false;
+    Jumper j = (Jumper) player.getComponent(JUMPER);
 
     for (CollisionPair p : collisions) {
 
         if (p.a == player && p.b == world.getTaggedEntity(TAG_WALL_BOTTOM)) {
-          jumpable = true; 
+
+          if (!j.jumpable) {
+            j.jumpable = true;
+            land.play();
+          } 
         }
     }
-
-    Jumper j = (Jumper) player.getComponent(JUMPER);
-    j.jumpable = jumpable;
-
 
 }
 
@@ -137,6 +149,7 @@ void collidePlayerAgainstPlatform(ArrayList<CollisionPair> collisions, RGB world
             world_color.r += 30;
             world_color.g += 30;
             world_color.b += 30;
+            hit.play();
         } 
 
 

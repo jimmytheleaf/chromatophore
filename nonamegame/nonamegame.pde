@@ -1,5 +1,8 @@
 import ddf.minim.Minim;
 import ddf.minim.AudioPlayer;
+import ddf.minim.signals.*;
+import ddf.minim.*;
+
 
 int width = 960;
 int height = 640;
@@ -35,7 +38,16 @@ void setup()
   minim = new Minim(this);
 
   audio_manager = new AudioManager(minim);
-  audio_manager.storeSound("slowdrag.mp3");
+  audio_manager.storeSound(SOUND_L1CORNER);
+  audio_manager.storeSound(SOUND_L2JUMP);
+  audio_manager.storeSound(SOUND_L2LAND);
+  audio_manager.storeSound(SOUND_L2HIT);
+  audio_manager.storeSound(SOUND_L4PU1);
+  audio_manager.storeSound(SOUND_L4PU2);
+  audio_manager.storeSound(SOUND_L5HIT);
+  audio_manager.storeSound(SOUND_L5PU);
+  audio_manager.storeSound(SOUND_CHIMES);
+
   playing = false;
 }
 
@@ -78,13 +90,7 @@ void update(float dt) {
 
 void draw() 
 {
-  if (!playing) {
-      AudioPlayer player = audio_manager.getSound("slowdrag.mp3");
-      player.loop();
-      player.play();
-      playing = true;
-  }
-
+  
   Scene current_scene = world.scene_manager.getCurrentScene();
   current_scene.draw();
 

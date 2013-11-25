@@ -4,12 +4,15 @@ class LevelFive extends BaseScene {
   RGB player_color = new RGB(0, 255, 0, 255);
   RGB wall_color = new RGB(63, 63, 63, 255);
 
-  RGB color_red = new RGB(255, 0, 0, 255);
-  RGB color_green = new RGB(0, 255, 0, 255);
+  RGB color_collect = new RGB(255, 0, 255, 255);
+  RGB color_shooter = new RGB(0, 255, 255, 255);
 
   ArrayList<Entity> remove_buffer = new ArrayList<Entity>();
 
   int NUM_COLLECTABLES = 2;
+
+  AudioPlayer hit;
+  AudioPlayer pickup;
 
   LevelFive(World _w) {
     super(LEVEL_FIVE, _w);
@@ -23,12 +26,16 @@ class LevelFive extends BaseScene {
       PLAYER_UTILS.addMotion(player, 200, 0, 0, 0.98);
       PLAYER_UTILS.addSpaceshipMovement(player, 20);
 
-      setUpCollectables(world, NUM_COLLECTABLES, color_red);
-      setUpShooter(world, LEFT_X + 75, TOP_Y + 75, TWO_PI, 100f, color_green, 14);
-      setUpShooter(world, RIGHT_X - 75, BOTTOM_Y - 75, TWO_PI, 100f, color_green, 14);
+      setUpCollectables(world, NUM_COLLECTABLES, color_collect);
+      setUpShooter(world, LEFT_X + 75, TOP_Y + 75, TWO_PI, 100f, color_shooter, 14);
+      setUpShooter(world, RIGHT_X - 75, BOTTOM_Y - 75, TWO_PI, 100f, color_shooter, 14);
 
       setUpWalls(this.world, wall_color);
       background(255, 255, 255);
+
+
+      hit = audio_manager.getSound(SOUND_L5HIT);
+      pickup = audio_manager.getSound(SOUND_L5PU);
   }
 
 
@@ -74,6 +81,15 @@ class LevelFive extends BaseScene {
 
     this.checkResetCondition();
 
+
+    if (!hit.isPlaying()) {
+      hit.rewind();
+    }
+
+    if (!pickup.isPlaying()) {
+      pickup.rewind();
+    }
+
   }
 
   void checkResetCondition() {
@@ -97,7 +113,7 @@ class LevelFive extends BaseScene {
     remove_buffer.clear();
 
     if (all_inactive) {
-      setUpCollectables(world, NUM_COLLECTABLES, color_red);
+      setUpCollectables(world, NUM_COLLECTABLES, color_collect);
       background(255, 255, 255);
     }
   }
@@ -120,8 +136,14 @@ class LevelFive extends BaseScene {
 
         Shape bshape = ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
 
-          player_color.r = constrain(player_color.r + 15, 0, 255);
-          player_color.g = constrain(player_color.g - 15, 0, 255);
+          player_color.r = constrain(player_color.r + 20, 0, 255);
+          player_color.b = constrain(player_color.b + 20, 0, 255);
+          player_color.g = constrain(player_color.g - 20, 0, 255);
+
+          if (pickup.isPlaying()) {
+            pickup.rewind();
+          }
+          pickup.play();
 
       } else if (p.a == world.getTaggedEntity(TAG_PLAYER) && this.world.group_manager.isEntityInGroup(p.b, GROUP_BULLETS)) {
 
@@ -129,8 +151,13 @@ class LevelFive extends BaseScene {
         pool.giveBack(p.b);
         
         player_color.r = constrain(player_color.r - 10, 0, 255);
+        player_color.b = constrain(player_color.b - 10, 0, 255);
         player_color.g = constrain(player_color.g + 10, 0, 255);
 
+        if (hit.isPlaying()) {
+            hit.rewind();
+        }
+        hit.play();
       }
     }
   }

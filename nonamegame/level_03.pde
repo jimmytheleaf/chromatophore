@@ -3,6 +3,8 @@ class LevelThree extends BaseScene {
 
   RGB world_color = new RGB(63, 63, 63, 255);
   Vec2 center = new Vec2(480, 320);
+  AudioOutput out;
+  SineWave sine;
 
   LevelThree(World _w) {
     super(LEVEL_THREE, _w);
@@ -32,6 +34,20 @@ class LevelThree extends BaseScene {
 
       background(255, 255, 255);
 
+      // get a line out from Minim, default bufferSize is 1024, default sample rate is 44100, bit depth is 16
+      out = minim.getLineOut(Minim.STEREO);
+      // create a sine wave Oscillator, set to 440 Hz, at 0.5 amplitude, sample rate from line out
+      sine = new SineWave(440, 0.5, out.sampleRate());
+  
+      // set the portamento speed on the oscillator to 200 milliseconds
+      sine.portamento(100);
+  
+      // add the oscillator to the line out
+      out.addSignal(sine);
+      //out.addSignal(sine2);
+      //out.addSignal(sine3);
+      out.mute();
+
 
   }
 
@@ -60,6 +76,10 @@ class LevelThree extends BaseScene {
 
      if (won) {
         if (this.world.clock.total_time - this.win_time > 3) {
+          out.mute();
+          out.clearSignals();
+          out = null;
+          sine = null;
           this.world.scene_manager.setCurrentScene(gateway);
         }
     }
@@ -87,10 +107,38 @@ class LevelThree extends BaseScene {
     ShapeComponent sc = (ShapeComponent) player.getComponent(SHAPE);
     Circle c = (Circle) sc.shape;
 
-    Transform t = (Transform) player.getComponent(TRANSFORM);
+    Transform t = (Transform) player.getComponent(TRANSFORM);    
+    float distance = t.pos.dist(center);
+    c.radius = 100 * (distance / 250);
 
 
-    c.radius = 100 * (t.pos.dist(center) / 250);
+    if (distance > 10) {
+      out.unmute();
+
+      float frequency = 440.0;
+      int interval = int(distance / 25);
+
+      if (distance < 50) {
+        frequency *= (6/5.0);
+      } else  if (distance < 100) {
+        frequency *= (5/4.0);
+      } else  if (distance < 150) {
+        frequency *= (4/3.0);
+      } else  if (distance < 200) {
+        frequency *= (3/2.0);
+      } else {
+        frequency *= 2.0;
+      }
+
+      sine.setFreq(frequency);
+      //sine2.setFreq(frequency * (5/4)); // Major Third
+      // sine3.setFreq(frequency * (3/2)); // Perfect fifth
+
+    } else {
+      //out.mute();
+    }
+
+   
 
   }
 

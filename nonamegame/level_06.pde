@@ -21,6 +21,11 @@ class LevelSix extends BaseScene {
 
   int NUM_COLLECTABLES = 4;
 
+
+  AudioPlayer hit;
+  AudioPlayer pickup;
+
+
   LevelSix(World _w) {
     super(LEVEL_SIX, _w);
   }
@@ -47,6 +52,10 @@ class LevelSix extends BaseScene {
 
       setUpWalls(this.world, wall_color);
       background(bg.r, bg.g, bg.b);
+
+
+      hit = audio_manager.getSound(SOUND_L5HIT);
+      pickup = audio_manager.getSound(SOUND_L5PU);
   }
 
 
@@ -91,6 +100,15 @@ class LevelSix extends BaseScene {
     handleLevelCollisions(collisions, player_color);
 
     this.checkResetCondition();
+
+
+    if (!hit.isPlaying()) {
+      hit.rewind();
+    }
+
+    if (!pickup.isPlaying()) {
+      pickup.rewind();
+    }
 
   }
 
@@ -140,7 +158,10 @@ class LevelSix extends BaseScene {
 
         p.b.active = false;
         // Play a sound
-        
+         if (pickup.isPlaying()) {
+            pickup.rewind();
+          }
+          pickup.play();
 
       } else if (p.a == world.getTaggedEntity(TAG_PLAYER) && this.world.group_manager.isEntityInGroup(p.b, GROUP_BULLETS)) {
 
@@ -150,6 +171,10 @@ class LevelSix extends BaseScene {
         player_color.g -= 5;
         player_color.b -= 5;
 
+        if (hit.isPlaying()) {
+            hit.rewind();
+        }
+        hit.play();
       }
     }
   }

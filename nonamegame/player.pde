@@ -162,15 +162,21 @@
 
 		InputResponse r = new InputResponse(); 
 
+		final AudioPlayer jump = audio_manager.getSound(SOUND_L2JUMP);
+
   		r.addInputResponseFunction(new InputResponseFunction() {
       		
+
+
       		public void update(InputSystem input_system) {
 
+      			if (!jump.isPlaying()) {
+			      jump.rewind();
+			    }
 		        Motion m = (Motion) player.getComponent(MOTION);
 
 		          if (input_system.actionHeld(ACTION_UP)) {
 		            
-
 		            Jumper j = (Jumper) player.getComponent(JUMPER);
 
 		            if (j.jumpable) {
@@ -181,6 +187,7 @@
 		            	m.velocity.y -= jump_power;
 
 		            	j.jumpable = false;
+		            	jump.play();
 					}
 		          } 
 

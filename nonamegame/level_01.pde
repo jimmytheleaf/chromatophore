@@ -2,6 +2,9 @@
 class LevelOne extends BaseScene {
 
   int corners_touched;
+  Boolean[] corners;
+  color black = color(0, 0, 0, 255);
+  AudioPlayer audio_player;
 
   LevelOne(World _w) {
     super(LEVEL_ONE, _w);
@@ -18,6 +21,14 @@ class LevelOne extends BaseScene {
 
       setUpWalls(this.world, new RGB(0, 0, 0, 255));
       background(255, 255, 255);
+      audio_player = audio_manager.getSound(SOUND_L1CORNER);
+
+      corners = new Boolean[4];
+      corners[0] = false;
+      corners[1] = false;
+      corners[2] = false;
+      corners[3] = false;
+      
   }
 
 
@@ -70,31 +81,53 @@ class LevelOne extends BaseScene {
 
     collidePlayerAgainstWalls(collisions, false);
 
+    if (!audio_player.isPlaying()) {
+      audio_player.rewind();
+    }
     this.updateWinCondition();
 
   }
 
   void updateWinCondition() {
 
-    color black = color(0, 0, 0, 255);
     loadPixels();
-
-    corners_touched = 0;
     
     if (getPixel(181, 21) == black) {
-      corners_touched++;
+      if (!corners[0]) {
+        corners_touched++;
+        audio_player.rewind();
+        audio_player.play();
+        corners[0] = true;
+      }
     }
 
     if (getPixel(181, 619) == black) {
-      corners_touched++;
+      if (!corners[1]) {
+        corners_touched++;
+        audio_player.rewind();
+        audio_player.play();
+        corners[1] = true;
+
+      }    
     }
 
     if (getPixel(779, 21) == black) {
-      corners_touched++;
+       if (!corners[2]) {
+        corners_touched++;
+        audio_player.rewind();
+        audio_player.play();
+        corners[2] = true;
+
+      }
     }
 
     if (getPixel(779, 619) == black) {
-      corners_touched++;
+       if (!corners[3]) {
+        corners_touched++;
+        audio_player.rewind();
+        audio_player.play();
+        corners[3] = true;
+      }
     }
   }
 

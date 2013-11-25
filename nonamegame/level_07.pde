@@ -24,6 +24,11 @@ class LevelSeven extends BaseScene {
 
   int NUM_COLLECTABLES = 100;
 
+
+  AudioPlayer hit;
+  AudioPlayer pickup;
+
+
   LevelSeven(World _w) {
     super(LEVEL_SEVEN, _w);
   }
@@ -56,6 +61,10 @@ class LevelSeven extends BaseScene {
 
       setUpWalls(this.world, wall_color);
       background(bg.r, bg.g, bg.b);
+
+
+      hit = audio_manager.getSound(SOUND_L5HIT);
+      pickup = audio_manager.getSound(SOUND_L5PU);
   }
 
 
@@ -116,6 +125,15 @@ class LevelSeven extends BaseScene {
       bullet_color.g = 127;
     }
 
+
+    if (!hit.isPlaying()) {
+      hit.rewind();
+    }
+
+    if (!pickup.isPlaying()) {
+      pickup.rewind();
+    }
+
   }
 
   void checkResetCondition() {
@@ -167,6 +185,10 @@ class LevelSeven extends BaseScene {
         player_color.r = randomint(0, 255);
         player_color.g = randomint(0, 255);
         player_color.b = randomint(0, 255);
+         if (pickup.isPlaying()) {
+            pickup.rewind();
+          }
+          pickup.play();
         
 
       } else if (p.a == world.getTaggedEntity(TAG_PLAYER) && this.world.group_manager.isEntityInGroup(p.b, GROUP_BULLETS)) {
@@ -178,6 +200,10 @@ class LevelSeven extends BaseScene {
         player_color.g = randomint(0, 255);
         player_color.b = randomint(0, 255);
 
+        if (hit.isPlaying()) {
+            hit.rewind();
+        }
+        hit.play();
       }
     }
   }
@@ -207,9 +233,9 @@ class LevelSeven extends BaseScene {
 
             if (wall_color.r > 0) {  
 
-              wall_color.r -=5;
-              wall_color.g -=5;
-              wall_color.b -=5;
+              wall_color.r -=10;
+              wall_color.g -=10;
+              wall_color.b -=10;
 
               t.pos.x = LEFT_X + 300;
               t.pos.y = TOP_Y + 300;

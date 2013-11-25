@@ -9,6 +9,10 @@ class LevelFour extends BaseScene {
   RGB color_blue = new RGB(0, 0, 255, 255);
 
 
+  AudioPlayer pu1;
+  AudioPlayer pu2;
+
+
   LevelFour(World _w) {
     super(LEVEL_FOUR, _w);
     corners_touched = 0;
@@ -27,6 +31,9 @@ class LevelFour extends BaseScene {
 
       setUpWalls(this.world, wall_color);
       background(255, 255, 255);
+
+      pu1 = audio_manager.getSound(SOUND_L4PU1);
+      pu2 = audio_manager.getSound(SOUND_L4PU2);
   }
 
 
@@ -71,6 +78,15 @@ class LevelFour extends BaseScene {
 
     this.checkResetCondition();
 
+
+
+    if (!pu1.isPlaying()) {
+      pu1.rewind();
+    }
+
+    if (!pu2.isPlaying()) {
+      pu2.rewind();
+    }
   }
 
   void checkResetCondition() {
@@ -116,9 +132,19 @@ class LevelFour extends BaseScene {
         if (bshape.getColor() == color_green) {        
           player_color.g += 15;
           player_color.b -= 15;
+          
+          if (pu1.isPlaying()) {
+            pu1.rewind();
+          }
+          pu1.play();
+
         } else if (bshape.getColor()  == color_blue) {        
           player_color.g -= 15;
           player_color.b = constrain(player_color.b + 15, 0, 255);
+          if (pu2.isPlaying()) {
+            pu2.rewind();
+          }
+          pu2.play();
         }
 
 
