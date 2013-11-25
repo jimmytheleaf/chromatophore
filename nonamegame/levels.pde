@@ -9,9 +9,13 @@ class BaseScene extends Scene {
 	BaseScene(String _name, World _w) {
 		super(_name, _w);
     won = false;
+
 	}
 
 	void update(float dt) {
+
+    ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+    schedule_system.update(dt);
 
 	  TweenSystem tween_system = (TweenSystem) this.world.getSystem(TWEEN_SYSTEM);
 	  tween_system.update(dt);

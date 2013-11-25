@@ -50,7 +50,7 @@ class System {
 class Scene {
 
   String name;
-  World world;
+  final World world;
   boolean initialized;
   
   Scene(String _name, World _w) {

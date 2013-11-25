@@ -31,10 +31,6 @@ void setup()
   background(63, 63, 63);
   noStroke();
 
-  gateway = new LevelGateway(world);
-  world.scene_manager.addScene(gateway);
-  world.scene_manager.setCurrentScene(gateway);
-
   minim = new Minim(this);
 
   audio_manager = new AudioManager(minim);
@@ -49,6 +45,16 @@ void setup()
   audio_manager.storeSound(SOUND_CHIMES);
 
   playing = false;
+
+
+  gateway = new LevelGateway(world);
+  world.scene_manager.addScene(gateway);
+  //world.scene_manager.setCurrentScene(gateway);
+  
+  LevelTitle title = new LevelTitle(world);
+  world.scene_manager.addScene(title);
+  world.scene_manager.setCurrentScene(title);
+ 
 }
 
 
@@ -60,6 +66,7 @@ void setUpSystems(World world) {
   InputSystem input_system = new InputSystem(world);
   RenderingSystem rendering_system = new RenderingSystem(world);
   CollisionSystem collision_system = new CollisionSystem(world);
+  ScheduleSystem schedule_system = new ScheduleSystem(world);
 
   SpringSystem spring_system = new SpringSystem(world);
   PhysicsSystem physics_system = new PhysicsSystem(world);
@@ -72,6 +79,7 @@ void setUpSystems(World world) {
   world.setSystem(collision_system);
   world.setSystem(spring_system);
   world.setSystem(physics_system);
+  world.setSystem(schedule_system);
 
   input_system.registerInput('W', ACTION_UP);
   input_system.registerInput('S', ACTION_DOWN);

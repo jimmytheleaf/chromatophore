@@ -88,6 +88,13 @@ function AudioPlayer(str) {
   this.unmute = function() {
     audio.volume = 1.0;
   };
+
+  this.setGain = function(v) {
+    audio.volume = v;
+  };
+  this.getGain = function() {
+    return audio.volume;
+  };
 }
 
 function canPlayOgg() {

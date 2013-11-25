@@ -33,6 +33,7 @@ String LEVEL_SEVEN = "l7";
 String LEVEL_EIGHT = "l8";
 String LEVEL_NINE = "l9";
 String LEVEL_GATEWAY = "gateway";
+String LEVEL_TITLE = "title";
 
 
 String SOUND_L1CORNER = "l1corners.mp3";

@@ -26,6 +26,77 @@ Entity setUpSpringMount(World world, int x, int y, float mass) {
 
 }
 
+Entity fullScreenFadeBox(World world, boolean fade_in) {
+
+    Entity fade = world.entity_manager.newEntity();
+    Transform t = new Transform(0, 0);
+    fade.addComponent(t);
+
+    final Shape fade_shape = new Rectangle(t.pos, width, height);
+    final RGB fade_color = new RGB(0, 0, 0, 254);
+    if (!fade_in) {
+        fade_color.a = 0;
+    }
+    fade_shape.setColor(fade_color);
+
+    fade.addComponent(new ShapeComponent(fade_shape, 0));
+
+    return fade;
+
+}
+
+void addFadeEffect(Entity e, float fade_length, boolean fade_in) {
+    
+    TweenSystem tween_system = (TweenSystem) this.world.getSystem(TWEEN_SYSTEM);
+
+    ShapeComponent shape_component = (ShapeComponent) e.getComponent(SHAPE);
+
+    final RGB fade_color = (RGB) (shape_component.shape.getColor());
+
+    if (fade_in) {
+
+        tween_system.addTween(fade_length, new TweenVariable() {
+                              public float initial() {           
+                                return fade_color.a; }
+                              public void setValue(float value) { 
+                                fade_color.a = int(value); 
+                              }  
+                          }, 1, EasingFunctions.linear);
+       
+    } else {
+       
+
+         tween_system.addTween(fade_length, new TweenVariable() {
+                              public float initial() {           
+                                return fade_color.a; }
+                              public void setValue(float value) { 
+                                fade_color.a = int(value); 
+                              }  
+                          }, 254, EasingFunctions.linear);
+    }
+}
+
+void addVolumeFader(final AudioPlayer player, float fade_length, boolean fade_in) {
+    
+    TweenSystem tween_system = (TweenSystem) this.world.getSystem(TWEEN_SYSTEM);
+
+    TweenVariable volume_fader = new TweenVariable() {
+                              public float initial() {           
+                                return player.getGain(); }
+                              public void setValue(float value) { 
+                                player.setGain(value); 
+                                printDebug("Setting gain to " + value);
+
+                              }  
+                          };
+    if (fade_in) {
+        tween_system.addTween(fade_length, volume_fader, 0, EasingFunctions.linear);
+    } else {
+        tween_system.addTween(fade_length, volume_fader, -60, EasingFunctions.linear);
+    }
+}
+
+
 
 void setUpPlatform(World world, int x, int y, int w, int h, IColor c) {
 

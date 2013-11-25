@@ -13,11 +13,13 @@ class LevelGateway extends Scene {
 
   float oscillation_amount = 70;
 
+  Entity fade;
+
   LevelGateway(World _w) {
 
     super(LEVEL_GATEWAY, _w);
     
-    level = 7;
+    level = 0;
     mouse_gridposition = new Vec2(0, 0);
     cell_size = 600 / grid_size;
 
@@ -60,6 +62,13 @@ class LevelGateway extends Scene {
 
   void update(float dt) {
 
+
+    ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+    schedule_system.update(dt);
+    
+    TweenSystem tween_system = (TweenSystem) this.world.getSystem(TWEEN_SYSTEM);
+    tween_system.update(dt);
+
     mouse_gridposition.x = constrain(floor((mouseX - LEFT_X)/cell_size), 0, grid_size - 1);
     mouse_gridposition.y = constrain(floor((mouseY - TOP_Y)/cell_size), 0, grid_size - 1);
 
@@ -70,6 +79,9 @@ class LevelGateway extends Scene {
     world.resetEntities();
     level++;
     active_fill = new RGB(255 - level * (255 / 8), 255 - level * (255 / 8), 255 - level * (255 / 8), 255);
+    fade = fullScreenFadeBox(world, true);
+    addFadeEffect(fade, 5, true);
+
   }
 
   void draw() {
@@ -111,6 +123,9 @@ class LevelGateway extends Scene {
     
     }
 
+    RenderingSystem rendering_system = (RenderingSystem) this.world.getSystem(RENDERING_SYSTEM);
+    rendering_system.drawDrawables();
+
   }
 
   int yVal(int i) {
@@ -134,6 +149,7 @@ class LevelGateway extends Scene {
 
   void mouseClicked() {
       if (mousePosToLevel() == level && level < 9) {
+        world.removeEntity(fade);
         world.scene_manager.setCurrentScene(levels.get(level - 1));
       }
   }
