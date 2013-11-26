@@ -32,7 +32,7 @@ class LevelEight extends BaseScene {
 
   Transform player_transform;
 
-  AudioPlayer chimes;
+  AudioPlayer bgsound;
 
 
   Entity fade;
@@ -116,11 +116,11 @@ class LevelEight extends BaseScene {
       setUpWalls(this.world, wall_color);
       background(bg.r, bg.g, bg.b);
 
-      chimes = audio_manager.getSound(SOUND_CHIMES);
-      chimes.loop();
-      chimes.setGain(-60);
-      addVolumeFader(chimes, 4.5, true);
-      chimes.play();
+      bgsound = audio_manager.getSound(SOUND_L8BG);
+      bgsound.setGain(-30);
+      addVolumeFader(bgsound, 4.5, true);
+      bgsound.play();
+      bgsound.loop();
 
 
       fade = fullScreenFadeBox(world, true);
@@ -130,9 +130,6 @@ class LevelEight extends BaseScene {
 
 
   void draw() {
-
-    this.world.updateClock();
-    this.update(this.world.clock.dt);
 
     background(gol.living, gol.living, gol.living);
     super.draw();
@@ -175,8 +172,6 @@ class LevelEight extends BaseScene {
 
     if (checkWinCondition()) {
 
-      fill(255, 255, 255, 255);
-      text("THE WINNER IS YOU", 40, 340); 
       if (!won) {
         won = true;
         this.win_time = this.world.clock.total_time;
@@ -188,32 +183,40 @@ class LevelEight extends BaseScene {
         triggerTransition();
     }
 
+    this.world.updateClock();
+    this.update(this.world.clock.dt);
+
+
   }
 
   void update(float dt) {
 
     super.update(dt);
 
-    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
-    ArrayList<CollisionPair> collisions = collision_system.getCollisions();
+    // If we haven't transitioned away...
+    if (this.world.scene_manager.getCurrentScene() == this) {
 
-    collidePlayerAgainstWalls(collisions, true);
+      CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
+      ArrayList<CollisionPair> collisions = collision_system.getCollisions();
 
-    mouse_gridposition.x = constrain(floor((mouseX - LEFT_X)/cell_size), 0, grid_size - 1);
-    mouse_gridposition.y = constrain(floor((mouseY - TOP_Y)/cell_size), 0, grid_size - 1);
+      collidePlayerAgainstWalls(collisions, true);
+
+      mouse_gridposition.x = constrain(floor((mouseX - LEFT_X)/cell_size), 0, grid_size - 1);
+      mouse_gridposition.y = constrain(floor((mouseY - TOP_Y)/cell_size), 0, grid_size - 1);
 
 
-    player_gridposition.x = constrain(floor((player_transform.pos.x - LEFT_X)/cell_size), 0, grid_size - 1);
-    player_gridposition.y = constrain(floor((player_transform.pos.y - TOP_Y)/cell_size), 0, grid_size - 1);
+      player_gridposition.x = constrain(floor((player_transform.pos.x - LEFT_X)/cell_size), 0, grid_size - 1);
+      player_gridposition.y = constrain(floor((player_transform.pos.y - TOP_Y)/cell_size), 0, grid_size - 1);
 
-    gol2.turnOn(player_gridposition.x, player_gridposition.y);
+      gol2.turnOn(player_gridposition.x, player_gridposition.y);
 
-    if (world.clock.ticks % 5 == 0) {
-      this.gol.updateFrame();
-    }
+      if (world.clock.ticks % 5 == 0) {
+        this.gol.updateFrame();
+      }
 
-     if (world.clock.ticks % 10 == 0) {
-      this.gol2.updateFrame();
+       if (world.clock.ticks % 10 == 0) {
+        this.gol2.updateFrame();
+      }
     }
   }
 
@@ -249,13 +252,13 @@ class LevelEight extends BaseScene {
 
       transitioning_out = true;      
       ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
-      addFadeEffect(fade, 3, false); 
-      addVolumeFader(chimes, 3, false);
+      addFadeEffect(fade, 5, false); 
+      addVolumeFader(bgsound, 5, false);
       schedule_system.doAfter(new ScheduleEntry() { 
                                 public void run() { 
                                   world.scene_manager.setCurrentScene(gateway);
                                 }
-                              }, 3.1);
+                              }, 5.1);
     }
   }
  

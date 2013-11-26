@@ -133,12 +133,13 @@ function AudioPlayer(str) {
     if (!loaded) {
       return;
     }
+    audio.pause();
     // rewind the sound to start
     if(audio.currentTime) {
       audio.currentTime = 0;
     }
     audio.ended = false;
-    audio.load();
+    // audio.load();
 
   };
   this.position = function() {

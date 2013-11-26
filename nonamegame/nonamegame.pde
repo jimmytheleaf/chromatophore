@@ -42,6 +42,7 @@ void setup()
   audio_manager.storeSound(SOUND_L5HIT);
   audio_manager.storeSound(SOUND_L5PU);
   audio_manager.storeSound(SOUND_CHIMES);
+  audio_manager.storeSound(SOUND_L8BG);
 
   playing = false;
 
