@@ -8,7 +8,72 @@ function Minim() {
   this.loadFile = function (str) {
     return new AudioPlayer(str);
   };
+
+  this.getLineOut = function(str) {
+    return new LineOut(str);
+  };
 }
+function LineOut(str) {
+
+    var context = new webkitAudioContext();
+    var oscillator = context.createOscillator();
+    oscillator.connect(context.destination);
+    var gainNode = context.createGainNode();
+    gainNode.gain.value = 0;
+    oscillator.connect(gainNode);
+
+    var wave;
+    var type;
+
+    this.addSignal = function (added_signal) {
+      type = added_signal.type;
+      oscillator.frequency.value = added_signal.frequency;
+      added_signal.setLineOut(this);
+      console.log(added_signal);
+      console.log(this);
+    };
+    this.mute = function () { oscillator.stop(0); };
+    this.unmute = function () { oscillator.start(0); };
+    this.sampleRate = function () { };
+    this.getOscillator = function () { return oscillator; };
+    this.getGain = function () { return gainNode.gain.value; };
+    this.setGain = function (v) {  };
+    this.getVolume = function () { return gainNode.gain.value; };
+    this.setVolume = function (level) { gainNode.gain.value = level;};
+    this.clearSignals = function() {
+      this.mute();
+      oscillator = null;
+    };
+
+
+}
+
+function SineWave(freq, pan, samplerate) {
+
+    var type = 1;
+    var frequency = freq;
+    var stereo_pan = pan;
+    var rate = samplerate;
+    var line_out;
+
+    this.portamento = function (num) { };
+    
+    this.setLineOut = function (lo) { line_out = lo; };
+
+    this.mute = function () { };
+    
+    this.unmute = function () { };
+
+    this.setFreq = function (freq) {
+      frequency = freq;
+      line_out.getOscillator().frequency.value = frequency;
+    };
+
+
+}
+
+
+
 
 // Browser Audio API
 function AudioPlayer(str) {
