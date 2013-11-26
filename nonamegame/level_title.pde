@@ -1,7 +1,6 @@
 
 class LevelTitle extends BaseScene {
 
-
   float start = 0;
   boolean fadein = false;
   boolean fadeout = false;
@@ -23,10 +22,9 @@ class LevelTitle extends BaseScene {
       chimes = audio_manager.getSound(SOUND_CHIMES);
       chimes.loop();
       chimes.play();
-      chimes.setGain(-60);
+      chimes.setGain(-60); // Java
+      chimes.setVolume(0); // Javascript
       addVolumeFader(chimes, 4.5, true);
-
-
 
       ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
       schedule_system.doAfter(new ScheduleEntry() { 
@@ -41,10 +39,10 @@ class LevelTitle extends BaseScene {
                                     printDebug("Running fade in effect");
 
                                 }
-                              }, 15);
+                              }, 10);
 
       final LevelGateway gwy = gateway;
-      schedule_system.doAfter(new ScheduleEntry() { public void run() {  world.scene_manager.setCurrentScene(gwy); } } , 20);
+      schedule_system.doAfter(new ScheduleEntry() { public void run() {  world.scene_manager.setCurrentScene(gwy); } } , 15);
 
   }
 
@@ -69,15 +67,6 @@ class LevelTitle extends BaseScene {
 
 
   void update(float dt) {
-
-    /*
-    if (start == 0) {
-      start = this.world.clock.total_time;  
-    } else if (this.world.clock.total_time - start > 20) {
-       this.world.scene_manager.setCurrentScene(gateway);
-    } */
-
-
     super.update(dt);
   }
 

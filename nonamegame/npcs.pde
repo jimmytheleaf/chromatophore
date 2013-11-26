@@ -47,7 +47,7 @@ Entity fullScreenFadeBox(World world, boolean fade_in) {
 
 void addFadeEffect(Entity e, float fade_length, boolean fade_in) {
     
-    TweenSystem tween_system = (TweenSystem) this.world.getSystem(TWEEN_SYSTEM);
+    TweenSystem tween_system = (TweenSystem) world.getSystem(TWEEN_SYSTEM);
 
     ShapeComponent shape_component = (ShapeComponent) e.getComponent(SHAPE);
 
@@ -77,19 +77,31 @@ void addFadeEffect(Entity e, float fade_length, boolean fade_in) {
 
 void addVolumeFader(final Controller player, float fade_length, boolean fade_in) {
     
-    TweenSystem tween_system = (TweenSystem) this.world.getSystem(TWEEN_SYSTEM);
+    TweenSystem tween_system = (TweenSystem) world.getSystem(TWEEN_SYSTEM);
 
-    TweenVariable volume_fader = new TweenVariable() {
+    TweenVariable gain_fader = new TweenVariable() {
                               public float initial() {           
                                 return player.getGain(); }
                               public void setValue(float value) { 
                                 player.setGain(value); 
                               }  
                           };
+
+    TweenVariable volume_fader = new TweenVariable() {
+                              public float initial() {           
+                                return player.getVolume(); }
+                              public void setValue(float value) { 
+                                player.setVolume(value); 
+                              }  
+                          };
     if (fade_in) {
-        tween_system.addTween(fade_length, volume_fader, 0, EasingFunctions.inCubic);
+        tween_system.addTween(fade_length, gain_fader, 0, EasingFunctions.inCubic);
+        tween_system.addTween(fade_length, volume_fader, 1, EasingFunctions.inCubic);
+
     } else {
-        tween_system.addTween(fade_length, volume_fader, -60, EasingFunctions.outCubic);
+        tween_system.addTween(fade_length, gain_fader, -59, EasingFunctions.outCubic);
+        tween_system.addTween(fade_length, volume_fader, 0, EasingFunctions.outCubic);
+
     }
 }
 

@@ -25,12 +25,19 @@ function AudioPlayer(str) {
     }, false);
     audio.preload = 'auto';
     audio.autobuffer = true;
+    
     if (canPlayOgg()) {
+      
       audio.src = str.split(".")[0] + ".ogg";
+
     } else if (canPlayMp3()) {
+      
       audio.src = str;
+
     }
+
     loaded = true;
+    audio.volume = 1.0;
   }
   this.play = function () {
     if (!loaded) {
@@ -40,6 +47,7 @@ function AudioPlayer(str) {
     }
     audio.play();
   };
+
   this.loop = function () {
     if (!loaded) {
       var local = this;
@@ -64,6 +72,9 @@ function AudioPlayer(str) {
     if(audio.currentTime) {
       audio.currentTime = 0;
     }
+    audio.ended = false;
+    audio.load();
+
   };
   this.position = function() {
     if (!loaded) {
@@ -89,11 +100,23 @@ function AudioPlayer(str) {
     audio.volume = 1.0;
   };
 
-  this.setGain = function(v) {
+  this.setVolume = function(v) {
     audio.volume = v;
   };
+
+  this.getVolume = function() {
+    return audio.volume;
+  };
+
+  this.setGain = function(v) {
+  };
+
   this.getGain = function() {
     return audio.volume;
+  };
+
+  this.isPlaying = function() {
+      return (!audio.paused && !audio.ended);
   };
 }
 

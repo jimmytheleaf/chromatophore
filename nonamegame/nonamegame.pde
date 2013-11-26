@@ -7,7 +7,7 @@ import ddf.minim.*;
 int width = 960;
 int height = 640;
 
-World world;
+final World world = new World(960, 640);
 LevelGateway gateway;
 
 Minim minim;
@@ -24,7 +24,6 @@ void setup()
   rectMode(CORNER);
   frameRate(60);
 
-  world = new World(960, 640);
 
   setUpSystems(world);
 

@@ -86,6 +86,7 @@ class LevelOne extends BaseScene {
     if (!audio_player.isPlaying()) {
       audio_player.rewind();
     }
+    
     this.updateWinCondition();
 
   }
