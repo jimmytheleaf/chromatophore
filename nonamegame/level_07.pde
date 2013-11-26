@@ -29,6 +29,9 @@ class LevelSeven extends BaseScene {
   AudioPlayer pickup;
 
 
+  Entity fade;
+  boolean transitioning_out = false;
+
   LevelSeven(World _w) {
     super(LEVEL_SEVEN, _w);
   }
@@ -60,11 +63,14 @@ class LevelSeven extends BaseScene {
       setUpMovingShooter(world, LEFT_X + 75, BOTTOM_Y - 150, TWO_PI, 100f, bullet_color, 10);
 
       setUpWalls(this.world, wall_color);
-      background(bg.r, bg.g, bg.b);
-
 
       hit = audio_manager.getSound(SOUND_L5HIT);
       pickup = audio_manager.getSound(SOUND_L5PU);
+
+
+      fade = fullScreenFadeBox(world, true);
+      addFadeEffect(fade, 3, true);
+
   }
 
 
@@ -78,22 +84,17 @@ class LevelSeven extends BaseScene {
 
     textSize(75);
     
-    fill(255, 255, 255, 255);
 
-       if (checkWinCondition()) {
+    if (checkWinCondition()) {
 
-       fill(255, 255, 255, 255);
-      text("THE WINNER IS YOU", 40, 340); 
       if (!won) {
         won = true;
         this.win_time = this.world.clock.total_time;
       } 
     }
 
-     if (won) {
-        if (this.world.clock.total_time - this.win_time > 3) {
-          this.world.scene_manager.setCurrentScene(gateway);
-        }
+    if (won) {
+        triggerTransition();
     }
 
   }
@@ -102,36 +103,41 @@ class LevelSeven extends BaseScene {
 
     super.update(dt);
 
-    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
-    ArrayList<CollisionPair> collisions = collision_system.getCollisions();
 
-    levelSevenWallCollisions(collisions);
-    handleLevelCollisions(collisions, player_color);
+    // If we haven't transitioned away...
+    if (this.world.scene_manager.getCurrentScene() == this) {
 
-    this.checkResetCondition();
+      CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
+      ArrayList<CollisionPair> collisions = collision_system.getCollisions();
 
-    bullet_color.r += randomint(-20, 20);
-    bullet_color.g += randomint(-20, 20);
-    bullet_color.b += randomint(-20, 20);
+      levelSevenWallCollisions(collisions);
+      handleLevelCollisions(collisions, player_color);
 
-    if (bullet_color.r < 0 || bullet_color.r > 255) {
-      bullet_color.r = 127;
-    }
-    if (bullet_color.g < 0 || bullet_color.g > 255) {
-      bullet_color.g = 127;
-    }
+      this.checkResetCondition();
 
-    if (bullet_color.g < 0 || bullet_color.g > 255) {
-      bullet_color.g = 127;
-    }
+      bullet_color.r += randomint(-20, 20);
+      bullet_color.g += randomint(-20, 20);
+      bullet_color.b += randomint(-20, 20);
+
+      if (bullet_color.r < 0 || bullet_color.r > 255) {
+        bullet_color.r = 127;
+      }
+      if (bullet_color.g < 0 || bullet_color.g > 255) {
+        bullet_color.g = 127;
+      }
+
+      if (bullet_color.g < 0 || bullet_color.g > 255) {
+        bullet_color.g = 127;
+      }
 
 
-    if (!hit.isPlaying()) {
-      hit.rewind();
-    }
+      if (!hit.isPlaying()) {
+        hit.rewind();
+      }
 
-    if (!pickup.isPlaying()) {
-      pickup.rewind();
+      if (!pickup.isPlaying()) {
+        pickup.rewind();
+      }
     }
 
   }
@@ -253,6 +259,20 @@ class LevelSeven extends BaseScene {
 }
 
 
+  void triggerTransition() {
+    if (!transitioning_out) {
+      fade = fullScreenFadeBox(world, false);
+
+      transitioning_out = true;      
+      ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+      addFadeEffect(fade, 3, false); 
+      schedule_system.doAfter(new ScheduleEntry() { 
+                                public void run() { 
+                                  world.scene_manager.setCurrentScene(gateway);
+                                }
+                              }, 3.1);
+    }
+  }
   
 
 }

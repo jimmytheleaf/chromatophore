@@ -20,7 +20,7 @@ class LevelGateway extends Scene {
 
     super(LEVEL_GATEWAY, _w);
     
-    level = 3;
+    level = 0;
     mouse_gridposition = new Vec2(0, 0);
     cell_size = 600 / grid_size;
 

@@ -50,13 +50,10 @@ class LevelOne extends BaseScene {
     textSize(75);
     
     fill(255, 255, 255, 255);
-
     text("" + corners_touched, 40, 140);
 
     if (checkWinCondition()) {
 
-      fill(255, 255, 255, 255);
-      text("THE WINNER IS YOU", 40, 340); 
       if (!won) {
         won = true;
         this.win_time = this.world.clock.total_time;
@@ -142,7 +139,7 @@ class LevelOne extends BaseScene {
 
       transitioning_out = true;      
       ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
-      addFadeEffect(fade, 3, false); 
+      addFadeEffect(fade, 4, false); 
       schedule_system.doAfter(new ScheduleEntry() { 
                                 public void run() { 
                                   world.scene_manager.setCurrentScene(gateway);

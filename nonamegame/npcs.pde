@@ -84,14 +84,12 @@ void addVolumeFader(final Controller player, float fade_length, boolean fade_in)
                                 return player.getGain(); }
                               public void setValue(float value) { 
                                 player.setGain(value); 
-                                printDebug("Setting gain to " + value);
-
                               }  
                           };
     if (fade_in) {
-        tween_system.addTween(fade_length, volume_fader, 0, EasingFunctions.linear);
+        tween_system.addTween(fade_length, volume_fader, 0, EasingFunctions.inCubic);
     } else {
-        tween_system.addTween(fade_length, volume_fader, -60, EasingFunctions.linear);
+        tween_system.addTween(fade_length, volume_fader, -60, EasingFunctions.outCubic);
     }
 }
 

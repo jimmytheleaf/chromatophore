@@ -14,6 +14,12 @@ class LevelFive extends BaseScene {
   AudioPlayer hit;
   AudioPlayer pickup;
 
+
+  Entity fade;
+  boolean transitioning_out = false;
+
+
+
   LevelFive(World _w) {
     super(LEVEL_FIVE, _w);
   }
@@ -31,11 +37,14 @@ class LevelFive extends BaseScene {
       setUpShooter(world, RIGHT_X - 75, BOTTOM_Y - 75, TWO_PI, 100f, color_shooter, 14);
 
       setUpWalls(this.world, wall_color);
-      background(255, 255, 255);
-
 
       hit = audio_manager.getSound(SOUND_L5HIT);
       pickup = audio_manager.getSound(SOUND_L5PU);
+
+      fade = fullScreenFadeBox(world, true);
+      addFadeEffect(fade, 3, true);
+
+
   }
 
 
@@ -48,13 +57,9 @@ class LevelFive extends BaseScene {
     super.draw();
 
     textSize(75);
-    
-    fill(255, 255, 255, 255);
 
     if (checkWinCondition()) {
 
-      fill(0, 0, 0, 255);
-      text("THE WINNER IS YOU", 40, 340); 
       if (!won) {
         won = true;
         this.win_time = this.world.clock.total_time;
@@ -62,9 +67,8 @@ class LevelFive extends BaseScene {
     }
 
     if (won) {
-        if (this.world.clock.total_time - this.win_time > 3) {
-          this.world.scene_manager.setCurrentScene(gateway);
-        }
+        triggerTransition();
+
     }
 
   }
@@ -73,21 +77,26 @@ class LevelFive extends BaseScene {
 
     super.update(dt);
 
-    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
-    ArrayList<CollisionPair> collisions = collision_system.getCollisions();
 
-    collidePlayerAgainstWalls(collisions, false);
-    handleLevelCollisions(collisions, player_color);
+    // If we haven't transitioned away...
+    if (this.world.scene_manager.getCurrentScene() == this) {
 
-    this.checkResetCondition();
+      CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
+      ArrayList<CollisionPair> collisions = collision_system.getCollisions();
+
+      collidePlayerAgainstWalls(collisions, false);
+      handleLevelCollisions(collisions, player_color);
+
+      this.checkResetCondition();
 
 
-    if (!hit.isPlaying()) {
-      hit.rewind();
-    }
+      if (!hit.isPlaying()) {
+        hit.rewind();
+      }
 
-    if (!pickup.isPlaying()) {
-      pickup.rewind();
+      if (!pickup.isPlaying()) {
+        pickup.rewind();
+      }
     }
 
   }
@@ -164,5 +173,19 @@ class LevelFive extends BaseScene {
 
 
   
+   void triggerTransition() {
+    if (!transitioning_out) {
+      fade = fullScreenFadeBox(world, false);
+
+      transitioning_out = true;      
+      ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+      addFadeEffect(fade, 3, false); 
+      schedule_system.doAfter(new ScheduleEntry() { 
+                                public void run() { 
+                                  world.scene_manager.setCurrentScene(gateway);
+                                }
+                              }, 3.1);
+    }
+  }
 
 }

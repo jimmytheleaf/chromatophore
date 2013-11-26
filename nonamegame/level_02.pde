@@ -46,13 +46,9 @@ class LevelTwo extends BaseScene {
 
     background(255, 255, 255);
     super.draw();
-
-    textSize(75);
     
     if (checkWinCondition()) {
 
-       fill(0, 0, 0, 255);
-      text("THE WINNER IS YOU", 40, 340); 
       if (!won) {
         won = true;
         this.win_time = this.world.clock.total_time;

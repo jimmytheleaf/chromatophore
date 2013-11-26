@@ -124,4 +124,22 @@ static class EasingFunctions {
 
 	};
 
+	public static Easing inCubic = new Easing() {
+
+		float ease(float t, float b, float c, float d) {
+ 			t = t / d;
+			return c * pow(t, 3) + b;
+  		}
+
+	};
+
+	public static Easing outCubic = new Easing() {
+
+		float ease(float t, float b, float c, float d) {
+ 			t = t / d - 1;
+		  	return c * (pow(t, 3) + 1) + b;
+  		}
+
+	};
+
 }

@@ -34,6 +34,10 @@ class LevelEight extends BaseScene {
 
   AudioPlayer chimes;
 
+
+  Entity fade;
+  boolean transitioning_out = false;
+
   LevelEight(World _w) {
     super(LEVEL_EIGHT, _w);
   }
@@ -114,7 +118,14 @@ class LevelEight extends BaseScene {
 
       chimes = audio_manager.getSound(SOUND_CHIMES);
       chimes.loop();
+      chimes.setGain(-60);
+      addVolumeFader(chimes, 4.5, true);
       chimes.play();
+
+
+      fade = fullScreenFadeBox(world, true);
+      addFadeEffect(fade, 3, true);
+
   }
 
 
@@ -174,11 +185,7 @@ class LevelEight extends BaseScene {
     }
 
      if (won) {
-        if (this.world.clock.total_time - this.win_time > 3) {
-          chimes.pause();
-
-          this.world.scene_manager.setCurrentScene(gateway);
-        }
+        triggerTransition();
     }
 
   }
@@ -233,6 +240,22 @@ class LevelEight extends BaseScene {
           }
 
       }   
+    }
+  }
+
+   void triggerTransition() {
+    if (!transitioning_out) {
+      fade = fullScreenFadeBox(world, false);
+
+      transitioning_out = true;      
+      ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+      addFadeEffect(fade, 3, false); 
+      addVolumeFader(chimes, 3, false);
+      schedule_system.doAfter(new ScheduleEntry() { 
+                                public void run() { 
+                                  world.scene_manager.setCurrentScene(gateway);
+                                }
+                              }, 3.1);
     }
   }
  
