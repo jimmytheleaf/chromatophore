@@ -19,12 +19,14 @@ class LevelTitle extends BaseScene {
 
       fade = fullScreenFadeBox(world, true);
 
+      /*
       chimes = audio_manager.getSound(SOUND_CHIMES);
       chimes.loop();
-      chimes.play();
+      // chimes.play();
       chimes.setGain(-60); // Java
       chimes.setVolume(0); // Javascript
       addVolumeFader(chimes, 4.5, true);
+      */
 
       ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
       schedule_system.doAfter(new ScheduleEntry() { 
@@ -35,7 +37,7 @@ class LevelTitle extends BaseScene {
       schedule_system.doAfter(new ScheduleEntry() {   
                                 public void run() { 
                                   addFadeEffect(fade, 5, false);
-                                  addVolumeFader(chimes, 5, false);
+                                 // addVolumeFader(chimes, 5, false);
                                     printDebug("Running fade in effect");
 
                                 }

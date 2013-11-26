@@ -35,12 +35,13 @@ Entity fullScreenFadeBox(World world, boolean fade_in) {
     final Shape fade_shape = new Rectangle(t.pos, width, height);
     final RGB fade_color = new RGB(0, 0, 0, 254);
     if (!fade_in) {
-        fade_color.a = 0;
+        fade_color.a = 1;
     }
     fade_shape.setColor(fade_color);
 
     fade.addComponent(new ShapeComponent(fade_shape, 0));
 
+    printDebug(fade_color.a);
     return fade;
 
 }
@@ -99,7 +100,7 @@ void addVolumeFader(final Controller player, float fade_length, boolean fade_in)
         tween_system.addTween(fade_length, volume_fader, 1, EasingFunctions.inCubic);
 
     } else {
-        tween_system.addTween(fade_length, gain_fader, -59, EasingFunctions.outCubic);
+        tween_system.addTween(fade_length, gain_fader, -30, EasingFunctions.outCubic);
         tween_system.addTween(fade_length, volume_fader, 0, EasingFunctions.outCubic);
 
     }

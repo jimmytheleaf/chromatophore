@@ -46,3 +46,4 @@ String SOUND_L5HIT = "l5hit.mp3";
 String SOUND_L5PU = "l5pickup.mp3";
 String SOUND_CHIMES = "chimes.mp3";
 String SOUND_L8BG = "l8background.mp3";
+String SOUND_AMBIENCE = "ambience.mp3";

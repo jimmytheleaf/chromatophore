@@ -20,7 +20,7 @@ class LevelGateway extends Scene {
 
     super(LEVEL_GATEWAY, _w);
     
-    level = 7;
+    level = 2;
     mouse_gridposition = new Vec2(0, 0);
     cell_size = 600 / grid_size;
 
@@ -166,10 +166,24 @@ class LevelGateway extends Scene {
       final Scene level_to = levels.get(level);
       
       ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
-      addFadeEffect(fade, 3, false); 
+      addFadeEffect(fade, 3, false);
+
+
+      ArrayList<String> text_array = new ArrayList<String>();
+      text_array.add("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod");
+      text_array.add("tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim");
+      text_array.add("veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea");
+      text_array.add("commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit");
+      text_array.add("");
+      text_array.add("esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat");
+      text_array.add("non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+
+      final TextInterlude interlude = new TextInterlude(world, text_array, 3.0, level_to);
+      world.scene_manager.addScene(interlude);
+
       schedule_system.doAfter(new ScheduleEntry() { 
                                 public void run() { 
-                                  world.scene_manager.setCurrentScene(level_to);
+                                  world.scene_manager.setCurrentScene(interlude);
                                   world.removeEntity(fade);
                                 }
                               }, 3.1);

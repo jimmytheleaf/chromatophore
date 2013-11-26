@@ -140,3 +140,39 @@ class Circle extends Shape {
   }
   
 }
+
+
+
+
+
+class TextBox extends Rectangle  {
+
+ String text;
+ int size;
+
+TextBox(Vec2 pos, int width, int height, String text, int size) {
+    super(pos, width, height);
+    this.text = text;
+    this.size = size;
+  }
+
+  void draw() {
+    textSize(this.size);    
+    fill(this.getColor().toRaw());
+    text(this.text, this.pos.x, this.pos.y, this.width, this.height); 
+  }
+
+  void drawAroundOrigin() {
+    rectMode(CENTER);
+    textSize(this.size);    
+    fill(this.getColor().toRaw());
+    text(this.text, 0, 0, this.width, this.height); 
+  }
+
+
+  String toString() {
+      return "Text: (" + this.pos.x + ", " + this.pos.y + ", w=" + this.width + " h=" + this.height + ", text=" + this.text + ", size=" + this.size + " color=" + this.getColor() + ")";
+  }
+
+
+}

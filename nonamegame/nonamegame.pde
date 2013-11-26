@@ -43,18 +43,24 @@ void setup()
   audio_manager.storeSound(SOUND_L5PU);
   audio_manager.storeSound(SOUND_CHIMES);
   audio_manager.storeSound(SOUND_L8BG);
+  audio_manager.storeSound(SOUND_AMBIENCE);
 
   playing = false;
 
 
   gateway = new LevelGateway(world);
   world.scene_manager.addScene(gateway);
-  world.scene_manager.setCurrentScene(gateway);
-  
+  // world.scene_manager.setCurrentScene(gateway);
+
   LevelTitle title = new LevelTitle(world);
   world.scene_manager.addScene(title);
-  //world.scene_manager.setCurrentScene(title);
- 
+  world.scene_manager.setCurrentScene(title);
+
+  AudioPlayer bgsound = audio_manager.getSound(SOUND_AMBIENCE);
+  bgsound.play();
+  bgsound.loop();
+
+
 }
 
 

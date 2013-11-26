@@ -44,6 +44,86 @@ class BaseScene extends Scene {
 }
 
 
+class TextInterlude extends BaseScene {
+
+  final ArrayList<String> text_array;
+  final float line_delay;
+  final Scene next_scene;
+
+  TextInterlude(World _w, ArrayList<String> text_array, float line_delay, Scene next_scene) {
+    super(text_array.get(0), _w);
+    this.text_array = text_array;
+    this.line_delay = line_delay;
+    this.next_scene = next_scene;
+  }
+
+  void init() {
+
+    this.world.updateClock();
+    this.world.clock.stop();
+    ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+
+    float cumulative_delay = 0.01f;
+    for (int i = 0; i < text_array.size(); i++) {
+
+      final Entity text_entity = this.world.entity_manager.newEntity();
+      Transform t = new Transform(30, 30 + (i * height / text_array.size()));
+      text_entity.addComponent(t);
+
+      final Shape text_shape = new TextBox(t.pos, width - 60, height - 60, text_array.get(i), 24).setColor(new RGB(203, 203, 203, 0));
+      text_entity.addComponent(new ShapeComponent(text_shape, 1));
+
+
+       schedule_system.doAfter(new ScheduleEntry() {   
+                                public void run() { 
+                                  addFadeEffect(text_entity, line_delay, false);
+                                }
+                              }, cumulative_delay);
+
+      cumulative_delay += this.line_delay / 2;
+
+    }
+
+    
+    schedule_system.doAfter(new ScheduleEntry() { 
+                                public void run() {
+                                  Entity fade = fullScreenFadeBox(world, false);
+                                  addFadeEffect(fade, 4.0, false);
+                                }
+                              }, cumulative_delay + 2);
+
+    schedule_system.doAfter(new ScheduleEntry() { 
+                                public void run() {
+                                  world.resetEntities();
+                                  world.scene_manager.setCurrentScene(next_scene);
+                                }
+                              }, cumulative_delay + 7);
+
+  }
+
+  void update(float dt) {
+
+    super.update(dt);
+
+  }
+
+  void draw() {
+
+    this.world.clock.start();
+
+    background(0, 0, 0);
+
+    super.draw();
+
+    this.world.updateClock();
+    this.update(this.world.clock.dt);
+
+  }
+
+
+}
+
+
 
 
 
