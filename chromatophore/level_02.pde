@@ -26,6 +26,7 @@ class LevelTwo extends BaseScene {
       PLAYER_UTILS.addMotion(player, 1000, 1000, 0, 1);
       PLAYER_UTILS.addPlatformerMovement(player, 100, 1000);
       PLAYER_UTILS.addGravity(player, 0, 600);
+      PLAYER_UTILS.addConstrainToWorldBehavior(player);
 
       setUpWalls(this.world, world_color);
 

@@ -215,6 +215,36 @@
 	  player.addComponent(new Jumper());
 	}
 
+
+	void addConstrainToWorldBehavior(final Entity player) {
+		Behavior b = new Behavior();
+
+		  b.addBehavior(new BehaviorCallback() {
+		      public void update(float dt) {
+		        Transform t = (Transform) player.getComponent(TRANSFORM);
+
+		        if (t.pos.x <= LEFT_X) {
+		          t.pos.x = LEFT_X;
+		        }
+
+		        if (t.pos.x >= RIGHT_X) {
+		          t.pos.x = RIGHT_X;
+		        }
+
+		        if (t.pos.y <= TOP_Y) {
+		          t.pos.y = TOP_Y;
+		        }
+
+		        if (t.pos.y >= BOTTOM_Y) {
+		          t.pos.y = BOTTOM_Y;
+		        }
+		      }
+		  });
+
+		  player.addComponent(b);
+
+	}
+
 }
 
 PlayerUtils PLAYER_UTILS = new PlayerUtils();
@@ -250,23 +280,23 @@ void setUpPlayer(World world) {
         Transform t = (Transform) player.getComponent(TRANSFORM);
         Motion m = (Motion) player.getComponent(MOTION);
 
-        if (t.pos.x <= 0) {
-          t.pos.x = 0;
+        if (t.pos.x <= LEFT_X) {
+          t.pos.x = LEFT_X;
           m.velocity.x = -m.velocity.x;
         }
 
-        if (t.pos.x >= width) {
-          t.pos.x = width;
+        if (t.pos.x >= RIGHT_X) {
+          t.pos.x = RIGHT_X;
           m.velocity.x = -m.velocity.x;
         }
 
-        if (t.pos.y <= 0) {
-          t.pos.y = 0;
+        if (t.pos.y <= TOP_Y) {
+          t.pos.y = TOP_Y;
           m.velocity.y = -m.velocity.y;
         }
 
-        if (t.pos.y >= height) {
-          t.pos.y = height;
+        if (t.pos.y >= BOTTOM_Y) {
+          t.pos.y = BOTTOM_Y;
           m.velocity.y = -m.velocity.y;
         }
       }
