@@ -11,13 +11,24 @@ function Minim() {
     return new AudioPlayer(str);
   };
 
+  /*
   this.getLineOut = function(str) {
     return new LineOut(str);
-  };
+  };*/
 }
+
+/*
 function LineOut(str) {
 
-    var context = new webkitAudioContext();
+
+    var context;
+
+    if (typeof AudioContext !== 'undefined') {
+      ctx = new AudioContext();
+    } else if (typeof webkitAudioContext !== 'undefined') {
+      ctx = new webkitAudioContext();
+    }
+
     var oscillator = context.createOscillator();
     oscillator.connect(context.destination);
     var gainNode = context.createGainNode();
@@ -74,7 +85,7 @@ function SineWave(freq, pan, samplerate) {
 
 }
 
-
+*/
 
 
 // Browser Audio API

@@ -52,7 +52,7 @@ void setup()
 
   gateway = new LevelGateway(world);
   world.scene_manager.addScene(gateway);
-  // world.scene_manager.setCurrentScene(gateway);
+  //world.scene_manager.setCurrentScene(gateway);
 
   LevelTitle title = new LevelTitle(world);
   world.scene_manager.addScene(title);
