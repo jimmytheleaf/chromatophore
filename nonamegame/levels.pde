@@ -80,7 +80,7 @@ class TextInterlude extends BaseScene {
                                 }
                               }, cumulative_delay);
 
-      cumulative_delay += this.line_delay / 2;
+      cumulative_delay +=  3 * this.line_delay / 4;
 
     }
 

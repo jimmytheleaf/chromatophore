@@ -125,8 +125,6 @@ class LevelFour extends BaseScene {
 
   void collidePlayerAgainstCollectables(ArrayList<CollisionPair> collisions, RGB player_color) {
 
-    CollisionSystem collision_system = (CollisionSystem) this.world.getSystem(COLLISION_SYSTEM);
-
     for (CollisionPair p : collisions) {
 
       if (p.a == world.getTaggedEntity(TAG_PLAYER) && this.world.group_manager.isEntityInGroup(p.b, GROUP_COLLECTABLES)) {

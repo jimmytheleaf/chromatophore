@@ -116,7 +116,7 @@ class LevelThree extends BaseScene {
           out.unmute();
 
           float frequency = 440.0;
-          int interval = int(distance / 25);
+          //int interval = int(distance / 25);
 
           if (distance < 50) {
             frequency *= (6/5.0);

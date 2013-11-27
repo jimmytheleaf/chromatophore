@@ -9,6 +9,7 @@ int height = 640;
 
 final World world = new World(960, 640);
 LevelGateway gateway;
+LevelCredits credits;
 
 Minim minim;
 AudioManager audio_manager;
@@ -47,10 +48,13 @@ void setup()
 
   playing = false;
 
+  credits = new LevelCredits(world);
+  world.scene_manager.addScene(credits);
+  //world.scene_manager.setCurrentScene(credits);
 
   gateway = new LevelGateway(world);
   world.scene_manager.addScene(gateway);
-  // world.scene_manager.setCurrentScene(gateway);
+  //world.scene_manager.setCurrentScene(gateway);
 
   LevelTitle title = new LevelTitle(world);
   world.scene_manager.addScene(title);
