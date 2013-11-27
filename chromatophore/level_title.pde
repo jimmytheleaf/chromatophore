@@ -31,10 +31,10 @@ class LevelTitle extends BaseScene {
                                     printDebug("Running fade in effect");
 
                                 }
-                              }, 10);
+                              }, 6.5);
 
       final LevelGateway gwy = gateway;
-      schedule_system.doAfter(new ScheduleEntry() { public void run() {  world.scene_manager.setCurrentScene(gwy); } } , 15);
+      schedule_system.doAfter(new ScheduleEntry() { public void run() {  world.scene_manager.setCurrentScene(gwy); } } , 12);
 
   }
 
