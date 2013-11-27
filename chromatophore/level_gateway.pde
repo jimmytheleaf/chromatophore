@@ -231,7 +231,7 @@ class LevelGateway extends Scene {
 
     interlude_three.add("3. A dark moon, I find that I am unable to escape my elliptical orbit around you.");
     interlude_three.add("");
-    interlude_three.add("One day we will collide and share our first global extinction event.");
+    interlude_three.add("One day we will collide and share our first extinction event.");
 
     text_interludes.add(interlude_three);
 
