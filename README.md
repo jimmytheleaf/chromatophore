@@ -25,7 +25,7 @@ Chromatophore is playable on the web through any browser that supports Processin
 
 Chromatophore was created by [Jim Fingal](http://jimfingal.com/). All game / engine code was written in [Processing](http://processing.org/) for this jam, with systems and components adapted from previous work in [Lua/Love2d](https://github.com/jimmytheleaf/love-lonelyatoms).
 
-Tools used were [Processing](http://processing.org/) / [Processing.js](http://processingjs.org/) (PDE X and Javascript Modes), [CFXR](http://thirdcog.eu/apps/cfxr), [Audacity](http://audacity.sourceforge.net/), and [Sublime Text 2](http://www.sublimetext.com/2). Javascript Minim-emulation adapted from code written by [Daniel Hodgin](https://github.com/Pomax/Pjs-2D-Game-Engine/blob/master/minim.js). Easing functions cribbed from Lua code written by [Emmanuel Oga](https://github.com/EmmanuelOga/easing/blob/master/lib/easing.lua).
+Tools used were [Processing](http://processing.org/) / [Processing.js](http://processingjs.org/) (PDE X and Javascript Modes), [CFXR](http://thirdcog.eu/apps/cfxr), [Audacity](http://audacity.sourceforge.net/), and [Sublime Text 2](http://www.sublimetext.com/2). Screen-shots begrudgingly edited in [GIMP](http://www.gimp.org/) Javascript Minim-emulation adapted from code written by [Daniel Hodgin](https://github.com/Pomax/Pjs-2D-Game-Engine/blob/master/minim.js). Easing functions cribbed from Lua code written by [Emmanuel Oga](https://github.com/EmmanuelOga/easing/blob/master/lib/easing.lua).
 
  Some background sounds and music were sourced from [Freesound.org](http://www.freesound.org/) ([CC 0](http://creativecommons.org/publicdomain/zero/1.0/)) and [The Free Music Archive](http://freemusicarchive.org).
 
