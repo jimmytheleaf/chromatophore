@@ -150,7 +150,10 @@ class AudioManager {
   }
 
   void storeSound(String filename) {
-    sounds.put(filename, minim.loadFile(filename));
+    AudioPlayer p = minim.loadFile(filename);
+    p.setGain(-10);
+    p.setVolume(0.5);
+    sounds.put(filename, p);
   }
 
   AudioPlayer getSound(String filename) {

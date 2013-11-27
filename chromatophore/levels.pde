@@ -87,7 +87,7 @@ class TextInterlude extends BaseScene {
                                   world.resetEntities();
                                   world.scene_manager.setCurrentScene(next_scene);
                                 }
-                              }, cumulative_delay + 7);
+                              }, cumulative_delay + 10);
 
   }
 

@@ -182,7 +182,7 @@ class LevelGateway extends Scene {
       if (level < 8) {
 
         final Scene level_to = levels.get(level);
-        final TextInterlude interlude = new TextInterlude(world, text_interludes.get(level), 3.0, level_to);
+        final TextInterlude interlude = new TextInterlude(world, text_interludes.get(level), 4.5, level_to);
         world.scene_manager.addScene(interlude);
         schedule_system.doAfter(new ScheduleEntry() { 
                                 public void run() { 
@@ -240,7 +240,7 @@ class LevelGateway extends Scene {
     interlude_four.add("4. Coleoid cephalopods have complex multicellular organs which they use to change color rapidly. ");
     interlude_four.add("This is most notable in brightly colored squid, cuttlefish and octopuses. ");
     interlude_four.add("Like chameleons, cephalopods use physiological color change for social interaction.");
-    interlude_four.add("They are also among the most skilled at background adaptation, having the ability to match both the colour and the texture of their local environment with remarkable accuracy.");
+    interlude_four.add("They are also among the most skilled at background adaptation, having the ability to match both the color and the texture of their local environment with remarkable accuracy.");
     text_interludes.add(interlude_four);
 
     ArrayList<String> interlude_five = new ArrayList<String>();
