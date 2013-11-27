@@ -301,13 +301,12 @@ class LevelGateway extends Scene {
 
     ArrayList<String> interlude_nine_three = new ArrayList<String>();
     interlude_nine_three.add("9.3");
-    interlude_nine_three.add("Who would want consciousness to persist if it remained located in the body after death?");
+    interlude_nine_three.add("Exhibit two: “But who knows the fate of his bones, or how often he is to be buried? Who hath the oracle of his ashes, or whither they are to be scattered?”");
     interlude_nine_three.add("");
-    interlude_nine_three.add("Oblivion may be preferable to an eternity of airless darkness in the ground or in an urn.");
 
     ArrayList<String> interlude_nine_four = new ArrayList<String>();
     interlude_nine_four.add("9.4");
-    interlude_nine_four.add("Exhibit two: “Ah to love at your last and see them at theirs, the last minute loved ones, and be happy, why ah, uncalled for.”");
+    interlude_nine_four.add("Exhibit three: “Ah to love at your last and see them at theirs, the last minute loved ones, and be happy, why ah, uncalled for.”");
     interlude_nine_four.add("");
 
     ArrayList<String> interlude_nine_five = new ArrayList<String>();
