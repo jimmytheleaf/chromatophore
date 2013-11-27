@@ -1,6 +1,8 @@
 /**
  * Minim-emulation code by Daniel Hodgin
  * From: https://github.com/Pomax/Pjs-2D-Game-Engine/blob/master/minim.js
+ *
+ * LineOut, SineWave, and additional AudioPlayer code by Jim Fingal
  */
 
 // wrap the P5 Minim sound library classes

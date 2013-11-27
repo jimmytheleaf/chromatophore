@@ -45,6 +45,19 @@ Entity fullScreenFadeBox(World world, boolean fade_in) {
 
 }
 
+Entity getTextEntity(String content, int x, int y, int w, int h, int text_size, IColor c) {
+
+    Entity text_entity = world.entity_manager.newEntity();
+    Transform t = new Transform(x, y);
+    text_entity.addComponent(t);
+
+    final Shape text_shape = new TextBox(t.pos, w, h, content, text_size).setColor(c);
+    text_entity.addComponent(new ShapeComponent(text_shape, 1));
+
+    return text_entity;
+
+}
+
 void addFadeEffect(Entity e, float fade_length, boolean fade_in) {
     
     TweenSystem tween_system = (TweenSystem) world.getSystem(TWEEN_SYSTEM);
@@ -180,25 +193,30 @@ void setUpCollectables(World world, int num, IColor c, boolean do_rotate) {
 
     for (int i = 0; i < num; i++) {
 
-        final Entity collectable = createRectangle(world, randomint(185, 775), randomint(25, 615), 6, 6, c);
+        Entity collectable = createRectangle(world, randomint(185, 775), randomint(25, 615), 6, 6, c);
         world.group_manager.addEntityToGroup(collectable, GROUP_COLLECTABLES);
         cs.watchCollision(player, collectable);
 
         if (do_rotate) {
-            Behavior b = new Behavior();
-
-            b.addBehavior(new BehaviorCallback() {
-                public void update(float dt) {
-                    Transform t = (Transform) collectable.getComponent(TRANSFORM);
-                    t.rotate(dt * 5);
-                }
-            });
-
-
-            collectable.addComponent(b);
+            addRotationBehavior(collectable);
         }
 
     }
+
+}
+
+void addRotationBehavior(final Entity e) {
+
+    Behavior b = new Behavior();
+
+    b.addBehavior(new BehaviorCallback() {
+        public void update(float dt) {
+            Transform t = (Transform) e.getComponent(TRANSFORM);
+            t.rotate(dt * 5);
+        }
+    });
+
+    e.addComponent(b);
 
 }
 

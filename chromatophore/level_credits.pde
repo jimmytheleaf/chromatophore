@@ -32,7 +32,7 @@ class LevelCredits extends BaseScene {
     textAlign(CENTER);
     textSize(75);    
     fill(203, 203, 203, 255);
-    text("Chromatophore", 0, TOP_Y, width, height);
+    text("Chromatophore", 0, TOP_Y + 5, width, height);
     textSize(30);
     text("by Jim Fingal", 0, BOTTOM_Y - 75, width, height);
 

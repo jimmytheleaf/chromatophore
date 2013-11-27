@@ -66,21 +66,11 @@ class TextInterlude extends BaseScene {
     float cumulative_delay = 0.01f;
     for (int i = 0; i < text_array.size(); i++) {
 
-      final Entity text_entity = this.world.entity_manager.newEntity();
-      Transform t = new Transform(30, 30 + (i * height / text_array.size()));
-      text_entity.addComponent(t);
+      Entity text_entity = getTextEntity(text_array.get(i), 30, 30 + (i * height / text_array.size()),  width - 60, height - 60, 24,  new RGB(203, 203, 203, 0));
 
-      final Shape text_shape = new TextBox(t.pos, width - 60, height - 60, text_array.get(i), 24).setColor(new RGB(203, 203, 203, 0));
-      text_entity.addComponent(new ShapeComponent(text_shape, 1));
+      this.scheduleAhead(text_entity, this.line_delay, cumulative_delay);
 
-
-       schedule_system.doAfter(new ScheduleEntry() {   
-                                public void run() { 
-                                  addFadeEffect(text_entity, line_delay, false);
-                                }
-                              }, cumulative_delay);
-
-      cumulative_delay +=  3 * this.line_delay / 4;
+      cumulative_delay +=  3 * this.line_delay / 4.0;
 
     }
 
@@ -99,6 +89,19 @@ class TextInterlude extends BaseScene {
                                 }
                               }, cumulative_delay + 7);
 
+  }
+
+  void scheduleAhead(final Entity txt, float fade_length, float delay_length) {
+    
+    final float fl = fade_length;
+    final float dl = delay_length;
+
+    ScheduleSystem schedule_system = (ScheduleSystem) this.world.getSystem(SCHEDULE_SYSTEM);
+    schedule_system.doAfter(new ScheduleEntry() {   
+                                public void run() { 
+                                  addFadeEffect(txt, fl, false);
+                                }
+                              }, dl);
   }
 
   void update(float dt) {

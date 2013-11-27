@@ -221,7 +221,7 @@ class LevelGateway extends Scene {
 
     ArrayList<String> interlude_two = new ArrayList<String>();
 
-    interlude_two.add("2. It is said that one never steps into the same lava flow twice.");
+    interlude_two.add("2. One never steps into the same lava flow twice.");
     interlude_two.add("");
     interlude_two.add("The changing of rules and the systems that underlie them is the best we can rely on.");
 
@@ -259,7 +259,7 @@ class LevelGateway extends Scene {
     interlude_six.add("Some who ascribe to him a specific domain call him the god of 'elusive sea change,' which suggests the constantly changing nature of the sea or the liquid quality of water in general.");
     interlude_six.add("");
     interlude_six.add("He can foretell the future, but, in a mytheme familiar to several cultures, will change his shape to avoid having to.");
-    interlude_six.add("From this feature of Proteus comes the adjective 'protean,'' with the general meaning of 'versatile,' 'mutable,' 'capable of assuming many forms.'");
+    interlude_six.add("From this feature of Proteus comes the adjective 'protean,' with the general meaning of 'versatile,' 'mutable,' 'capable of assuming many forms.'");
     interlude_six.add("");
 
     text_interludes.add(interlude_six);
@@ -270,7 +270,7 @@ class LevelGateway extends Scene {
     interlude_seven.add("'Transcendence.'");
     interlude_seven.add("");
     interlude_seven.add("In making this leap, individuals confront their own limitless freedom, which");
-    interlude_seven.add("Jaspers calls 'Existenz,'' and can finally experience authentic existence.");
+    interlude_seven.add("Jaspers calls 'Existenz,' and can finally experience authentic existence.");
     text_interludes.add(interlude_seven);
 
     ArrayList<String> interlude_eight = new ArrayList<String>();

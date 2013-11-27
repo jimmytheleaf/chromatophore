@@ -3,7 +3,6 @@ import ddf.minim.AudioPlayer;
 import ddf.minim.signals.*;
 import ddf.minim.*;
 
-
 int width = 960;
 int height = 640;
 
@@ -42,7 +41,6 @@ void setup()
   audio_manager.storeSound(SOUND_L4PU2);
   audio_manager.storeSound(SOUND_L5HIT);
   audio_manager.storeSound(SOUND_L5PU);
-  audio_manager.storeSound(SOUND_CHIMES);
   audio_manager.storeSound(SOUND_L8BG);
   audio_manager.storeSound(SOUND_AMBIENCE);
 
@@ -54,7 +52,7 @@ void setup()
 
   gateway = new LevelGateway(world);
   world.scene_manager.addScene(gateway);
-  //world.scene_manager.setCurrentScene(gateway);
+  // world.scene_manager.setCurrentScene(gateway);
 
   LevelTitle title = new LevelTitle(world);
   world.scene_manager.addScene(title);
