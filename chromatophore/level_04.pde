@@ -9,6 +9,8 @@ class LevelFour extends BaseScene {
   RGB color_blue = new RGB(0, 0, 255, 255);
   RGB color_white = new RGB(255, 255, 255, 255);
 
+  ArrayList<Entity> remove_buffer = new ArrayList<Entity>();
+
 
   AudioPlayer pu1;
   AudioPlayer pu2;
@@ -107,16 +109,23 @@ class LevelFour extends BaseScene {
       if (e.active) {
         all_inactive = false;
         break;
+      } else {
+        remove_buffer.add(e);
       }
     }
 
+    for (int i = 0; i < remove_buffer.size(); i++) {
+        world.removeEntity(remove_buffer.get(i));
+    }
+
+    remove_buffer.clear();
+
     if (all_inactive) {
-      for (int i = 0; i < collectables.size(); i++) {
-        Entity e = collectables.get(i);
-        e.active = true;
-      }
+      setUpCollectables(world, 25, color_green);
+      setUpCollectables(world, 25, color_blue);
       background(255, 255, 255);
     }
+
   }
   
   boolean checkWinCondition() {
