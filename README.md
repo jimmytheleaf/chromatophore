@@ -14,9 +14,9 @@ Chromatophore is playable on the web through any browser that supports Processin
 
 ![Chromatophore Menu](https://raw.github.com/jimmytheleaf/game-off-2013/master/img/chromatophoremenu1.png)
 
-![Chromatophore Level 4](https://raw.github.com/jimmytheleaf/game-off-2013/master/img/chromatophorel4.png)
+![Chromatophore Text](https://raw.github.com/jimmytheleaf/game-off-2013/master/img/chromatophoretext1.png)
 
-![Chromatophore Text](https://raw.github.com/jimmytheleaf/game-off-2013/master/img/chromatophoretext.png)
+![Chromatophore Level 4](https://raw.github.com/jimmytheleaf/game-off-2013/master/img/chromatophorel4.png)
 
 ![Chromatophore Level 7](https://raw.github.com/jimmytheleaf/game-off-2013/master/img/chromatophorel7.png)
 
