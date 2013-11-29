@@ -29,6 +29,6 @@ Tools used were [Processing](http://processing.org/) / [Processing.js](http://pr
 
  Some background sounds and music were sourced from [Freesound.org](http://www.freesound.org/) ([CC 0](http://creativecommons.org/publicdomain/zero/1.0/)) and [The Free Music Archive](http://freemusicarchive.org).
 
-A modified version of ["John Stockton Slow Drag" by Chris Zabriskie](http://freemusicarchive.org/music/Chris_Zabriskie/Undercover_Vampire_Policeman/02_-_John_Stockton_Slow_Drag_1468) appears in the game ([CC BY 3.0](http://creativecommons.org/licenses/by/3.0/).
+A modified version of ["John Stockton Slow Drag" by Chris Zabriskie](http://freemusicarchive.org/music/Chris_Zabriskie/Undercover_Vampire_Policeman/02_-_John_Stockton_Slow_Drag_1468) appears in the game ([CC BY 3.0](http://creativecommons.org/licenses/by/3.0/)).
 
 Text fragments were written by the author and adapted from *The Magician* by Ingmar Bergman, "Fizzle 6" by Samuel Beckett, *Urn Burial* by Sir Thomas Browne, *Damned to Fame* by James Knowlson, and various Wikipedia articles.
