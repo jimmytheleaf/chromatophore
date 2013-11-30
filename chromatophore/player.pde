@@ -108,6 +108,100 @@
 
 	}
 
+	void addSpaceshipMovementRandomControls(final Entity player, final int responsiveness) {
+
+		InputResponse r = new InputResponse(); 
+
+		final ArrayList<MotionChanger> motions = new ArrayList<MotionChanger>();
+
+		motions.add(new MotionChanger() {
+			public void updateMotion(Motion m) {
+				 if (m.velocity.y >= 0) {
+	               m.velocity.y = 0;
+	            }
+	            m.velocity.y -= responsiveness;
+	            printDebug("Moving down");
+			}
+		});
+
+		motions.add(new MotionChanger() {
+			public 	void updateMotion(Motion m) {
+					if (m.velocity.y <= 0) {
+	              m.velocity.y = 0;
+	            }
+	            m.velocity.y += responsiveness;
+	            printDebug("Moving up");
+
+				}
+			});
+
+			motions.add(new MotionChanger() {
+				public void updateMotion(Motion m) {
+					if (m.velocity.x >= 0) {
+	              m.velocity.x = 0;
+	            }
+	            m.velocity.x -= responsiveness;
+	           	printDebug("Moving left");
+
+				}
+			});
+
+			motions.add(new MotionChanger() {
+				public void updateMotion(Motion m) {
+				if (m.velocity.x <= 0) {
+	              m.velocity.x = 0;
+	            }
+	            m.velocity.x += responsiveness;
+	           	printDebug("Moving Right");
+				}
+			});
+
+		final HashMap<String, Integer> action_maps = new HashMap<String, Integer>();
+
+		final ArrayList<String> actions = new ArrayList<String>();
+		actions.add(ACTION_UP);
+		actions.add(ACTION_RIGHT);
+		actions.add(ACTION_DOWN);
+		actions.add(ACTION_LEFT);
+
+  		r.addInputResponseFunction(new InputResponseFunction() {
+
+  			int current_index = 0;
+
+      		public void update(InputSystem input_system) {
+
+      			Motion m = (Motion) player.getComponent(MOTION);
+
+      			for (int i = 0; i < actions.size(); i++) {
+      				String a = actions.get(i);
+      				if (input_system.actionPressed(a)) {
+      					action_maps.put(a, current_index);
+      					printDebug("Mapping action " + a + " to impact " + i);
+
+      					current_index++;
+      					if (current_index >= actions.size()) {
+      						current_index = 0;
+      					}
+
+      				} else if (action_maps.containsKey(a) && !input_system.actionHeld(a)) {
+      					action_maps.remove(a);
+      					printDebug("Released action " + a);
+
+      				}
+
+      				if (input_system.actionHeld(a)) {
+      					MotionChanger motion_changer = motions.get(action_maps.get(a));
+      					motion_changer.updateMotion(m);
+      				}
+      			}
+
+		     }
+	  });
+
+	  player.addComponent(r);
+
+	}
+
 
 
 	void addForceMovement(final Entity player, final float force) {

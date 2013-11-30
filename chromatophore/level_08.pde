@@ -109,7 +109,8 @@ class LevelEight extends BaseScene {
       Entity player = PLAYER_UTILS.getNewPlayerEntity(world);
       PLAYER_UTILS.addRectangleShape(player, int(center.x), int(center.y), 15, 15, player_color);
       PLAYER_UTILS.addMotion(player, 200, 0, 0, 0.98);
-      PLAYER_UTILS.addSpaceshipMovement(player, 20);
+      //PLAYER_UTILS.addSpaceshipMovement(player, 20);
+      PLAYER_UTILS.addSpaceshipMovementRandomControls(player, 20);
 
       player_transform = (Transform) player.getComponent(TRANSFORM);
 
@@ -167,8 +168,8 @@ class LevelEight extends BaseScene {
     fill(255, 255, 255, 255);
     text(gol.living, 20, 340);
 
-    fill(0, 255, 100, 255);
-    text(gol2.living, 780, 340);
+    // fill(0, 255, 100, 255);
+    // text(gol2.living, 780, 340);
 
     if (checkWinCondition()) {
 
@@ -210,11 +211,11 @@ class LevelEight extends BaseScene {
 
       gol2.turnOn(player_gridposition.x, player_gridposition.y);
 
-      if (world.clock.ticks % 5 == 0) {
+      if (world.clock.ticks % 8 == 0) {
         this.gol.updateFrame();
       }
 
-       if (world.clock.ticks % 10 == 0) {
+       if (world.clock.ticks % 5 == 0) {
         this.gol2.updateFrame();
       }
     }

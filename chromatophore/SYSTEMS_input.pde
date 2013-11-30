@@ -19,6 +19,10 @@ class InputSystem extends System {
     input_to_action.put(key, action);
   }
 
+  void clearInput(int key) {
+    input_to_action.remove(key);
+  }
+
   void keyPressed(int key) {
 
     // printDebug("Key pressed called on " + (char) key);

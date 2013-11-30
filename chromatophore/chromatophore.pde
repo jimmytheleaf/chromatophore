@@ -48,19 +48,20 @@ void setup()
 
   credits = new LevelCredits(world);
   world.scene_manager.addScene(credits);
-  //world.scene_manager.setCurrentScene(credits);
 
   gateway = new LevelGateway(world);
   world.scene_manager.addScene(gateway);
-  //world.scene_manager.setCurrentScene(gateway);
 
   LevelTitle title = new LevelTitle(world);
   world.scene_manager.addScene(title);
-  world.scene_manager.setCurrentScene(title);
 
   AudioPlayer bgsound = audio_manager.getSound(SOUND_AMBIENCE);
   bgsound.play();
   bgsound.loop();
+
+  //world.scene_manager.setCurrentScene(gateway);
+  world.scene_manager.setCurrentScene(title);
+
 
 
 }

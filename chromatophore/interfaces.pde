@@ -14,3 +14,8 @@ interface Drawable {
 	public void draw();
 	public String toString();
 }
+
+
+interface MotionChanger {
+	void updateMotion(Motion m);
+}
