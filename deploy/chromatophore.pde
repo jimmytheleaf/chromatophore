@@ -59,7 +59,7 @@ void setup()
   bgsound.play();
   bgsound.loop();
 
-  //world.scene_manager.setCurrentScene(gateway);
+  // world.scene_manager.setCurrentScene(gateway);
   world.scene_manager.setCurrentScene(title);
 
 
@@ -1717,6 +1717,7 @@ class LevelOne extends BaseScene {
 class LevelTwo extends BaseScene {
 
   RGB world_color = new RGB(0, 0, 0, 255);
+  RGB red_color = new RGB(255, 0, 0, 255);
 
   AudioPlayer hit;
   AudioPlayer land;
@@ -1724,6 +1725,9 @@ class LevelTwo extends BaseScene {
   Entity fade;
 
   boolean transitioning_out = false;
+
+  Rectangle player_right_edge; 
+  Rectangle player_left_edge;
 
   LevelTwo(World _w) {
     super(LEVEL_TWO, _w);
@@ -1753,6 +1757,12 @@ class LevelTwo extends BaseScene {
       fade = fullScreenFadeBox(world, true);
       addFadeEffect(fade, 3, true);
 
+      player_left_edge = new Rectangle(405, 40, 20, 110);
+      player_right_edge = new Rectangle(535, 40, 20, 110);
+      player_left_edge.setColor(red_color);
+      player_right_edge.setColor(red_color);
+
+
   }
 
 
@@ -1779,6 +1789,9 @@ class LevelTwo extends BaseScene {
     this.world.updateClock();
     this.update(this.world.clock.dt);
 
+    // Debug
+    // player_left_edge.draw();
+    // player_right_edge.draw();
   }
 
   void update(float dt) {
@@ -1853,27 +1866,44 @@ class LevelTwo extends BaseScene {
 
         Rectangle platform_shape = (Rectangle) ((ShapeComponent) p.b.getComponent(SHAPE)).shape;
 
+        player_left_edge.pos.x = player_shape.pos.x;
+        player_left_edge.pos.y = player_shape.pos.y + 20;
+        player_right_edge.pos.x =  player_shape.pos.x + player_shape.width - 20; 
+        player_right_edge.pos.y =  player_shape.pos.y + 20;
 
         // TODO fix horizontal collision
-        if (player_shape instanceof Rectangle) {
+        if (player_shape instanceof Rectangle && collision_system.rectangleCollision(player_shape, platform_shape)) {
 
-          if (collision_system.rectangleCollision(player_shape, platform_shape) &&
-              m.velocity.y > 0)  {
+            // Right
+            if (collision_system.rectangleCollision(player_right_edge, platform_shape)) {
               
-              t.pos.y = platform_shape.pos.y - ((Rectangle)player_shape).height;
-              m.velocity.y = 0;
+              m.velocity.x = 0;
+              player_shape.pos.x = platform_shape.pos.x - player_shape.width;
+
+            // Left
+            } else if (collision_system.rectangleCollision(player_left_edge, platform_shape)) {
+              
+              m.velocity.x = 0;
+              player_shape.pos.x = platform_shape.pos.x + platform_shape.width;
+
+            // Bottom
+            } else if (m.velocity.y > 0 && player_shape.pos.y + (0.5 * player_shape.height) < platform_shape.pos.y)  {
+              
+                t.pos.y = platform_shape.pos.y - ((Rectangle)player_shape).height;
+                m.velocity.y = 0;
           
-          } else if (collision_system.rectangleCollision(player_shape, platform_shape) &&
-              m.velocity.y < 0)  {
-              
-              t.pos.y = platform_shape.pos.y + platform_shape.height;
-              m.velocity.y = -m.velocity.y;
+            // Top
+            } else if (m.velocity.y < 0  && player_shape.pos.y + 10 > platform_shape.pos.y)  {
+                
+                t.pos.y = platform_shape.pos.y + platform_shape.height;
+                m.velocity.y = -m.velocity.y;
 
-              world_color.r += 30;
-              world_color.g += 30;
-              world_color.b += 30;
-              hit.play();
-          } 
+                world_color.r += 30;
+                world_color.g += 30;
+                world_color.b += 30;
+                hit.play();
+              }
+
 
 
         }
