@@ -59,7 +59,7 @@ void setup()
   bgsound.play();
   bgsound.loop();
 
-  //world.scene_manager.setCurrentScene(gateway);
+  // world.scene_manager.setCurrentScene(gateway);
   world.scene_manager.setCurrentScene(title);
 
 
