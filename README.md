@@ -2,7 +2,7 @@
 
 ## Chromatophore
 
-Chromatophore is an art-puzzle game that explores the central theme of change over the course of play. The game changes color schemes and depth, mechanics, interaction mode, and tone over the course of the 9 levels.
+Chromatophore is an art-puzzle game that explores changing play dynamics over the course of the game. The game changes color schemes and depth, mechanics, interaction mode, and tone over the course of the 9 levels.
 
 Controls: Use WASD, and your Mouse + Left Click to interact.
 
