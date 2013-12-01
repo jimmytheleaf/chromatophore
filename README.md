@@ -1,4 +1,4 @@
-![Chromatophore](https://raw.github.com/jimmytheleaf/game-off-2013/master/img/chromatophoretitle.png)
+![Chromatophore](https://raw.github.com/jimmytheleaf/game-off-2013/master/img/chromatophoretitle1.png)
 
 ## Chromatophore
 

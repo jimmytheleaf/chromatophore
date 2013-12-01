@@ -5,6 +5,8 @@ class LevelTitle extends BaseScene {
   boolean fadein = false;
   boolean fadeout = false;
 
+  PImage background_image;
+
   AudioPlayer chimes;
   Entity fade;
 
@@ -16,6 +18,8 @@ class LevelTitle extends BaseScene {
   void init() {
       super.init();   
       this.world.clock.stop();
+
+      background_image = loadImage("title.png");
 
       fade = fullScreenFadeBox(world, true);
 
@@ -46,13 +50,15 @@ class LevelTitle extends BaseScene {
     this.update(this.world.clock.dt);
 
     background(63, 63, 63);
+    image(background_image, 0, 0);
 
     textSize(75);    
-    fill(zbc[2], zbc[1], zbc[0], 255);
-    text("Chromatophore", 40, 240);
+    // fill(zbc[2], zbc[1], zbc[0], 255);
+    fill(255, 255, 255, 255);
+    text("Chromatophore", 40, 140);
 
     textSize(30);
-    text("by Jim Fingal", 80, 340);
+    text("by Jim Fingal", 80, 240);
 
     super.draw();
   }
